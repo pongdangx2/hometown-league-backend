@@ -2,7 +2,7 @@
 <!DOCTYPE configuration>
 <configuration>
 
-    <property name="log.pattern" value="${log.pattern:-[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-41c{1}:%4L]|%X{GID}|%msg%n}"/>
+    <property name="log.pattern" value="${log.pattern:-[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-41c{1}:%4L]|%msg%n}"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

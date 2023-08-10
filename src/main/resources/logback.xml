@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+
+    <property name="log.pattern" value="${log.pattern:-[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-41c{1}:%4L]|%X{GID}|%msg%n}"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="console"/>
+    </root>
+
+    <!-- mybatis -->
+    <logger name="org.mybatis.spring">
+        <level value="debug"/>
+    </logger>
+
+    <!-- spring framework -->
+    <logger name="org.springframework">
+        <level value="info"/>
+    </logger>
+
+    <!-- application -->
+    <logger name="me.lkh.hometownleague">
+        <level value="debug"/>
+    </logger>
+
+</configuration>

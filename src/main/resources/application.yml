@@ -6,7 +6,7 @@ spring:
         connection-timeout: 5000
         validation-timeout: 1000
         maximum-pool-size: 30
-        jdbc-url:
-        username:
-        password:
+        jdbc-url: jdbc:mysql://db-ht96d-kr.vpc-pub-cdb.ntruss.com:3306/htldb?useSSL=false&serverTimezone=Asia/Seoul
+        username: user
+        password: P@ssw0rd
         transaction-isolation: TRANSACTION_READ_COMMITTED

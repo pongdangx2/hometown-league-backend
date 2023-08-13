@@ -1,7 +1,8 @@
 package me.lkh.hometownleague.user.controller;
 
+import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.user.domain.User;
-import me.lkh.hometownleague.user.service.UserService;
+import me.lkh.hometownleague.user.service.Impl.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +17,9 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @ResponseBody
-    public User getUserById(@PathVariable String id) {
-        return userService.getUserById(id);
+    public CommonResponse getUserById(@PathVariable String id) {
+        User user = userService.getUserById(id);
+        CommonResponse<User> response = new CommonResponse(user);
+        return response;
     }
 }

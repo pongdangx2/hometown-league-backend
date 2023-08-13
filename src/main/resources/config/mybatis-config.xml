@@ -6,4 +6,9 @@
         <typeAlias type="me.lkh.hometownleague.user.domain.User" alias="user"/>
     </typeAliases>
     -->
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
 </configuration>

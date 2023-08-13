@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.lkh.hometownleague.user.service.Repository.UserRepository">
+    <select id="selectUserById" parameterType="String" resultType="me.lkh.hometownleague.user.domain.User">
+        SELECT *
+        FROM user_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectUserDupCheck" parameterType="me.lkh.hometownleague.user.domain.User" resultType="me.lkh.hometownleague.user.domain.UserDupCheck">
+        SELECT MAX(CASE WHEN id = #{id} THEN 'Y' ELSE 'N' END) AS id_dup_yn
+             , MAX(CASE WHEN name = #{name} THEN 'Y' ELSE 'N' END) AS name_dup_yn
+        FROM user_info
+        WHERE id = #{id} OR name = #{name}
+    </select>
+
+    <insert id = 'insertUser' parameterType="me.lkh.hometownleague.user.domain.User">
+        INSERT INTO user_info
+        VALUES(#{id}, #{name}, #{password}, 'Y', NOW(), NOW())
+    </insert>
+
+</mapper>

@@ -1,8 +1,10 @@
 package me.lkh.hometownleague.common.exception;
 
 public enum ErrorCode {
-     SUCCESS("00", "성공")
-    ,COMMON_ERROR("99", "기타 에러")
+     SUCCESS("0000", "성공")
+    ,DUPLICATE_ID("1000", "이미 존재하는 ID")
+    ,DUPLICATE_NAME("1001", "이미 존재하는 닉네임")
+    ,COMMON_ERROR("9000", "기타 에러")
     ;
 
     private String code;

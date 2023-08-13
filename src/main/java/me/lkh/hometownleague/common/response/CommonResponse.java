@@ -11,7 +11,11 @@ public class CommonResponse <T> {
     //@JsonProperty("response_code")
     private final ResponseCode responseCode;
 
-    public CommonResponse(ErrorCode errorCode){
+    public static CommonResponse withEmptyData(ErrorCode errorCode){
+        return new CommonResponse(errorCode);
+    }
+
+    private CommonResponse(ErrorCode errorCode){
         this.data = null;
         this.responseCode = new ResponseCode(errorCode);
     }

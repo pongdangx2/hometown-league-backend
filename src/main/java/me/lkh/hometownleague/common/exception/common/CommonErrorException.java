@@ -1,4 +1,4 @@
-package me.lkh.hometownleague.common.exception.exceptions;
+package me.lkh.hometownleague.common.exception.common;
 
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.exception.HometownLeagueBaseException;

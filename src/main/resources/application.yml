@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     hikari:
@@ -7,6 +6,23 @@ spring:
         validation-timeout: 1000
         maximum-pool-size: 30
         jdbc-url: jdbc:mysql://db-ht96d-kr.vpc-pub-cdb.ntruss.com:3306/htldb?useSSL=false&serverTimezone=Asia/Seoul
-        username: user
-        password: P@ssw0rd
+        username:
+        password:
         transaction-isolation: TRANSACTION_READ_COMMITTED
+  session:
+    store-type: redis
+    # * Spring Boot + redis 참고
+    # https://docs.spring.io/spring-session/reference/guides/boot-redis.html
+    redis:
+      flush-mode: on_save # Sessions flush mode.
+      namespace: spring:session # Namespace for keys used to store sessions.
+  data:
+    redis:
+      host: localhost # Redis server host.
+      password: P@ssw0RD # Login password of the redis server.
+      port: 6379 # Redis server port.
+server:
+  servlet:
+    session:
+      timeout: 30s # Session timeout. If a duration suffix is not specified, seconds is used.
+                   # 30m :30 minutes / 30s : 30 seconds / 30h : 30 hours

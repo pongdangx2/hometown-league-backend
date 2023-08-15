@@ -1,4 +1,4 @@
-package me.lkh.hometownleague.user.service.Repository;
+package me.lkh.hometownleague.user.repository;
 
 import me.lkh.hometownleague.user.domain.User;
 import me.lkh.hometownleague.user.domain.UserDupCheck;

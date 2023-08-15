@@ -1,12 +1,12 @@
 package me.lkh.hometownleague.user.service;
 
-import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.common.user.DuplicateIdException;
 import me.lkh.hometownleague.common.exception.common.user.DuplicateNameException;
+import me.lkh.hometownleague.common.exception.common.user.NoSuchUserIdException;
+import me.lkh.hometownleague.common.exception.common.user.WrongPasswordException;
 import me.lkh.hometownleague.common.util.SecurityUtil;
 import me.lkh.hometownleague.user.domain.User;
-import me.lkh.hometownleague.user.domain.UserDupCheck;
-import me.lkh.hometownleague.user.service.Repository.UserRepository;
+import me.lkh.hometownleague.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,33 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userDao) {
-        this.userRepository = userDao;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public User getUserById(String id) {
-        return userRepository.selectUserById(id);
+    /**
+     * 로그인 체크
+     *  - ID 존재하는지 확인
+     *  - PW가 일치하는지 확인
+     * @param user
+     * @throws NoSuchAlgorithmException
+     */
+    public void loginCheck(User user) throws NoSuchAlgorithmException {
+
+        final User encryptedUser = new User(user.getId()
+                , user.getName()
+                , SecurityUtil.encrypt(user.getPassword()));
+
+        Optional.ofNullable(userRepository.selectUserById(encryptedUser.getId()))
+                .ifPresentOrElse(selectedUser -> {
+                        // 패스워드가 일치하지 않는 경우
+                        if(!encryptedUser.getPassword().equals(selectedUser.getPassword())){
+                            throw new WrongPasswordException();
+                        }
+                    }
+                    // ID가 존재하지 않는 경우
+                    , () -> { throw new NoSuchUserIdException(); }
+                );
     }
 
     public void join(User user) throws NoSuchAlgorithmException {
@@ -35,8 +56,11 @@ public class UserService {
         // ID, 닉네임 중복체크
         Optional.ofNullable(userRepository.selectUserDupCheck(checkUser))
                 .ifPresent(userDupCheck -> {
+                    // ID가 중복되는 경우
                     if ("Y".equals(userDupCheck.getIdDupYn()))
                         throw new DuplicateIdException();
+
+                    // 닉네임이 중복되는 경우
                     if ("Y".equals(userDupCheck.getNameDupYn()))
                         throw new DuplicateNameException();
                 });

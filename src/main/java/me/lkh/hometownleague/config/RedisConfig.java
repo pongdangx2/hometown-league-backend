@@ -1,13 +1,16 @@
 package me.lkh.hometownleague.config;
 
+import me.lkh.hometownleague.session.domain.UserSession;
+//import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
@@ -16,7 +19,7 @@ public class RedisConfig {
     private String redisHost;
 
     @Value("${spring.data.redis.port}")
-    private int redisPort;
+    private Integer redisPort;
 
     @Value("${spring.data.redis.password}")
     private String redisPassword;
@@ -36,8 +39,33 @@ public class RedisConfig {
      *  - GenericJackson2JsonRedisSerializer로 지정하면 사람이 알아볼 수 있는 데이터로 저장된다.
      * @return
      */
+    /*
     @Bean
     public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
         return new GenericJackson2JsonRedisSerializer();
+    }
+     */
+
+    // Session용 redistemplate
+    @Bean
+    public RedisTemplate<String, UserSession> sessionRedisTemplate() {
+        RedisTemplate<String, UserSession> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(UserSession.class));
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> redisStringTemplate() {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        return redisTemplate;
     }
 }

@@ -12,14 +12,14 @@
 
     <select id="selectUserDupCheck" parameterType="me.lkh.hometownleague.user.domain.User" resultType="me.lkh.hometownleague.user.domain.UserDupCheck">
         SELECT MAX(CASE WHEN id = #{id} THEN 'Y' ELSE 'N' END) AS id_dup_yn
-             , MAX(CASE WHEN name = #{name} THEN 'Y' ELSE 'N' END) AS name_dup_yn
+             , MAX(CASE WHEN nickname = #{nickname} THEN 'Y' ELSE 'N' END) AS name_dup_yn
         FROM user_info
-        WHERE id = #{id} OR name = #{name}
+        WHERE id = #{id} OR nickname = #{nickname}
     </select>
 
     <insert id = 'insertUser' parameterType="me.lkh.hometownleague.user.domain.User">
         INSERT INTO user_info
-        VALUES(#{id}, #{name}, #{password}, 'Y', NOW(), NOW())
+        VALUES(#{id}, #{nickname}, #{password}, 'Y', NOW(), NOW())
     </insert>
 
 </mapper>

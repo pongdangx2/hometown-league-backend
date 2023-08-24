@@ -9,7 +9,7 @@ public class SecurityUtil {
 
     private static final String hashAlgorithm = "SHA-256";
 
-    public static String encrypt(String rawData) throws NoSuchAlgorithmException {
+    public static String hashEncrypt(String rawData) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(hashAlgorithm);
         md.update(rawData.getBytes());
 

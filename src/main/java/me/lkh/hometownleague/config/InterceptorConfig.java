@@ -8,13 +8,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
+    private final SessionInterceptor sessionInterceptor;
+
+    public InterceptorConfig(SessionInterceptor sessionInterceptor) {
+        this.sessionInterceptor = sessionInterceptor;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
         // 세션 처리를 위한 인터셉터 등록
-        registry.addInterceptor(new SessionInterceptor())
+        registry.addInterceptor(sessionInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/**"); // 로그인/회원가입 시 세션체크하지 않는다.
-
+                .excludePathPatterns("/user/**");     // 로그인/회원가입 관련 요청 시 세션체크 제외
     }
 }

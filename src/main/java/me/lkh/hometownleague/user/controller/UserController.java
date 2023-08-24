@@ -1,12 +1,14 @@
 package me.lkh.hometownleague.user.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
+import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.common.util.SessionUtil;
+import me.lkh.hometownleague.user.domain.request.JoinRequest;
+import me.lkh.hometownleague.user.domain.request.LoginRequest;
 import me.lkh.hometownleague.user.domain.User;
-import me.lkh.hometownleague.user.domain.UserSession;
+import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +21,13 @@ import java.security.NoSuchAlgorithmException;
 public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final SessionService sessionService;
+
+    public UserController(SessionService redisSessionService, UserService userService) {
+        this.sessionService = redisSessionService;
         this.userService = userService;
     }
 
@@ -30,35 +36,47 @@ public class UserController {
      *  1. ID/PW 체크
      *  2. 세션 생성
      *  3. 응답
-     * @param user
+     * /@param id    id
+     * /@param password  비밀번호
+     * /@param force     강제로그인 여부
+     * @param response
      * @return
      * @throws NoSuchAlgorithmException
      */
     @PostMapping("/login")
     @ResponseBody
-    public CommonResponse login(@RequestBody User user, HttpServletRequest request) throws NoSuchAlgorithmException {
+    public CommonResponse login(@RequestBody LoginRequest loginRequest,
+                                HttpServletResponse response) throws NoSuchAlgorithmException {
+        User user = new User(loginRequest.getId(), loginRequest.getPassword());
 
-        // 1.
-        userService.loginCheck(user);
+        // 1. ID/PW 체크
+        User checkedUser = userService.loginCheck(user);
 
-        UserSession userSession = new UserSession(user.getId(), user.getName());
-        HttpSession httpSession = request.getSession();
+        // 2. 세션 생성
+        UserSession userSession = sessionService.getSession(checkedUser);
 
-        SessionUtil.setUserSession(httpSession, userSession);
+        // 3. 세션 저장
+        sessionService.login(userSession);
+
+        // 4. 응답쿠키 설정 (SET-COOKIE)
+        SessionUtil.setSessionCookie(response, userSession.getSessionId());
 
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 
     /**
      * 회원가입
-     * @param user
+     * @param joinRequest
      * @return
+     * @throws NoSuchAlgorithmException
      */
     @PostMapping("/join")
     @ResponseBody
-    public CommonResponse join(@RequestBody User user) throws NoSuchAlgorithmException {
+    public CommonResponse join(@RequestBody JoinRequest joinRequest) throws NoSuchAlgorithmException {
+        User user = new User(joinRequest.getId(), joinRequest.getNickname(), joinRequest.getPassword());
         logger.debug("user:" + user);
         userService.join(user);
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
+
 }

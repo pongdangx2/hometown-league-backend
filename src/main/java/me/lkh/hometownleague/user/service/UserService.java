@@ -32,14 +32,13 @@ public class UserService {
      * @param user
      * @throws NoSuchAlgorithmException
      */
-    public void loginCheck(User user) throws NoSuchAlgorithmException {
+    public User loginCheck(User user) throws NoSuchAlgorithmException {
 
         final User encryptedUser = new User(user.getId()
-                , user.getName()
-                , SecurityUtil.encrypt(user.getPassword()));
+                , SecurityUtil.hashEncrypt(user.getPassword()));
 
-        Optional.ofNullable(userRepository.selectUserById(encryptedUser.getId()))
-                .ifPresentOrElse(selectedUser -> {
+        Optional<User> optionalUser = Optional.ofNullable(userRepository.selectUserById(encryptedUser.getId()));
+        optionalUser.ifPresentOrElse(selectedUser -> {
                         // 패스워드가 일치하지 않는 경우
                         if(!encryptedUser.getPassword().equals(selectedUser.getPassword())){
                             throw new WrongPasswordException();
@@ -48,10 +47,11 @@ public class UserService {
                     // ID가 존재하지 않는 경우
                     , () -> { throw new NoSuchUserIdException(); }
                 );
+        return optionalUser.get();
     }
 
     public void join(User user) throws NoSuchAlgorithmException {
-        User checkUser = new User(user.getId(), user.getName());
+        User checkUser = new User(user.getId(), user.getNickname(), null);
 
         // ID, 닉네임 중복체크
         Optional.ofNullable(userRepository.selectUserDupCheck(checkUser))
@@ -66,8 +66,8 @@ public class UserService {
                 });
 
         User encryptedUser = new User(user.getId()
-                                    , user.getName()
-                                    , SecurityUtil.encrypt(user.getPassword()));
+                                    , user.getNickname()
+                                    , SecurityUtil.hashEncrypt(user.getPassword()));
 
         // user 데이터 삽입
         userRepository.insertUser(encryptedUser);

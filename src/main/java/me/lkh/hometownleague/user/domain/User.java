@@ -3,16 +3,14 @@ package me.lkh.hometownleague.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 
 public class User {
 
     private final String id;
 
-    private final String name;
+    private final String nickname;
 
-//    @JsonIgnore
     private final String password;
 
     @JsonIgnore
@@ -22,29 +20,27 @@ public class User {
 
     private final LocalDateTime modifiedTimeStamp;
 
-    public User(String id, String name, String password, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimeStamp) {
+    public User(String id, String nickname, String password, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimeStamp) {
         this.id = id;
-        this.name = name;
+        this.nickname = nickname;
         this.password = password;
         this.useYn = useYn;
         this.createTimestamp = createTimestamp;
         this.modifiedTimeStamp = modifiedTimeStamp;
     }
 
-    @ConstructorProperties({"id", "name", "password"})
-    public User(String id, String name, String password){
+    public User(String id, String nickname, String password){
         this.id = id;
-        this.name = name;
+        this.nickname = nickname;
         this.password = password;
         this.useYn = null;
         this.createTimestamp = null;
         this.modifiedTimeStamp = null;
     }
-
-    public User(String id, String name){
+    public User(String id, String password){
         this.id = id;
-        this.name = name;
-        this.password = null;
+        this.nickname = null;
+        this.password = password;
         this.useYn = null;
         this.createTimestamp = null;
         this.modifiedTimeStamp = null;
@@ -54,8 +50,8 @@ public class User {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getPassword() {
@@ -78,7 +74,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", name='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 ", useYn='" + useYn + '\'' +
                 ", createTimestamp=" + createTimestamp +

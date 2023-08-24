@@ -89,7 +89,7 @@ class UserControllerTest {
         User compareUser = userRepository.selectUserById(user.getId());
 
         assertThat(compareUser.getId()).isEqualTo(user.getId());
-        assertThat(compareUser.getName()).isEqualTo(user.getName());
+        assertThat(compareUser.getNickname()).isEqualTo(user.getNickname());
     }
 
     @DisplayName("회원가입 - ID 중복 테스트")

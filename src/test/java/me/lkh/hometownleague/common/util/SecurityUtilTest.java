@@ -15,11 +15,11 @@ class SecurityUtilTest {
         String firstPassword = "tesTP@ssw0Rd";
         String secondPassword = "Testp@sSw0rD";
 
-        String encryptedFirstPassword = SecurityUtil.encrypt(firstPassword);
-        String encryptedSecondPassword = SecurityUtil.encrypt(secondPassword);
+        String encryptedFirstPassword = SecurityUtil.hashEncrypt(firstPassword);
+        String encryptedSecondPassword = SecurityUtil.hashEncrypt(secondPassword);
 
         assertThat(encryptedFirstPassword)
-                .isEqualTo(SecurityUtil.encrypt(firstPassword));
+                .isEqualTo(SecurityUtil.hashEncrypt(firstPassword));
 
         assertThat(encryptedFirstPassword)
                 .isNotEqualTo(encryptedSecondPassword);

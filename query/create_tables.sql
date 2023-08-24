@@ -1,6 +1,6 @@
 CREATE TABLE `user_info` (
-                             `id` varchar(20) NOT NULL COMMENT '유저ID',
-                             `name` varchar(20) NOT NULL COMMENT '유저이름',
+                             `id` varchar(50) NOT NULL COMMENT '유저ID(email)',
+                             `nickname` varchar(20) NOT NULL COMMENT '유저닉네임',
                              `password` varchar(70) NOT NULL COMMENT '비밀번호',
                              `use_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '사용여부',
                              `create_timestamp` timestamp NOT NULL COMMENT '생성일시',

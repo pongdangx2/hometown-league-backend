@@ -5,24 +5,25 @@ spring:
         connection-timeout: 5000
         validation-timeout: 1000
         maximum-pool-size: 30
-        jdbc-url: jdbc:mysql://db-ht96d-kr.vpc-pub-cdb.ntruss.com:3306/htldb?useSSL=false&serverTimezone=Asia/Seoul
+        jdbc-url: jdbc:mysql://218.232.175.4:49154/htldbp?useSSL=false&serverTimezone=Asia/Seoul
         username:
         password:
         transaction-isolation: TRANSACTION_READ_COMMITTED
-  session:
-    store-type: redis
+  #session:
+   # store-type: redis
     # * Spring Boot + redis 참고
     # https://docs.spring.io/spring-session/reference/guides/boot-redis.html
-    redis:
-      flush-mode: on_save # Sessions flush mode.
-      namespace: spring:session # Namespace for keys used to store sessions.
+    #redis:
+     # flush-mode: on_save # Sessions flush mode.
+                          #   - on_save : SessionRepository.save가 호출될 때, Session store에 저장
+                          #   - immeidate : 즉시 기록된다. Http Response전에 setAttribute나 createSession이 호출될 때 생성된다.
+      #namespace: spring:session # Namespace for keys used to store sessions.
   data:
     redis:
-      host: localhost # Redis server host.
-      password: P@ssw0RD # Login password of the redis server.
-      port: 6379 # Redis server port.
-server:
-  servlet:
-    session:
-      timeout: 30s # Session timeout. If a duration suffix is not specified, seconds is used.
-                   # 30m :30 minutes / 30s : 30 seconds / 30h : 30 hours
+      host: 218.232.175.4 # Redis server host.
+      password:  # Login password of the redis server.
+      port:  # Redis server port.
+
+  session:
+    namespace: spring-session-  # 세션 ID에 붙는 Prefix
+    expire-minute: 1  # 세션 만료 시간(분)

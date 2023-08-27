@@ -13,6 +13,8 @@ public class User {
 
     private final String password;
 
+    private final String description;
+
     @JsonIgnore
     private final String useYn;
 
@@ -20,10 +22,11 @@ public class User {
 
     private final LocalDateTime modifiedTimeStamp;
 
-    public User(String id, String nickname, String password, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimeStamp) {
+    public User(String id, String nickname, String password, String useYn, String description, LocalDateTime createTimestamp, LocalDateTime modifiedTimeStamp) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
+        this.description = description;
         this.useYn = useYn;
         this.createTimestamp = createTimestamp;
         this.modifiedTimeStamp = modifiedTimeStamp;
@@ -33,14 +36,27 @@ public class User {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
+        this.description = "";
         this.useYn = null;
         this.createTimestamp = null;
         this.modifiedTimeStamp = null;
     }
+
+    public User(String id, String nickname, String password, String description){
+        this.id = id;
+        this.nickname = nickname;
+        this.password = password;
+        this.description = description;
+        this.useYn = null;
+        this.createTimestamp = null;
+        this.modifiedTimeStamp = null;
+    }
+
     public User(String id, String password){
         this.id = id;
         this.nickname = null;
         this.password = password;
+        this.description = "";
         this.useYn = null;
         this.createTimestamp = null;
         this.modifiedTimeStamp = null;
@@ -62,6 +78,10 @@ public class User {
         return useYn;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public LocalDateTime getCreateTimestamp() {
         return createTimestamp;
     }
@@ -76,6 +96,7 @@ public class User {
                 "id='" + id + '\'' +
                 ", name='" + nickname + '\'' +
                 ", password='" + password + '\'' +
+                ", description='" + description + '\'' +
                 ", useYn='" + useYn + '\'' +
                 ", createTimestamp=" + createTimestamp +
                 ", modifiedTimeStamp=" + modifiedTimeStamp +

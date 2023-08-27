@@ -1,0 +1,52 @@
+= HometownLeague : API Specification
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: /Users/lkhz/Workspace/dev_study/java/hometown-league/target/generated-snippets
+:custom-snippets: /Users/lkhz/Workspace/dev_study/java/hometown-league/target/custom-snippets
+
+[[overview]]
+== 1. User
+
+=== Login (로그인)
+사용자 로그인을 위한 API
+include::{snippets}/user-login/curl-request.adoc[]
+
+==== Request
+include::{snippets}/user-login/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-login/http-request.adoc[]
+
+[[overview-response-dto]]
+==== Response
+include::{snippets}/user-login/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/user-login/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/user-login/response-body.adoc[]
+
+=== Join (회원가입)
+회원가입 위한 API
+include::{snippets}/user-join/curl-request.adoc[]
+
+==== Request
+include::{snippets}/user-join/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-join/http-request.adoc[]
+
+[[overview-response-dto]]
+==== Response
+include::{snippets}/user-join/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/user-join/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/user-join/response-body.adoc[]

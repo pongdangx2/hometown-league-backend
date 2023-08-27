@@ -19,7 +19,7 @@
 
     <insert id = 'insertUser' parameterType="me.lkh.hometownleague.user.domain.User">
         INSERT INTO user_info
-        VALUES(#{id}, #{nickname}, #{password}, 'Y', NOW(), NOW())
+        VALUES(#{id}, #{nickname}, #{password}, #{description}, 'Y', NOW(), NOW())
     </insert>
 
 </mapper>

@@ -67,7 +67,8 @@ public class UserService {
 
         User encryptedUser = new User(user.getId()
                                     , user.getNickname()
-                                    , SecurityUtil.hashEncrypt(user.getPassword()));
+                                    , SecurityUtil.hashEncrypt(user.getPassword())
+                                    , user.getDescription());
 
         // user 데이터 삽입
         userRepository.insertUser(encryptedUser);

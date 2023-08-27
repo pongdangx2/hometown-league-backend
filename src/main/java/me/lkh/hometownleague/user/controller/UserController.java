@@ -44,7 +44,6 @@ public class UserController {
      * @throws NoSuchAlgorithmException
      */
     @PostMapping("/login")
-    @ResponseBody
     public CommonResponse login(@RequestBody LoginRequest loginRequest,
                                 HttpServletResponse response) throws NoSuchAlgorithmException {
         User user = new User(loginRequest.getId(), loginRequest.getPassword());
@@ -71,9 +70,8 @@ public class UserController {
      * @throws NoSuchAlgorithmException
      */
     @PostMapping("/join")
-    @ResponseBody
     public CommonResponse join(@RequestBody JoinRequest joinRequest) throws NoSuchAlgorithmException {
-        User user = new User(joinRequest.getId(), joinRequest.getNickname(), joinRequest.getPassword());
+        User user = new User(joinRequest.getId(), joinRequest.getNickname(), joinRequest.getPassword(), joinRequest.getDescription());
         logger.debug("user:" + user);
         userService.join(user);
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);

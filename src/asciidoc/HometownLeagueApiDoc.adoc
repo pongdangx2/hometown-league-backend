@@ -87,3 +87,25 @@ include::{custom-snippets}/select-user-by-id/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/select-user-by-id/response-body.adoc[]
+
+=== 사용자 정보 업데이트
+ID로 사용자를 업데이트
+
+:path: user-update
+
+include::{snippets}/{path}/curl-request.adoc[]
+
+==== Request
+include::{snippets}/{path}/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/{path}/http-request.adoc[]
+
+==== Response
+include::{snippets}/{path}/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/{path}/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/{path}/response-body.adoc[]

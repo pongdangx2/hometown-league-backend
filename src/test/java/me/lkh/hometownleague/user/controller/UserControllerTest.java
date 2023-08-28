@@ -228,4 +228,47 @@ class UserControllerTest {
 
         assertThrows(NoSuchUserIdException.class, () -> userService.selectUserById(id + "!@#%^@#!"));
     }
+
+    @DisplayName("사용자 정보 업데이트")
+    @Transactional
+    @Test
+    void updateUser() throws NoSuchAlgorithmException {
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        name = "update:" + name;
+        password = "update:" + password;
+        description = "update:" + description;
+        User updateUser = new User(id, name, password, description);
+
+        userService.updateUser(updateUser);
+        User selectedUser = userService.selectUserById(updateUser.getId());
+        assertThat(selectedUser.getNickname()).isEqualTo(updateUser.getNickname());
+        assertThat(selectedUser.getDescription()).isEqualTo(updateUser.getDescription());
+        assertThat(selectedUser.getPassword()).isEqualTo(SecurityUtil.hashEncrypt(updateUser.getPassword()));
+    }
+
+    @DisplayName("사용자 정보 업데이트_실패")
+    @Transactional
+    @Test
+    void updateUser_fail() throws NoSuchAlgorithmException {
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        id = "update:" + id;
+        name = "update:" + name;
+        password = "update:" + password;
+        description = "update:" + description;
+        User updateUser = new User(id, name, password, description);
+
+        assertThrows(NoSuchUserIdException.class, () -> userService.updateUser(updateUser));
+    }
 }

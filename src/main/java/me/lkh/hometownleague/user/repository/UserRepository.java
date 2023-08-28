@@ -15,4 +15,6 @@ public interface UserRepository {
     int insertUser(User user);
 
     String selectIsDuplicate(JoinDuplicateCheck joinDuplicateCheck);
+
+    int updateUser(User user);
 }

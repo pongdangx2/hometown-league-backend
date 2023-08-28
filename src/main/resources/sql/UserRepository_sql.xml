@@ -21,6 +21,7 @@
         INSERT INTO user_info
         VALUES(#{id}, #{nickname}, #{password}, #{description}, 'Y', NOW(), NOW())
     </insert>
+
     <select id="selectIsDuplicate" parameterType="me.lkh.hometownleague.user.domain.JoinDuplicateCheck" resultType="String">
         SELECT id
         FROM user_info
@@ -34,4 +35,19 @@
                 </otherwise>
             </choose>
     </select>
+
+    <insert id = 'updateUser' parameterType="me.lkh.hometownleague.user.domain.User">
+        UPDATE user_info
+        SET modified_timestamp = NOW()
+        <if test="nickname != null">
+            , nickname = #{nickname}
+        </if>
+        <if test="nickname != null">
+            , description = #{description}
+        </if>
+        <if test="password != null">
+            , password = #{password}
+        </if>
+        WHERE id = #{id}
+    </insert>
 </mapper>

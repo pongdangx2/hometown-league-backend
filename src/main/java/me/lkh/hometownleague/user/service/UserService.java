@@ -109,4 +109,20 @@ public class UserService {
         selectedUser.orElseThrow(() -> { throw new NoSuchUserIdException(); });
         return selectedUser.get();
     }
+
+    /**
+     * 유저 정보를 수정
+     * @param user id는 필수이며, password, nickname, description을 수정할 수 있다.
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
+    public void updateUser(User user) throws NoSuchAlgorithmException {
+        User paramUser = user;
+        if(user.getPassword() != null){
+            paramUser = new User(user.getId(), user.getNickname(), SecurityUtil.hashEncrypt(user.getPassword()), user.getDescription());
+        }
+
+        if(userRepository.updateUser(paramUser) == 0)
+            throw new NoSuchUserIdException();
+    }
 }

@@ -14,6 +14,7 @@ import me.lkh.hometownleague.user.domain.request.JoinRequest;
 import me.lkh.hometownleague.user.domain.request.LoginRequest;
 import me.lkh.hometownleague.user.domain.User;
 import me.lkh.hometownleague.session.domain.UserSession;
+import me.lkh.hometownleague.user.domain.request.UpdateRequest;
 import me.lkh.hometownleague.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,12 +112,26 @@ public class UserController {
      * @return
      * @throws NoSuchUserIdException 존재하지 않는 ID
      */
-//    @AuthCheck
+    @AuthCheck
     @GetMapping("/{id}")
     public CommonResponse getUser(@PathVariable("id") String id) throws NoSuchUserIdException{
         User user = userService.selectUserById(id);
         return new CommonResponse<>(user);
     }
 
+    /**
+     * 사용자 정보를 수정
+     * @param updateRequest 수정할 User정보 - User ID는 필수이며, 닉네임, 패스워드, 소개글을 수정할 수 있다.
+     * @return
+     * @throws NoSuchUserIdException
+     * @throws NoSuchAlgorithmException
+     */
+    @AuthCheck
+    @PatchMapping
+    public CommonResponse updateUser(@RequestBody UpdateRequest updateRequest) throws NoSuchUserIdException, NoSuchAlgorithmException {
+        User user = new User(updateRequest.getId(), updateRequest.getNickname(), updateRequest.getPassword(), updateRequest.getDescription());
+        userService.updateUser(user);
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
 
 }

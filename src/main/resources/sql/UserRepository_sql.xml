@@ -21,5 +21,17 @@
         INSERT INTO user_info
         VALUES(#{id}, #{nickname}, #{password}, #{description}, 'Y', NOW(), NOW())
     </insert>
-
+    <select id="selectIsDuplicate" parameterType="me.lkh.hometownleague.user.domain.JoinDuplicateCheck" resultType="String">
+        SELECT id
+        FROM user_info
+        WHERE
+            <choose>
+                <when test="type != null and 'nickname' eq type">
+                    nickname = #{value}
+                </when>
+                <otherwise>
+                    id = #{value}
+                </otherwise>
+            </choose>
+    </select>
 </mapper>

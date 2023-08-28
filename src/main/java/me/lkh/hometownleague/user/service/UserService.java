@@ -6,6 +6,7 @@ import me.lkh.hometownleague.common.exception.common.user.DuplicateNameException
 import me.lkh.hometownleague.common.exception.common.user.NoSuchUserIdException;
 import me.lkh.hometownleague.common.exception.common.user.WrongPasswordException;
 import me.lkh.hometownleague.common.util.SecurityUtil;
+import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
 import me.lkh.hometownleague.user.domain.User;
 import me.lkh.hometownleague.user.domain.request.LoginRequest;
 import me.lkh.hometownleague.user.repository.UserRepository;
@@ -87,5 +88,14 @@ public class UserService {
 
         // user 데이터 삽입
         userRepository.insertUser(encryptedUser);
+    }
+
+    /**
+     * 중복체크
+     * @param joinDuplicateCheck    type : "nickname" or "id" / value : id 혹은 닉네임 값
+     * @return 이미 존재하는 경우 true
+     */
+    public boolean isDuplicate(JoinDuplicateCheck joinDuplicateCheck){
+        return Optional.ofNullable(userRepository.selectIsDuplicate(joinDuplicateCheck)).isPresent();
     }
 }

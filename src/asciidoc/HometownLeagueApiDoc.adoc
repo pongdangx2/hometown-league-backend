@@ -11,7 +11,7 @@
 [[overview]]
 == 1. User
 
-=== Login (로그인)
+=== 로그인
 사용자 로그인을 위한 API
 include::{snippets}/user-login/curl-request.adoc[]
 
@@ -31,7 +31,7 @@ include::{custom-snippets}/user-login/response-code.adoc[]
 ==== Response Example
 include::{snippets}/user-login/response-body.adoc[]
 
-=== Join (회원가입)
+=== 회원가입
 회원가입 위한 API
 include::{snippets}/user-join/curl-request.adoc[]
 
@@ -50,3 +50,24 @@ include::{custom-snippets}/user-join/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/user-join/response-body.adoc[]
+
+=== 중복체크
+ID/닉네임 중복체크를 위한 API
+include::{snippets}/is-duplicate/curl-request.adoc[]
+
+==== Request
+include::{snippets}/is-duplicate/request-fields.adoc[]
+include::{snippets}/is-duplicate/query-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/is-duplicate/http-request.adoc[]
+
+[[overview-response-dto]]
+==== Response
+include::{snippets}/is-duplicate/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/is-duplicate/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/is-duplicate/response-body.adoc[]

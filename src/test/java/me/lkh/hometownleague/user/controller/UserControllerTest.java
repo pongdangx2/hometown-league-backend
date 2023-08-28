@@ -4,9 +4,11 @@ import me.lkh.hometownleague.common.exception.common.user.DuplicateIdException;
 import me.lkh.hometownleague.common.exception.common.user.DuplicateNameException;
 import me.lkh.hometownleague.common.exception.common.user.NoSuchUserIdException;
 import me.lkh.hometownleague.common.exception.common.user.WrongPasswordException;
+import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
 import me.lkh.hometownleague.user.domain.User;
 import me.lkh.hometownleague.user.repository.UserRepository;
 import me.lkh.hometownleague.user.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,6 @@ class UserControllerTest {
     @Autowired
     UserRepository userRepository;
 
-
     @DisplayName("로그인 테스트")
     @Transactional
     @Test
@@ -36,7 +37,8 @@ class UserControllerTest {
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
         String password = "testPassw0rD";
-        User user = new User(id, name, password);
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
         userService.join(user);
 
         assertThatCode(() -> userService.loginCheck(user)).doesNotThrowAnyException();
@@ -49,7 +51,8 @@ class UserControllerTest {
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
         String password = "testPassw0rD";
-        User user = new User(id, name, password);
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
         userService.join(user);
 
         User tmpUser = new User(id+"1", name, password);
@@ -66,7 +69,8 @@ class UserControllerTest {
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
         String password = "testPassw0rD";
-        User user = new User(id, name, password);
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
         userService.join(user);
 
         User tmpUser = new User(id, name, password+"1");
@@ -83,7 +87,8 @@ class UserControllerTest {
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
         String password = "testPassw0rD";
-        User user = new User(id, name, password);
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
         userService.join(user);
 
         User compareUser = userRepository.selectUserById(user.getId());
@@ -100,7 +105,8 @@ class UserControllerTest {
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
         String password = "testPassw0rD";
-        User user = new User(id, name, password);
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
         userService.join(user);
 
         User compareUser = new User(id, name+"1", password);
@@ -118,15 +124,76 @@ class UserControllerTest {
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
         String password = "testPassw0rD";
-        User user = new User(id, name, password);
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
         userService.join(user);
 
         User compareUser = new User(id+"1", name, password);
 
-        assertThrows(DuplicateNameException.class, () -> {
-            userService.join(compareUser);
-        });
+        assertThrows(DuplicateNameException.class, () -> userService.join(compareUser));
     }
 
+    @DisplayName("닉네임중복체크 - 중복")
+    @Transactional
+    @Test
+    void 닉네임중복체크_중복() throws NoSuchAlgorithmException {
 
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        boolean isDuplicate = userService.isDuplicate(new JoinDuplicateCheck("nickname", name));
+        assertThat(isDuplicate).isEqualTo(true);
+    }
+
+    @DisplayName("닉네임중복체크 - 미중복")
+    @Transactional
+    @Test
+    void 닉네임중복체크_미중복() throws NoSuchAlgorithmException {
+
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        boolean isDuplicate = userService.isDuplicate(new JoinDuplicateCheck("nickname", name + "1"));
+        assertThat(isDuplicate).isEqualTo(false);
+    }
+
+    @DisplayName("id중복체크 - 중복")
+    @Transactional
+    @Test
+    void id중복체크_중복() throws NoSuchAlgorithmException {
+
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        boolean isDuplicate = userService.isDuplicate(new JoinDuplicateCheck("id", id));
+        assertThat(isDuplicate).isEqualTo(true);
+    }
+
+    @DisplayName("닉네임중복체크 - 미중복")
+    @Transactional
+    @Test
+    void id중복체크_미중복() throws NoSuchAlgorithmException {
+
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        boolean isDuplicate = userService.isDuplicate(new JoinDuplicateCheck("id", id + "1"));
+        assertThat(isDuplicate).isEqualTo(false);
+    }
 }

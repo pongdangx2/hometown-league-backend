@@ -4,11 +4,11 @@ import me.lkh.hometownleague.common.exception.common.user.DuplicateIdException;
 import me.lkh.hometownleague.common.exception.common.user.DuplicateNameException;
 import me.lkh.hometownleague.common.exception.common.user.NoSuchUserIdException;
 import me.lkh.hometownleague.common.exception.common.user.WrongPasswordException;
+import me.lkh.hometownleague.common.util.SecurityUtil;
 import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
 import me.lkh.hometownleague.user.domain.User;
 import me.lkh.hometownleague.user.repository.UserRepository;
 import me.lkh.hometownleague.user.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,7 +136,7 @@ class UserControllerTest {
     @DisplayName("닉네임중복체크 - 중복")
     @Transactional
     @Test
-    void 닉네임중복체크_중복() throws NoSuchAlgorithmException {
+    void nickNameDupCheck_dup() throws NoSuchAlgorithmException {
 
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
@@ -152,7 +152,7 @@ class UserControllerTest {
     @DisplayName("닉네임중복체크 - 미중복")
     @Transactional
     @Test
-    void 닉네임중복체크_미중복() throws NoSuchAlgorithmException {
+    void nickNameDupCheck() throws NoSuchAlgorithmException {
 
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
@@ -168,7 +168,7 @@ class UserControllerTest {
     @DisplayName("id중복체크 - 중복")
     @Transactional
     @Test
-    void id중복체크_중복() throws NoSuchAlgorithmException {
+    void idDupCheck_dup() throws NoSuchAlgorithmException {
 
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
@@ -184,7 +184,7 @@ class UserControllerTest {
     @DisplayName("닉네임중복체크 - 미중복")
     @Transactional
     @Test
-    void id중복체크_미중복() throws NoSuchAlgorithmException {
+    void idDupCheck() throws NoSuchAlgorithmException {
 
         String id = "testID!@#$%";
         String name = "testNAME!@#$^";
@@ -195,5 +195,37 @@ class UserControllerTest {
 
         boolean isDuplicate = userService.isDuplicate(new JoinDuplicateCheck("id", id + "1"));
         assertThat(isDuplicate).isEqualTo(false);
+    }
+
+    @DisplayName("ID로 사용자 조회")
+    @Transactional
+    @Test
+    void selectUserById() throws NoSuchAlgorithmException {
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        User selectedUser = userService.selectUserById(id);
+        assertThat(selectedUser.getId()).isEqualTo(user.getId());
+        assertThat(selectedUser.getNickname()).isEqualTo(user.getNickname());
+        assertThat(selectedUser.getDescription()).isEqualTo(user.getDescription());
+        assertThat(selectedUser.getPassword()).isEqualTo(SecurityUtil.hashEncrypt(user.getPassword()));
+    }
+
+    @DisplayName("ID로 사용자 조회-미존재")
+    @Transactional
+    @Test
+    void selectUserById_notExist() throws NoSuchAlgorithmException {
+        String id = "testID!@#$%";
+        String name = "testNAME!@#$^";
+        String password = "testPassw0rD";
+        String description = "test소개글";
+        User user = new User(id, name, password, description);
+        userService.join(user);
+
+        assertThrows(NoSuchUserIdException.class, () -> userService.selectUserById(id + "!@#%^@#!"));
     }
 }

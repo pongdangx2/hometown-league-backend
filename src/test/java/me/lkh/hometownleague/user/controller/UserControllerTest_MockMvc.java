@@ -6,7 +6,6 @@ import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
-import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
 import me.lkh.hometownleague.user.domain.User;
 import me.lkh.hometownleague.user.domain.request.JoinRequest;
 import me.lkh.hometownleague.user.domain.request.LoginRequest;
@@ -31,8 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureRestDocs(uriHost="218.232.175.4", uriPort = 49156)
@@ -102,7 +100,7 @@ class UserControllerTest_MockMvc {
 
     @DisplayName("회원가입 테스트")
     @Test
-    void 회원가입() throws Exception {
+    void join() throws Exception {
 
         String id = "testid";
         String name = "testname";
@@ -144,7 +142,7 @@ class UserControllerTest_MockMvc {
 
     @DisplayName("중복체크 테스트")
     @Test
-    void 중복체크() throws Exception {
+    void isDuplicate() throws Exception {
 
         String id = "testid";
 
@@ -171,6 +169,45 @@ class UserControllerTest_MockMvc {
                         ),
                         responseFields(
                                 fieldWithPath("data").type(JsonFieldType.STRING).description("이미 존재하는 경우 Y / 존재하지 않는 경우 N"),
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("Id로 유저조회")
+    @Test
+    void selectUserById() throws Exception {
+
+        String id = "testid";
+        String name = "testname";
+        String password = "testPassword";
+        String description = "testDescription";
+        User user = new User(id, name, password, description);
+        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+        given(userService.selectUserById(any())).willReturn(user);
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.get("/user/{id}", id)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("select-user-by-id",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("조회할 사용자의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(User.class).description("조회된 사용자 정보"),
+                                fieldWithPath("data.id").type(User.class).description("ID"),
+                                fieldWithPath("data.nickname").type(User.class).description("닉네임"),
+                                fieldWithPath("data.description").type(User.class).description("소개"),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )

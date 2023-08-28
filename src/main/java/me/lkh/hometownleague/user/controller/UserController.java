@@ -6,6 +6,7 @@ import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.common.user.NoSuchUserIdException;
 import me.lkh.hometownleague.common.exception.common.user.WrongPasswordException;
 import me.lkh.hometownleague.common.response.CommonResponse;
+import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * 유저 회원가입/로그인 등 세션처리가 필요없는 API에서 사용하는 컨트롤러
+ * 유저 회원가입/로그인, 유저 정보 조회/수정 등 유저 관련된 비즈니스로직을 수행
  * URL : /user/**
  * @author leekh
  * @see me.lkh.hometownleague.common.exception.HomeTownLeagueExceptionHandler
@@ -103,5 +104,19 @@ public class UserController {
         boolean isDuplicate = userService.isDuplicate(new JoinDuplicateCheck(type, value));
         return new CommonResponse<>(isDuplicate ? "Y" : "N");
     }
+
+    /**
+     * ID로 User정보를 조회
+     * @param id 조회하고자 하는 User의 ID
+     * @return
+     * @throws NoSuchUserIdException 존재하지 않는 ID
+     */
+//    @AuthCheck
+    @GetMapping("/{id}")
+    public CommonResponse getUser(@PathVariable("id") String id) throws NoSuchUserIdException{
+        User user = userService.selectUserById(id);
+        return new CommonResponse<>(user);
+    }
+
 
 }

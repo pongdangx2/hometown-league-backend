@@ -2,6 +2,7 @@ CREATE TABLE `user_info` (
                              `id` varchar(50) NOT NULL COMMENT '유저ID(email)',
                              `nickname` varchar(20) NOT NULL COMMENT '유저닉네임',
                              `password` varchar(70) NOT NULL COMMENT '비밀번호',
+                             `description` varchar(2000) NOT NULL COMMENT '소개',
                              `use_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '사용여부',
                              `create_timestamp` timestamp NOT NULL COMMENT '생성일시',
                              `modified_timestamp` timestamp NOT NULL COMMENT '수정일시',
@@ -12,7 +13,9 @@ CREATE TABLE `team_info` (
                              `id` int NOT NULL AUTO_INCREMENT COMMENT '팀ID',
                              `name` varchar(30) NOT NULL COMMENT '팀명',
                              `owner_id` varchar(20) NOT NULL COMMENT '팀 소유주 ID',
+                             `description` varchar(2000) NOT NULL COMMENT '팀 소개글',
                              `rank_score` int NOT NULL COMMENT '경쟁 점수',
+                             `kind` int NOT NULL COMMENT '종목', -- 공통코드
                              `use_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '사용여부',
                              `create_timestamp` timestamp NOT NULL COMMENT '생성일시',
                              `modified_timestamp` timestamp NOT NULL COMMENT '수정일시',

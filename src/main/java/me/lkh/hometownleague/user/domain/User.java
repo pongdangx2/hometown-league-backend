@@ -11,6 +11,7 @@ public class User {
 
     private final String nickname;
 
+    @JsonIgnore
     private final String password;
 
     private final String description;
@@ -18,18 +19,20 @@ public class User {
     @JsonIgnore
     private final String useYn;
 
+    @JsonIgnore
     private final LocalDateTime createTimestamp;
 
-    private final LocalDateTime modifiedTimeStamp;
+    @JsonIgnore
+    private final LocalDateTime modifiedTimestamp;
 
-    public User(String id, String nickname, String password, String useYn, String description, LocalDateTime createTimestamp, LocalDateTime modifiedTimeStamp) {
+    public User(String id, String nickname, String password, String useYn, String description, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
         this.description = description;
         this.useYn = useYn;
         this.createTimestamp = createTimestamp;
-        this.modifiedTimeStamp = modifiedTimeStamp;
+        this.modifiedTimestamp = modifiedTimestamp;
     }
 
     public User(String id, String nickname, String password){
@@ -39,7 +42,7 @@ public class User {
         this.description = "";
         this.useYn = null;
         this.createTimestamp = null;
-        this.modifiedTimeStamp = null;
+        this.modifiedTimestamp = null;
     }
 
     public User(String id, String nickname, String password, String description){
@@ -49,7 +52,7 @@ public class User {
         this.description = description;
         this.useYn = null;
         this.createTimestamp = null;
-        this.modifiedTimeStamp = null;
+        this.modifiedTimestamp = null;
     }
 
     public User(String id, String password){
@@ -59,7 +62,7 @@ public class User {
         this.description = "";
         this.useYn = null;
         this.createTimestamp = null;
-        this.modifiedTimeStamp = null;
+        this.modifiedTimestamp = null;
     }
 
     public String getId() {
@@ -86,8 +89,8 @@ public class User {
         return createTimestamp;
     }
 
-    public LocalDateTime getModifiedTimeStamp() {
-        return modifiedTimeStamp;
+    public LocalDateTime getModifiedTimestamp() {
+        return modifiedTimestamp;
     }
 
     @Override
@@ -99,7 +102,7 @@ public class User {
                 ", description='" + description + '\'' +
                 ", useYn='" + useYn + '\'' +
                 ", createTimestamp=" + createTimestamp +
-                ", modifiedTimeStamp=" + modifiedTimeStamp +
+                ", modifiedTimeStamp=" + modifiedTimestamp +
                 '}';
     }
 }

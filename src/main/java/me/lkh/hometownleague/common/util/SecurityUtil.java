@@ -1,7 +1,5 @@
 package me.lkh.hometownleague.common.util;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

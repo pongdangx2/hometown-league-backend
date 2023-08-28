@@ -98,4 +98,15 @@ public class UserService {
     public boolean isDuplicate(JoinDuplicateCheck joinDuplicateCheck){
         return Optional.ofNullable(userRepository.selectIsDuplicate(joinDuplicateCheck)).isPresent();
     }
+
+    /**
+     * ID로 유저를 조회
+     * @param id 조회하고자하는 User의 ID
+     * @return 조회된 User
+     */
+    public User selectUserById(String id) {
+        Optional<User> selectedUser = Optional.ofNullable(userRepository.selectUserById(id));
+        selectedUser.orElseThrow(() -> { throw new NoSuchUserIdException(); });
+        return selectedUser.get();
+    }
 }

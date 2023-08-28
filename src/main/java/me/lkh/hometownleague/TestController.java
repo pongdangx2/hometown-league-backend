@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@AuthCheck
 @RestController
 @RequestMapping("/test")
 public class TestController {
 
-    @AuthCheck
+//    @AuthCheck
     @PostMapping("/tt")
     public String test(){
         String test = "ttt";

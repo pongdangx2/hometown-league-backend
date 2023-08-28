@@ -51,6 +51,12 @@ public class SessionInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /*
+    * handler : URL을 처리할 handler 정보
+    Request -> dispatcherservlet -> HandlerMapping [URL과 매핑되는 Controller 탐색]
+                                 <-
+                                 -> HandlerAdaptor [Controller의 비즈니스로직 수행 위임]
+     */
     private boolean isAuthCheckTarget(Object handler) {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 

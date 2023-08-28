@@ -3,6 +3,10 @@ package me.lkh.hometownleague.common.exception.common.user;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.exception.HometownLeagueBaseException;
 
+/**
+ * ID가 중복되는 경우 발생
+ * @see ErrorCode
+ */
 public class DuplicateIdException extends HometownLeagueBaseException {
 
     public DuplicateIdException() {

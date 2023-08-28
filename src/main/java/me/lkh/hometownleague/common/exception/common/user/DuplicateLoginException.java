@@ -3,6 +3,10 @@ package me.lkh.hometownleague.common.exception.common.user;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.exception.HometownLeagueBaseException;
 
+/**
+ * 이미 로그인 되어있는 경우 발생
+ * @see ErrorCode
+ */
 public class DuplicateLoginException extends HometownLeagueBaseException {
     public DuplicateLoginException() {
         super(ErrorCode.DUPLICATE_LOGIN);

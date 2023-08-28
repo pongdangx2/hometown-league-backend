@@ -1,6 +1,5 @@
 package me.lkh.hometownleague.session.domain;
 
-
 public class UserSession {
     private String sessionId;
     private String userId;

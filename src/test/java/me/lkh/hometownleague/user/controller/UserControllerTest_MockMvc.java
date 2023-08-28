@@ -1,6 +1,5 @@
 package me.lkh.hometownleague.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
@@ -100,7 +99,7 @@ class UserControllerTest_MockMvc {
 
     @DisplayName("회원가입 테스트")
     @Test
-    void join() throws Exception {
+    void 회원가입() throws Exception {
 
         String id = "testid";
         String name = "testname";
@@ -121,8 +120,8 @@ class UserControllerTest_MockMvc {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.responseCode").exists())
-//                .andExpect(jsonPath("$.responseCode.code").value(ErrorCode.SUCCESS.getCode()))
-//                .andExpect(jsonPath("$.responseCode.message").value(ErrorCode.SUCCESS.getMessage()))
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
                 .andExpect((content().json(responseContent)))
                 .andDo(document("user-join",
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),

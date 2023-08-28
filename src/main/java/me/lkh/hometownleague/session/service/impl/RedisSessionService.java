@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * "Redis" 에 세션정보를 저장하고 관리하는 SessionService 구현체
+ * @author leekh
+ * @see me.lkh.hometownleague.session.service.SessionService
+ */
 @Component
 public class RedisSessionService implements SessionService {
 
@@ -39,6 +44,11 @@ public class RedisSessionService implements SessionService {
         this.redisStringTemplate = redisStringTemplate;
     }
 
+    /**
+     * User정보를 통해 UserSession정보를 생성
+     * @param user
+     * @return 생성된 UserSession
+     */
     @Override
     public UserSession getSession(User user) {
         UserSession userSession = null;
@@ -53,11 +63,11 @@ public class RedisSessionService implements SessionService {
         return userSession;
     }
 
-    @Override
-    public String makeSessionKey(UserSession userSession){
-        return redisSessionPrefix + userSession.getSessionId();
-    }
-
+    /**
+     * Redis에 세션정보 존재 여부를 반환
+     * @param sessionId
+     * @return
+     */
     @Override
     public boolean isExistSession(String sessionId){
         return sessionRedisTemplate.hasKey(sessionId);

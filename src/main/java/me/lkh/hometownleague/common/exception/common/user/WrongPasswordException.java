@@ -3,6 +3,10 @@ package me.lkh.hometownleague.common.exception.common.user;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.exception.HometownLeagueBaseException;
 
+/**
+ * 패스워드가 불일치 하는 경우 발생
+ * @see ErrorCode
+ */
 public class WrongPasswordException extends HometownLeagueBaseException {
     public WrongPasswordException() {
         super(ErrorCode.WRONG_PASSWORD);

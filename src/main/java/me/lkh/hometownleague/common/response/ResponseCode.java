@@ -2,6 +2,9 @@ package me.lkh.hometownleague.common.response;
 
 import me.lkh.hometownleague.common.exception.ErrorCode;
 
+/**
+ * API의 응답코드
+ */
 public class ResponseCode {
     private final String code;
     private final String message;

@@ -3,6 +3,10 @@ package me.lkh.hometownleague.common.exception.common.user;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.exception.HometownLeagueBaseException;
 
+/**
+ * 닉네임이 중복된 경우 발생
+ * @see ErrorCode
+ */
 public class DuplicateNameException extends HometownLeagueBaseException {
     public DuplicateNameException() {
         super(ErrorCode.DUPLICATE_NAME);

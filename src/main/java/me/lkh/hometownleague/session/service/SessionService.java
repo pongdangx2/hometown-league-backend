@@ -5,19 +5,22 @@ import me.lkh.hometownleague.user.domain.User;
 
 public interface SessionService {
 
+    /**
+     * User를 통해 UserSession을 생성
+     * @param user Session을 생성할 User
+     * @return 생성된 UserSession
+     */
     UserSession getSession(User user);
 
-    String makeSessionKey(UserSession userSession);
-
     /**
-     * 이미 존재하는 세션인지 여부 리턴
+     * 저장소에 존재하는 세션인지 여부 리턴
      * @param sessionId
-     * @return
+     * @return true: 존재 / false: 미존재
      */
     boolean isExistSession(String sessionId);
 
     /**
-     * 신규 생성한 세션정보 저장
+     * 신규 생성한 세션정보를 저장소에 저장
      * @param userSession
      */
     void login(UserSession userSession);

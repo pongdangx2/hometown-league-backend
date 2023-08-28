@@ -3,6 +3,10 @@ package me.lkh.hometownleague.common.exception.common.user;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.exception.HometownLeagueBaseException;
 
+/**
+ * 세션이 없는 경우 발생
+ * @see ErrorCode
+ */
 public class UnauthorizedException extends HometownLeagueBaseException {
     public UnauthorizedException() {
         super(ErrorCode.UNAUTHORIZED);

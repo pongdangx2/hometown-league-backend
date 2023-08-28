@@ -19,6 +19,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
         // 세션 처리를 위한 인터셉터 등록
         registry.addInterceptor(sessionInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/**");     // 로그인/회원가입 관련 요청 시 세션체크 제외
+// 2023.08.28 애노테이션을 이용해 체크하는 방식으로 수정
+//                .excludePathPatterns("/user/**") // 로그인/회원가입 관련 요청 시 세션체크 제외
+                ;
     }
 }

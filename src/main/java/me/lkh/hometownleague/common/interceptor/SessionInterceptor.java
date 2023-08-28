@@ -4,10 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.lkh.hometownleague.common.exception.common.user.InvalidSessionException;
 import me.lkh.hometownleague.common.exception.common.user.UnauthorizedException;
+import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.service.SessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Optional;
@@ -30,6 +32,10 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
+        // AuthCheck 애노테이션이 없는 경우 true 리턴
+        if(!isAuthCheckTarget(handler))
+            return true;
+
         logger.debug("interceptor request url:" + request.getRequestURL());
         // session 조회
         Optional<String> optionalSession = Optional.ofNullable(request.getHeader("cookie"));
@@ -44,4 +50,18 @@ public class SessionInterceptor implements HandlerInterceptor {
 
         return true;
     }
+
+    private boolean isAuthCheckTarget(Object handler) {
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+
+        //AuthCheck anntotation이 있는 경우
+        if (null != handlerMethod.getMethodAnnotation(AuthCheck.class)
+                || null != handlerMethod.getBeanType().getAnnotation(AuthCheck.class)) {
+            return true;
+        }
+
+        //annotation이 없는 경우
+        return false;
+    }
+
 }

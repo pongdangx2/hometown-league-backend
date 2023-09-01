@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.util.Optional;
 
@@ -58,6 +59,10 @@ public class SessionInterceptor implements HandlerInterceptor {
                                  -> HandlerAdaptor [Controller의 비즈니스로직 수행 위임]
      */
     private boolean isAuthCheckTarget(Object handler) {
+
+        if(handler instanceof ResourceHttpRequestHandler)
+            return false;
+
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
         //AuthCheck anntotation이 있는 경우

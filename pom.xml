@@ -64,6 +64,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
         <!-- Session을 Redis에 저장하기위한 의존성 -->
         <!--
         <dependency>
@@ -93,7 +99,7 @@
                         <configuration>
                             <backend>html</backend>
                             <doctype>book</doctype>
-                            <outputDirectory>src/main/resources/docs</outputDirectory>
+                            <outputDirectory>src/main/resources/templates</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

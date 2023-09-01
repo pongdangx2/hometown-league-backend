@@ -25,6 +25,18 @@ public class User {
     @JsonIgnore
     private final LocalDateTime modifiedTimestamp;
 
+    public User(String id, String password){
+        this(id, null, password);
+    }
+
+    public User(String id, String nickname, String password){
+        this(id, nickname, password, "");
+    }
+
+    public User(String id, String nickname, String password, String description){
+        this(id, nickname, password, null, description, null, null);
+    }
+
     public User(String id, String nickname, String password, String useYn, String description, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
         this.id = id;
         this.nickname = nickname;
@@ -35,35 +47,6 @@ public class User {
         this.modifiedTimestamp = modifiedTimestamp;
     }
 
-    public User(String id, String nickname, String password){
-        this.id = id;
-        this.nickname = nickname;
-        this.password = password;
-        this.description = "";
-        this.useYn = null;
-        this.createTimestamp = null;
-        this.modifiedTimestamp = null;
-    }
-
-    public User(String id, String nickname, String password, String description){
-        this.id = id;
-        this.nickname = nickname;
-        this.password = password;
-        this.description = description;
-        this.useYn = null;
-        this.createTimestamp = null;
-        this.modifiedTimestamp = null;
-    }
-
-    public User(String id, String password){
-        this.id = id;
-        this.nickname = null;
-        this.password = password;
-        this.description = "";
-        this.useYn = null;
-        this.createTimestamp = null;
-        this.modifiedTimestamp = null;
-    }
 
     public String getId() {
         return id;

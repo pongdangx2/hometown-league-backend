@@ -2,14 +2,12 @@ package me.lkh.hometownleague.team.service;
 
 import me.lkh.hometownleague.common.code.RoleCode;
 import me.lkh.hometownleague.common.exception.common.CommonErrorException;
-import me.lkh.hometownleague.common.exception.team.CannotInsertPlayLocationException;
-import me.lkh.hometownleague.common.exception.team.CannotInsertPlayTimeException;
-import me.lkh.hometownleague.common.exception.team.DuplicateTeamNameException;
+import me.lkh.hometownleague.common.exception.team.*;
 import me.lkh.hometownleague.team.repository.TeamRepository;
-import me.lkh.hometownleague.team.service.domain.Team;
-import me.lkh.hometownleague.team.service.domain.TeamPlayLocation;
-import me.lkh.hometownleague.team.service.domain.TeamPlayTime;
-import me.lkh.hometownleague.team.service.domain.TeamUserMapping;
+import me.lkh.hometownleague.team.domain.Team;
+import me.lkh.hometownleague.team.domain.TeamPlayLocation;
+import me.lkh.hometownleague.team.domain.TeamPlayTime;
+import me.lkh.hometownleague.team.domain.TeamUserMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -107,5 +105,28 @@ public class TeamService {
     public boolean isDuplicate(String name){
         String id = teamRepository.selectIdByName(name);
         return id != null;
+    }
+
+    /**
+     * 팀 삭제
+     * @param userId 요청한 유저 아이디
+     * @param teamId 삭제하고자 하는 팀 아이디
+     */
+    public void deleteTeam(String userId, Integer teamId){
+        Team team = Team.forOwnerCheck(teamId, userId);
+        Optional.ofNullable(teamRepository.selectOwnerCheck(team))
+                .ifPresentOrElse(ownerCheck -> {
+                    if("Y".equals(ownerCheck.getOwnerYn())){
+                        // 소유주인 경우 논리삭제
+                        teamRepository.deleteTeamLogically(ownerCheck.getTeamId().toString());
+                    } else {
+                        // 요청한 사람이 팀 소유주가 아닐 경우
+                        throw new NotOwnerException();
+                    }
+                    logger.debug(ownerCheck.toString());
+                },() -> {
+                    // 팀이 존재하지 않는 경우
+                    throw new NoSuchTeamIdException();
+                });
     }
 }

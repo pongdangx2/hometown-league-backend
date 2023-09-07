@@ -1,8 +1,8 @@
-package me.lkh.hometownleague.team.service.domain.request;
+package me.lkh.hometownleague.team.domain.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import me.lkh.hometownleague.team.service.domain.TeamPlayLocation;
-import me.lkh.hometownleague.team.service.domain.TeamPlayTime;
+import me.lkh.hometownleague.team.domain.TeamPlayLocation;
+import me.lkh.hometownleague.team.domain.TeamPlayTime;
 
 import java.util.List;
 

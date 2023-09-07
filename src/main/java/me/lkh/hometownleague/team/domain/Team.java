@@ -1,6 +1,8 @@
-package me.lkh.hometownleague.team.service.domain;
+package me.lkh.hometownleague.team.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.servlet.http.HttpServletRequest;
+import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +20,7 @@ public class Team {
 
     private final Integer rankScore;
 
-    private final int kind;
+    private final Integer kind;
 
     @JsonIgnore
     private final String useYn;
@@ -29,10 +31,25 @@ public class Team {
     @JsonIgnore
     private final LocalDateTime modifiedTimestamp;
 
-    public static Team forPost(String name, String ownerId, String ciPath, String description, int kind){
-        return new Team(null, name, ownerId, ciPath, description, 0,  kind, "Y", null, null);
+
+    /**
+     * 팀 생성 API를 위한 Team 생성 용도
+     * @param name
+     * @param ownerId
+     * @param ciPath
+     * @param description
+     * @param kind
+     * @return
+     * @see me.lkh.hometownleague.team.controller.TeamController#makeTeam(MakeTeamRequest, HttpServletRequest)
+     */
+    public static Team forCreatingTeam(String name, String ownerId, String ciPath, String description, int kind){
+        return new Team(null, name, ownerId, ciPath, description, null,  kind, "Y", null, null);
     }
-    public Team(Integer id, String name, String ownerId, String ciPath, String description, Integer rankScore, int kind, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
+    public static Team forOwnerCheck(int id, String ownerId){
+        return new Team(id, null, ownerId, null, null, null,  null, "Y", null, null);
+    }
+
+    public Team(Integer id, String name, String ownerId, String ciPath, String description, Integer rankScore, Integer kind, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
         this.id = id;
         this.name = name;
         this.ownerId = ownerId;
@@ -69,7 +86,7 @@ public class Team {
         return rankScore;
     }
 
-    public int getKind() {
+    public Integer getKind() {
         return kind;
     }
 

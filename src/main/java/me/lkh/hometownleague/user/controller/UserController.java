@@ -52,14 +52,11 @@ public class UserController {
      * @param response
      * @return
      * @throws NoSuchAlgorithmException
-     * @throws WrongPasswordException 패스워드가 일치하지 않는 경우
-     * @throws NoSuchUserIdException ID가 존재하지 않는 경우
-     * @throws CommonErrorException 기타 에러가 발생한 경우
      * @see me.lkh.hometownleague.user.service.UserService#loginCheck(User) 
      */
     @PostMapping("/login")
     public CommonResponse login(@RequestBody LoginRequest loginRequest,
-                                HttpServletResponse response) throws NoSuchAlgorithmException, WrongPasswordException, NoSuchUserIdException, CommonErrorException {
+                                HttpServletResponse response) throws NoSuchAlgorithmException {
         User user = new User(loginRequest.getId(), loginRequest.getPassword());
 
         // 1. ID/PW 체크
@@ -82,10 +79,9 @@ public class UserController {
      * @param joinRequest
      * @return
      * @throws NoSuchAlgorithmException
-     * @throws CommonErrorException 기타 에러가 발생한 경우
      */
     @PostMapping("/join")
-    public CommonResponse join(@RequestBody JoinRequest joinRequest) throws NoSuchAlgorithmException, CommonErrorException {
+    public CommonResponse join(@RequestBody JoinRequest joinRequest) throws NoSuchAlgorithmException {
         User user = new User(joinRequest.getId(), joinRequest.getNickname(), joinRequest.getPassword(), joinRequest.getDescription());
         logger.debug("user:" + user);
         userService.join(user);
@@ -97,11 +93,10 @@ public class UserController {
      * @param type "id" : ID 중복여부 체크 , "nickname" : 닉네임 중복여부 체크
      * @param value id 혹은 nickname 값
      * @return 이미 존재하면 "Y"
-     * @throws CommonErrorException 기타 에러가 발생한 경우
      */
     @GetMapping("/is-duplicate")
     public CommonResponse isDuplicate(@RequestParam(defaultValue = "id") String type
-                                    , @RequestParam String value) throws CommonErrorException{
+                                    , @RequestParam String value) {
         boolean isDuplicate = userService.isDuplicate(new JoinDuplicateCheck(type, value));
         return new CommonResponse<>(isDuplicate ? "Y" : "N");
     }
@@ -110,11 +105,10 @@ public class UserController {
      * ID로 User정보를 조회
      * @param id 조회하고자 하는 User의 ID
      * @return
-     * @throws NoSuchUserIdException 존재하지 않는 ID
      */
     @AuthCheck
     @GetMapping("/{id}")
-    public CommonResponse getUser(@PathVariable("id") String id) throws NoSuchUserIdException{
+    public CommonResponse getUser(@PathVariable("id") String id) {
         User user = userService.selectUserById(id);
         return new CommonResponse<>(user);
     }
@@ -123,12 +117,11 @@ public class UserController {
      * 사용자 정보를 수정
      * @param updateRequest 수정할 User정보 - User ID는 필수이며, 닉네임, 패스워드, 소개글을 수정할 수 있다.
      * @return
-     * @throws NoSuchUserIdException
      * @throws NoSuchAlgorithmException
      */
     @AuthCheck
     @PatchMapping
-    public CommonResponse updateUser(@RequestBody UpdateRequest updateRequest) throws NoSuchUserIdException, NoSuchAlgorithmException {
+    public CommonResponse updateUser(@RequestBody UpdateRequest updateRequest) throws NoSuchAlgorithmException {
         User user = new User(updateRequest.getId(), updateRequest.getNickname(), updateRequest.getPassword(), updateRequest.getDescription());
         userService.updateUser(user);
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);

@@ -1,9 +1,6 @@
 package me.lkh.hometownleague.team.repository;
 
-import me.lkh.hometownleague.team.service.domain.Team;
-import me.lkh.hometownleague.team.service.domain.TeamPlayLocation;
-import me.lkh.hometownleague.team.service.domain.TeamPlayTime;
-import me.lkh.hometownleague.team.service.domain.TeamUserMapping;
+import me.lkh.hometownleague.team.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -17,4 +14,8 @@ public interface TeamRepository {
     int insertTeamPlayTime(TeamPlayTime teamPlayTime);
 
     int insertTeamPlayLocation(TeamPlayLocation teamPlayLocation);
+
+    OwnerCheck selectOwnerCheck(Team team);
+
+    int deleteTeamLogically(String teamId);
 }

@@ -1,4 +1,4 @@
-package me.lkh.hometownleague.team.service.domain;
+package me.lkh.hometownleague.team.domain;
 
 public class TeamUserMapping {
 

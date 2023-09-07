@@ -9,11 +9,10 @@ import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.team.controller.TeamController;
 import me.lkh.hometownleague.team.service.TeamService;
-import me.lkh.hometownleague.team.service.domain.TeamPlayLocation;
-import me.lkh.hometownleague.team.service.domain.TeamPlayTime;
-import me.lkh.hometownleague.team.service.domain.request.MakeTeamRequest;
+import me.lkh.hometownleague.team.domain.TeamPlayLocation;
+import me.lkh.hometownleague.team.domain.TeamPlayTime;
+import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 import me.lkh.hometownleague.user.domain.User;
-import me.lkh.hometownleague.user.domain.request.LoginRequest;
 import org.junit.Rule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -155,6 +153,46 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("location[].legalCode").type(JsonFieldType.STRING).description("법정동 코드"),
                                 fieldWithPath("location[].jibunAddress").type(JsonFieldType.STRING).description("(Optional)지번주소").optional(),
                                 fieldWithPath("location[].roadAddress").type(JsonFieldType.STRING).description("(Optional)도로명주소").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("팀 삭제")
+    @Test
+    void deleteTeam() throws Exception {
+
+        String teamId = "16";
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.delete("/team/{teamId}", teamId)
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andDo(document("team-delete",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        pathParameters(
+                                parameterWithName("teamId").description("삭제할 팀 ID")
                         ),
                         responseFields(
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),

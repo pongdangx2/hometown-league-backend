@@ -1,4 +1,4 @@
-package me.lkh.hometownleague.team.service.domain;
+package me.lkh.hometownleague.team.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

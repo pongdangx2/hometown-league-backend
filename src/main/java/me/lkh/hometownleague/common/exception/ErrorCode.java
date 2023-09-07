@@ -14,6 +14,8 @@ public enum ErrorCode {
     ,DUPLICATE_TEAM_NAME("2000", "이미 존재하는 팀명입니다.")
     ,CANNOT_INSERT_PLAY_TIME("2001", "시간 입력에 실패했습니다.")
     ,CANNOT_INSERT_PLAY_LOCATION("2002", "장소 입력에 실패했습니다.")
+    ,NO_SUCH_TEAM_ID("2003", "존재하지 않는 팀ID입니다.")
+    ,NOT_OWNER("2004", "소유주가 아니면 삭제할 수 없습니다.")
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;
 

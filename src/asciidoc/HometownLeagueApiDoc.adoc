@@ -147,3 +147,22 @@ include::{custom-snippets}/team-create/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-create/response-body.adoc[]
+
+=== 팀 삭제
+팀 삭제
+include::{snippets}/team-delete/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-delete/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-delete/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-delete/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-delete/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-delete/response-body.adoc[]

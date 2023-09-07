@@ -9,8 +9,8 @@ import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.team.service.TeamService;
-import me.lkh.hometownleague.team.service.domain.Team;
-import me.lkh.hometownleague.team.service.domain.request.MakeTeamRequest;
+import me.lkh.hometownleague.team.domain.Team;
+import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +40,7 @@ public class TeamController {
     public CommonResponse makeTeam(@RequestBody MakeTeamRequest makeTeamRequest, HttpServletRequest httpServletRequest){
 
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
-        Team team = Team.forPost(makeTeamRequest.getName(), userSession.getUserId(), "", makeTeamRequest.getDescription(), makeTeamRequest.getKind());
+        Team team = Team.forCreatingTeam(makeTeamRequest.getName(), userSession.getUserId(), "", makeTeamRequest.getDescription(), makeTeamRequest.getKind());
         teamService.makeTeam(team, makeTeamRequest.getTime(), makeTeamRequest.getLocation());
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
@@ -56,5 +56,26 @@ public class TeamController {
         boolean isDuplicate = teamService.isDuplicate(name);
         return new CommonResponse<>(isDuplicate ? "Y" : "N");
     }
+
+    /**
+     * 팀 삭제
+     * @param teamId
+     * @param httpServletRequest
+     * @return
+     */
+    @DeleteMapping("/{teamId}")
+    public CommonResponse deleteTeam(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
+
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        teamService.deleteTeam(userSession.getUserId(), teamId);
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+
+    @PutMapping
+    public CommonResponse updateTeam(HttpServletRequest httpServletRequest){
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
 
 }

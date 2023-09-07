@@ -6,12 +6,12 @@
 <mapper namespace="me.lkh.hometownleague.team.repository.TeamRepository">
 
 
-    <insert id = 'insertTeam' parameterType="me.lkh.hometownleague.team.service.domain.Team">
+    <insert id = 'insertTeam' parameterType="me.lkh.hometownleague.team.domain.Team">
         INSERT INTO team_info(name, ci_path, description, rank_score, kind, use_yn, create_timestamp, modified_timestamp)
         VALUES(#{name}, #{ciPath}, #{description}, #{rankScore}, #{kind}, 'Y', NOW(), NOW())
     </insert>
 
-    <insert id = 'joinTeam' parameterType="me.lkh.hometownleague.team.service.domain.TeamUserMapping">
+    <insert id = 'joinTeam' parameterType="me.lkh.hometownleague.team.domain.TeamUserMapping">
         INSERT INTO team_user_mapping(user_id, team_id, role_code, use_yn, create_timestamp, modified_timestamp)
         VALUES(#{userId}, #{teamId}, #{roleCode}, 'Y', NOW(), NOW())
     </insert>
@@ -22,14 +22,28 @@
         WHERE name = #{name}
     </select>
 
-    <insert id = 'insertTeamPlayTime' parameterType="me.lkh.hometownleague.team.service.domain.TeamPlayTime">
+    <insert id = 'insertTeamPlayTime' parameterType="me.lkh.hometownleague.team.domain.TeamPlayTime">
         INSERT INTO play_time_info(team_id, from_time, to_time, day_of_week)
         VALUES(#{teamId}, #{playTimeFrom}, #{playTimeTo}, #{dayOfWeek})
     </insert>
 
-    <insert id = 'insertTeamPlayLocation' parameterType="me.lkh.hometownleague.team.service.domain.TeamPlayLocation">
+    <insert id = 'insertTeamPlayLocation' parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
         INSERT INTO hometown_info(team_id, jibun_address, road_address, latitude, longitude, legal_code)
         VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode})
     </insert>
 
+    <select id="selectOwnerCheck" parameterType="me.lkh.hometownleague.team.domain.Team" resultType="me.lkh.hometownleague.team.domain.OwnerCheck">
+        SELECT a.id AS team_id
+             , CASE WHEN b.user_id = #{ownerId} THEN 'Y'
+                    ELSE 'N'
+               END AS owner_yn
+        FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id AND b.role_code = 'O'
+        WHERE a.id = #{id} AND a.use_yn = 'Y'
+    </select>
+
+    <update id="deleteTeamLogically" parameterType="String">
+        UPDATE team_info
+        SET use_yn = 'N'
+        WHERE id = #{teamId}
+    </update>
 </mapper>

@@ -1,12 +1,16 @@
 package me.lkh.hometownleague.common.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class SessionUtil {
+
+    public static final String SESSION_ID = "SESSION_ID";
 
     /**
      * Session ID 생성 전략
@@ -32,5 +36,18 @@ public class SessionUtil {
 
     public static void setSessionCookie(HttpServletResponse response, String sessionId){
         response.setHeader("SET-COOKIE", getSessionString(sessionId));
+    }
+
+    /**
+     * httpServletRequest에서 SessionId를 꺼내준다.
+     * @param httpServletRequest
+     * @return
+     */
+    public static Optional<String> getSessionIdFromRequest(HttpServletRequest httpServletRequest){
+        final StringBuffer stringBuffer = new StringBuffer();
+        Optional.ofNullable(httpServletRequest.getHeader("cookie")).ifPresent(
+                cookie -> stringBuffer.append(cookie.split("=")[1])
+        );
+        return stringBuffer.length() == 0 ? Optional.empty() : Optional.of(stringBuffer.toString());
     }
 }

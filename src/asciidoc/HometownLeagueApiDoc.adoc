@@ -71,41 +71,79 @@ include::{snippets}/is-duplicate/response-body.adoc[]
 
 === 사용자 정보 조회
 ID로 사용자를 조회
-include::{snippets}/select-user-by-id/curl-request.adoc[]
+include::{snippets}/team-is-duplicate/curl-request.adoc[]
 
 ==== Request (Path Variable)
-include::{snippets}/select-user-by-id/path-parameters.adoc[]
+include::{snippets}/team-is-duplicate/path-parameters.adoc[]
 
 ==== Request Example
-include::{snippets}/select-user-by-id/http-request.adoc[]
+include::{snippets}/team-is-duplicate/http-request.adoc[]
 
 ==== Response
-include::{snippets}/select-user-by-id/response-fields.adoc[]
+include::{snippets}/team-is-duplicate/response-fields.adoc[]
 
 ===== responseCode
-include::{custom-snippets}/select-user-by-id/response-code.adoc[]
+include::{custom-snippets}/team-is-duplicate/response-code.adoc[]
 
 ==== Response Example
-include::{snippets}/select-user-by-id/response-body.adoc[]
+include::{snippets}/team-is-duplicate/response-body.adoc[]
 
 === 사용자 정보 업데이트
 ID로 사용자를 업데이트
 
-:path: user-update
-
-include::{snippets}/{path}/curl-request.adoc[]
+include::{snippets}/user-update/curl-request.adoc[]
 
 ==== Request
-include::{snippets}/{path}/request-fields.adoc[]
+include::{snippets}/user-update/request-fields.adoc[]
 
 ==== Request Example
-include::{snippets}/{path}/http-request.adoc[]
+include::{snippets}/user-update/http-request.adoc[]
 
 ==== Response
-include::{snippets}/{path}/response-fields.adoc[]
+include::{snippets}/user-update/response-fields.adoc[]
 
 ===== responseCode
-include::{custom-snippets}/{path}/response-code.adoc[]
+include::{custom-snippets}/user-update/response-code.adoc[]
 
 ==== Response Example
-include::{snippets}/{path}/response-body.adoc[]
+include::{snippets}/user-update/response-body.adoc[]
+
+== 2. Team
+
+=== 팀명 중복 체크
+팀명 중복체크 여부 확인
+include::{snippets}/team-is-duplicate/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-is-duplicate/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-is-duplicate/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-is-duplicate/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-is-duplicate/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-is-duplicate/response-body.adoc[]
+
+=== 팀 생성
+새로 팀 만들기
+include::{snippets}/team-create/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-create/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-create/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-create/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-create/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-create/response-body.adoc[]

@@ -1,7 +1,7 @@
 package me.lkh.hometownleague.common.exception;
 
-import me.lkh.hometownleague.common.exception.common.user.InvalidSessionException;
-import me.lkh.hometownleague.common.exception.common.user.UnauthorizedException;
+import me.lkh.hometownleague.common.exception.user.InvalidSessionException;
+import me.lkh.hometownleague.common.exception.user.UnauthorizedException;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

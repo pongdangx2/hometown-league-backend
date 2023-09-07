@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author leekh
  * @see me.lkh.hometownleague.session.service.SessionService
  */
-@Component
+@Service
 public class RedisSessionService implements SessionService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -98,5 +98,19 @@ public class RedisSessionService implements SessionService {
         hashOperations.put(userSession.getSessionId(), LAST_ACCESSED_TIME, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd HHmmss")));
 
         redisStringTemplate.expire(userSession.getSessionId(), redisSessionExpirationTimeInMinute, TimeUnit.MINUTES);
+    }
+
+    /**
+     * 세션ID로 UserSesison 얻기 (Session Repository로부터)
+     * @param userSessionId
+     * @return
+     */
+    @Override
+    public UserSession getUserSession(String userSessionId) {
+
+        HashOperations<String, String, UserSession> userSessionHashOperations = sessionRedisTemplate.opsForHash();
+        UserSession userSession = userSessionHashOperations.get(userSessionId, USER_SESSION);
+
+        return userSession;
     }
 }

@@ -10,6 +10,10 @@ public enum ErrorCode {
     ,UNAUTHORIZED("1004", "권한이 없습니다.")
     ,INVALID_SESSION("1005", "세션 정보가 없습니다.")
     ,DUPLICATE_LOGIN("1006", "이미 로그인 중입니다.")
+    // 2000 : Team관련
+    ,DUPLICATE_TEAM_NAME("2000", "이미 존재하는 팀명입니다.")
+    ,CANNOT_INSERT_PLAY_TIME("2001", "시간 입력에 실패했습니다.")
+    ,CANNOT_INSERT_PLAY_LOCATION("2002", "장소 입력에 실패했습니다.")
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;
 

@@ -30,4 +30,11 @@ public interface SessionService {
      * @param userSession
      */
     void updateLastAccessedTime(UserSession userSession);
+
+    /**
+     * 세션 저장소로부터 UserSession 얻어오기
+     * @param userSessionId
+     * @return
+     */
+    UserSession getUserSession(String userSessionId);
 }

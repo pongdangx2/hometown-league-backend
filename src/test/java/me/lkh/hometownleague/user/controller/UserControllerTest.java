@@ -1,9 +1,9 @@
 package me.lkh.hometownleague.user.controller;
 
-import me.lkh.hometownleague.common.exception.common.user.DuplicateIdException;
-import me.lkh.hometownleague.common.exception.common.user.DuplicateNameException;
-import me.lkh.hometownleague.common.exception.common.user.NoSuchUserIdException;
-import me.lkh.hometownleague.common.exception.common.user.WrongPasswordException;
+import me.lkh.hometownleague.common.exception.user.DuplicateIdException;
+import me.lkh.hometownleague.common.exception.user.DuplicateNameException;
+import me.lkh.hometownleague.common.exception.user.NoSuchUserIdException;
+import me.lkh.hometownleague.common.exception.user.WrongPasswordException;
 import me.lkh.hometownleague.common.util.SecurityUtil;
 import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
 import me.lkh.hometownleague.user.domain.User;

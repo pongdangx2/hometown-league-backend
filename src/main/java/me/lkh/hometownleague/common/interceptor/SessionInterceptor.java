@@ -2,8 +2,9 @@ package me.lkh.hometownleague.common.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import me.lkh.hometownleague.common.exception.common.user.InvalidSessionException;
-import me.lkh.hometownleague.common.exception.common.user.UnauthorizedException;
+import me.lkh.hometownleague.common.exception.user.InvalidSessionException;
+import me.lkh.hometownleague.common.exception.user.UnauthorizedException;
+import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.service.SessionService;
 import org.slf4j.Logger;
@@ -39,15 +40,21 @@ public class SessionInterceptor implements HandlerInterceptor {
 
         logger.debug("interceptor request url:" + request.getRequestURL());
         // session 조회
-        Optional<String> optionalSession = Optional.ofNullable(request.getHeader("cookie"));
-        optionalSession.ifPresentOrElse(cookie -> {
-            String sessionId = cookie.split("=")[1];
+        Optional<String> optionalSession = SessionUtil.getSessionIdFromRequest(request);
+        optionalSession.ifPresentOrElse(sessionId -> {
             // 세션이 없는 경우
             if(!sessionService.isExistSession(sessionId))
                 throw new InvalidSessionException();
+
+            // 세션이 있는 경우 최근 접근 시간 업데이트 및 만료시간 재설정
+            sessionService.updateLastAccessedTime(sessionService.getUserSession(sessionId));
+            request.setAttribute(SessionUtil.SESSION_ID, sessionId);
         }
             //세션이 없는 경우
-            , () -> {throw new UnauthorizedException(); });
+            , () -> {
+            logger.debug("empty session");
+            throw new UnauthorizedException();
+        });
 
         return true;
     }

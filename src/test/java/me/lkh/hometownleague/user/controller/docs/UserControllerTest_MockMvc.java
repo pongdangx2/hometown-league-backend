@@ -1,4 +1,4 @@
-package me.lkh.hometownleague.user.controller;
+package me.lkh.hometownleague.user.controller.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.lkh.hometownleague.common.exception.ErrorCode;
@@ -7,6 +7,7 @@ import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
+import me.lkh.hometownleague.user.controller.UserController;
 import me.lkh.hometownleague.user.domain.User;
 import me.lkh.hometownleague.user.domain.request.JoinRequest;
 import me.lkh.hometownleague.user.domain.request.LoginRequest;

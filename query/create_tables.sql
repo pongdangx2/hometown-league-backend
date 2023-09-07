@@ -12,7 +12,7 @@ CREATE TABLE `user_info` (
 CREATE TABLE `team_info` (
                              `id` int NOT NULL AUTO_INCREMENT COMMENT '팀ID',
                              `name` varchar(30) NOT NULL COMMENT '팀명',
-                             `owner_id` varchar(20) NOT NULL COMMENT '팀 소유주 ID',
+                             `ci_path` varchar(50) NOT NULL COMMENT '팀 로고 경로',
                              `description` varchar(2000) NOT NULL COMMENT '팀 소개글',
                              `rank_score` int NOT NULL COMMENT '경쟁 점수',
                              `kind` int NOT NULL COMMENT '종목', -- 공통코드
@@ -20,15 +20,14 @@ CREATE TABLE `team_info` (
                              `create_timestamp` timestamp NOT NULL COMMENT '생성일시',
                              `modified_timestamp` timestamp NOT NULL COMMENT '수정일시',
                              PRIMARY KEY (`id`),
-                             UNIQUE KEY `name` (`name`),
-                             KEY `owner_id` (`owner_id`),
-                             CONSTRAINT `team_info_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `user_info` (`id`)
+                             UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='팀 정보 테이블';
 
 CREATE TABLE `team_user_mapping` (
                                      `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
                                      `user_id` varchar(20) NOT NULL COMMENT '유저ID',
                                      `team_id` int NOT NULL COMMENT '팀ID',
+                                     `owner_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '팀 소유주 여부',
                                      `use_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '사용여부',
                                      `create_timestamp` timestamp NOT NULL COMMENT '생성일시',
                                      `modified_timestamp` timestamp NOT NULL COMMENT '수정일시',
@@ -58,6 +57,7 @@ CREATE TABLE `hometown_info` (
                                  `detail_address` varchar(100) DEFAULT NULL COMMENT '연고지 상세주소',
                                  `latitude` double NOT NULL COMMENT '연고지 위도',
                                  `longitude` double NOT NULL COMMENT '연고지 경도',
+                                 `dong_code` int NOT NULL COMMENT '연고지 행정동코드',
                                  PRIMARY KEY (`id`,`team_id`),
                                  KEY `team_id` (`team_id`),
                                  CONSTRAINT `hometown_info_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team_info` (`id`)
@@ -100,5 +100,6 @@ CREATE TABLE `common_code` (
                                `code` varchar(6) NOT NULL COMMENT '코드',
                                `code_name` varchar(100) NOT NULL COMMENT '코드명',
                                `use_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '사용여부',
+                               `description` varchar(1000) COMMENT '설명'
                                PRIMARY KEY (`group_id`,`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='공통코드';

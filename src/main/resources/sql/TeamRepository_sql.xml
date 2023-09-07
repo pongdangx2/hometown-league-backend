@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.lkh.hometownleague.team.repository.TeamRepository">
+
+
+    <insert id = 'insertTeam' parameterType="me.lkh.hometownleague.team.service.domain.Team">
+        INSERT INTO team_info(name, ci_path, description, rank_score, kind, use_yn, create_timestamp, modified_timestamp)
+        VALUES(#{name}, #{ciPath}, #{description}, #{rankScore}, #{kind}, 'Y', NOW(), NOW())
+    </insert>
+
+    <insert id = 'joinTeam' parameterType="me.lkh.hometownleague.team.service.domain.TeamUserMapping">
+        INSERT INTO team_user_mapping(user_id, team_id, role_code, use_yn, create_timestamp, modified_timestamp)
+        VALUES(#{userId}, #{teamId}, #{roleCode}, 'Y', NOW(), NOW())
+    </insert>
+
+    <select id="selectIdByName" parameterType="String" resultType="String">
+        SELECT id
+        FROM team_info
+        WHERE name = #{name}
+    </select>
+
+    <insert id = 'insertTeamPlayTime' parameterType="me.lkh.hometownleague.team.service.domain.TeamPlayTime">
+        INSERT INTO play_time_info(team_id, from_time, to_time, day_of_week)
+        VALUES(#{teamId}, #{playTimeFrom}, #{playTimeTo}, #{dayOfWeek})
+    </insert>
+
+    <insert id = 'insertTeamPlayLocation' parameterType="me.lkh.hometownleague.team.service.domain.TeamPlayLocation">
+        INSERT INTO hometown_info(team_id, jibun_address, road_address, latitude, longitude, legal_code)
+        VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode})
+    </insert>
+
+</mapper>

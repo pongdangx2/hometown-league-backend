@@ -65,10 +65,20 @@ public class TeamController {
      */
     @DeleteMapping("/{teamId}")
     public CommonResponse deleteTeam(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
-
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         teamService.deleteTeam(userSession.getUserId(), teamId);
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+    /**
+     * 팀 조회
+     * @param teamId
+     * @return
+     */
+    @GetMapping("/{teamId}")
+    public CommonResponse selectTeam(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), teamId));
     }
 
 

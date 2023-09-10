@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Team {
 
@@ -12,6 +13,7 @@ public class Team {
 
     private final String name;
 
+    @JsonIgnore
     private final String ownerId;
 
     private final String ciPath;
@@ -20,7 +22,15 @@ public class Team {
 
     private final Integer rankScore;
 
+    private final String rank;
+
     private final Integer kind;
+
+    private final String ownerYn;
+
+    private final List<TeamPlayTime> time;
+
+    private final List<TeamPlayLocation> location;
 
     @JsonIgnore
     private final String useYn;
@@ -43,20 +53,41 @@ public class Team {
      * @see me.lkh.hometownleague.team.controller.TeamController#makeTeam(MakeTeamRequest, HttpServletRequest)
      */
     public static Team forCreatingTeam(String name, String ownerId, String ciPath, String description, int kind){
-        return new Team(null, name, ownerId, ciPath, description, null,  kind, "Y", null, null);
+        return new Team(null, name, ownerId, ciPath, description, 0, null, kind, null,null, null, "Y", null, null);
     }
-    public static Team forOwnerCheck(int id, String ownerId){
-        return new Team(id, null, ownerId, null, null, null,  null, "Y", null, null);
+    public static Team forOwnerCheck(Integer id, String ownerId){
+        return new Team(id, null, ownerId, null, null, null, null, null, null,null, null, "Y", null, null);
+    }
+    public static Team forSelectTeamResponse(Integer id, String name, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerYn, List<TeamPlayTime> time, List<TeamPlayLocation> location){
+        return new Team(id, name, null, ciPath, description, rankScore, rank, kind, ownerYn, time, location, null, null, null);
     }
 
-    public Team(Integer id, String name, String ownerId, String ciPath, String description, Integer rankScore, Integer kind, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
+    /**
+     * selectTeam 쿼리를 위한 생성자(Mybatis)
+     * @param id
+     * @param name
+     * @param ciPath
+     * @param description
+     * @param rankScore
+     * @param kind
+     * @param ownerYn
+     */
+    public Team(Integer id, String name, String ciPath, String description, Integer rankScore, Integer kind, String ownerYn){
+        this(id, name, null, ciPath, description, rankScore, null, kind, ownerYn, null, null, null, null, null);
+    }
+
+    public Team(Integer id, String name, String ownerId, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerYn, List<TeamPlayTime> time, List<TeamPlayLocation> location, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
         this.id = id;
         this.name = name;
         this.ownerId = ownerId;
         this.ciPath = ciPath;
         this.description = description;
         this.rankScore = rankScore;
+        this.rank = rank;
         this.kind = kind;
+        this.ownerYn = ownerYn;
+        this.time = time;
+        this.location = location;
         this.useYn = useYn;
         this.createTimestamp = createTimestamp;
         this.modifiedTimestamp = modifiedTimestamp;
@@ -100,5 +131,40 @@ public class Team {
 
     public LocalDateTime getModifiedTimestamp() {
         return modifiedTimestamp;
+    }
+
+    public String getOwnerYn() {
+        return ownerYn;
+    }
+
+    public List<TeamPlayTime> getTime() {
+        return time;
+    }
+
+    public List<TeamPlayLocation> getLocation() {
+        return location;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", ownerId='" + ownerId + '\'' +
+                ", ciPath='" + ciPath + '\'' +
+                ", description='" + description + '\'' +
+                ", rankScore=" + rankScore +
+                ", kind=" + kind +
+                ", ownerYn='" + ownerYn + '\'' +
+                ", time=" + time +
+                ", location=" + location +
+                ", useYn='" + useYn + '\'' +
+                ", createTimestamp=" + createTimestamp +
+                ", modifiedTimestamp=" + modifiedTimestamp +
+                '}';
     }
 }

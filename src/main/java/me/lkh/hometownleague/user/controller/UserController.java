@@ -2,9 +2,6 @@ package me.lkh.hometownleague.user.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import me.lkh.hometownleague.common.exception.ErrorCode;
-import me.lkh.hometownleague.common.exception.common.CommonErrorException;
-import me.lkh.hometownleague.common.exception.user.NoSuchUserIdException;
-import me.lkh.hometownleague.common.exception.user.WrongPasswordException;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.service.SessionService;

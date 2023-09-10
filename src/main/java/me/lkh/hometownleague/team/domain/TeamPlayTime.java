@@ -3,17 +3,26 @@ package me.lkh.hometownleague.team.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class TeamPlayTime {
+    private final Integer id;
     @JsonIgnore
-    private final String teamId;
+    private final Integer teamId;
     private final int dayOfWeek;
     private final String playTimeFrom;
     private final String playTimeTo;
 
-    public TeamPlayTime(String teamId, int dayOfWeek, String playTimeFrom, String playTimeTo) {
+    public static TeamPlayTime forInsertTeamPlayTime(Integer teamId, int dayOfWeek, String playTimeFrom, String playTimeTo){
+        return new TeamPlayTime(null, teamId, dayOfWeek, playTimeFrom, playTimeTo);
+    }
+    public TeamPlayTime(Integer id, Integer teamId, int dayOfWeek, String playTimeFrom, String playTimeTo) {
+        this.id = id;
         this.teamId = teamId;
         this.dayOfWeek = dayOfWeek;
         this.playTimeFrom = playTimeFrom;
         this.playTimeTo = playTimeTo;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public int getDayOfWeek() {
@@ -28,7 +37,7 @@ public class TeamPlayTime {
         return playTimeTo;
     }
 
-    public String getTeamId() {
+    public Integer getTeamId() {
         return teamId;
     }
 

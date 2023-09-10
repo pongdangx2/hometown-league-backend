@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class TeamPlayLocation {
 
+    private final Integer id;
+
     @JsonIgnore
-    private final String teamId;
+    private final Integer teamId;
 
     private final double latitude;    // 위도
 
@@ -17,7 +19,11 @@ public class TeamPlayLocation {
 
     private final String roadAddress; // 도로명주소
 
-    public TeamPlayLocation(String teamId, double latitude, double longitude, String legalCode, String jibunAddress, String roadAddress) {
+    public static TeamPlayLocation forInsertTeamPlayLocation(Integer teamId, double latitude, double longitude, String legalCode, String jibunAddress, String roadAddress){
+        return new TeamPlayLocation(null, teamId, jibunAddress, roadAddress, latitude, longitude, legalCode);
+    }
+    public TeamPlayLocation(Integer id, Integer teamId, String jibunAddress, String roadAddress, double latitude, double longitude, String legalCode) {
+        this.id = id;
         this.teamId = teamId;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -26,7 +32,11 @@ public class TeamPlayLocation {
         this.roadAddress = roadAddress;
     }
 
-    public String getTeamId() {
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getTeamId() {
         return teamId;
     }
 

@@ -16,7 +16,7 @@
         VALUES(#{userId}, #{teamId}, #{roleCode}, 'Y', NOW(), NOW())
     </insert>
 
-    <select id="selectIdByName" parameterType="String" resultType="String">
+    <select id="selectIdByName" parameterType="String" resultType="Integer">
         SELECT id
         FROM team_info
         WHERE name = #{name}
@@ -32,18 +32,31 @@
         VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode})
     </insert>
 
-    <select id="selectOwnerCheck" parameterType="me.lkh.hometownleague.team.domain.Team" resultType="me.lkh.hometownleague.team.domain.OwnerCheck">
-        SELECT a.id AS team_id
-             , CASE WHEN b.user_id = #{ownerId} THEN 'Y'
-                    ELSE 'N'
-               END AS owner_yn
-        FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id AND b.role_code = 'O'
-        WHERE a.id = #{id} AND a.use_yn = 'Y'
-    </select>
-
     <update id="deleteTeamLogically" parameterType="String">
         UPDATE team_info
         SET use_yn = 'N'
         WHERE id = #{teamId}
     </update>
+
+    <select id="selectTeam" parameterType="me.lkh.hometownleague.team.domain.Team" resultType="me.lkh.hometownleague.team.domain.Team">
+        SELECT a.id, a.name, a.ci_path, a.description, a.rank_score, a.kind
+             , CASE WHEN b.user_id IS NULL THEN 'N'
+                    ELSE 'Y'
+               END AS owner_yn
+        FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id
+                                                            AND b.role_code = 'O'
+                                                            AND b.user_id = #{ownerId}
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="selectTeamPlayLocation" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
+        SELECT *
+        FROM hometown_info
+        WHERE team_id = #{teamId}
+    </select>
+    <select id="selectTeamPlayTime" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayTime">
+        SELECT *
+        FROM play_time_info
+        WHERE team_id = #{teamId}
+    </select>
 </mapper>

@@ -8,6 +8,7 @@ import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.team.controller.TeamController;
+import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.team.service.TeamService;
 import me.lkh.hometownleague.team.domain.TeamPlayLocation;
 import me.lkh.hometownleague.team.domain.TeamPlayTime;
@@ -99,11 +100,11 @@ public class TeamControllerTest_MockMvc {
     @Test
     void makeTeam() throws Exception {
         List<TeamPlayTime> time = new ArrayList<>();
-        time.add(new TeamPlayTime(null, 1, "1000", "1200"));
-        time.add(new TeamPlayTime(null, 2, "2000", "2200"));
+        time.add(new TeamPlayTime(null, null, 1, "1000", "1200"));
+        time.add(new TeamPlayTime(null, null, 2, "2000", "2200"));
 
         List<TeamPlayLocation> location = new ArrayList<>();
-        location.add(new TeamPlayLocation(null, 37.6317692339419, 127.0803445512275, "11350103", "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232"));
+        location.add(new TeamPlayLocation(null, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
 
         String teamName = "testTeamName";
         String requestContent = objectMapper.writeValueAsString(new MakeTeamRequest(teamName, null, "tempPath", "테스트로 만든 팀입니다.", 0, 3, time, location));
@@ -200,4 +201,79 @@ public class TeamControllerTest_MockMvc {
                         )
                 ));
     }
+
+    @DisplayName("팀 상세정보 조회")
+    @Test
+    void selectTeamDetail() throws Exception {
+
+        List<TeamPlayTime> time = new ArrayList<>();
+        time.add(new TeamPlayTime(1, null, 1, "1000", "1200"));
+        time.add(new TeamPlayTime(2, null, 2, "2000", "2200"));
+
+        List<TeamPlayLocation> location = new ArrayList<>();
+        location.add(new TeamPlayLocation(1, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
+
+        Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "Y", time, location);
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(team));
+        given(teamService.selectTeam(any(), any())).willReturn(team);
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        // 세션 관련 End ======================================================================
+
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team/{teamId}", 16)
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("team-select-detail",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        pathParameters(
+                                parameterWithName("teamId").description("상세정보를 조회할 팀 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("조회한 팀의 상세 정보"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("팀 ID"),
+                                fieldWithPath("data.name").type(JsonFieldType.STRING).description("팀 이름"),
+                                fieldWithPath("data.ciPath").type(JsonFieldType.STRING).description("팀 로고 경로"),
+                                fieldWithPath("data.description").type(JsonFieldType.STRING).description("팀 설명"),
+                                fieldWithPath("data.rankScore").type(JsonFieldType.NUMBER).description("팀 점수"),
+                                fieldWithPath("data.rank").type(JsonFieldType.STRING).description("팀 점수별 랭크"),
+                                fieldWithPath("data.kind").type(JsonFieldType.NUMBER).description("팀 종목"),
+                                fieldWithPath("data.ownerYn").type(JsonFieldType.STRING).description("조회한 유저가 팀의 소유주인지 여부"),
+                                fieldWithPath("data.time").type(JsonFieldType.ARRAY).description("주로 운동하는 시간"),
+                                fieldWithPath("data.time[].id").type(JsonFieldType.NUMBER).description("운동시간의 ID"),
+                                fieldWithPath("data.time[].dayOfWeek").type(JsonFieldType.NUMBER).description("운동하는 요일(1:월요일 ~ 7: 일요일)"),
+                                fieldWithPath("data.time[].playTimeFrom").type(JsonFieldType.STRING).description("운동 시작시간 (HH24MI형태, ex-1030)"),
+                                fieldWithPath("data.time[].playTimeTo").type(JsonFieldType.STRING).description("운동 종료시간 (HH24MI형태, ex-1030)"),
+                                fieldWithPath("data.location").type(JsonFieldType.ARRAY).description("주로 운동하는 장소"),
+                                fieldWithPath("data.location[].id").type(JsonFieldType.NUMBER).description("운동장소의 ID"),
+                                fieldWithPath("data.location[].latitude").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("data.location[].longitude").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data.location[].legalCode").type(JsonFieldType.STRING).description("법정동 코드"),
+                                fieldWithPath("data.location[].jibunAddress").type(JsonFieldType.STRING).description("(Optional)지번주소").optional(),
+                                fieldWithPath("data.location[].roadAddress").type(JsonFieldType.STRING).description("(Optional)도로명주소").optional(),
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
 }

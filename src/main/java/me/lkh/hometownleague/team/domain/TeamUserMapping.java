@@ -4,11 +4,11 @@ public class TeamUserMapping {
 
     private final String userId;
 
-    private final String teamId;
+    private final Integer teamId;
 
     private final String roleCode;
 
-    public TeamUserMapping(String userId, String teamId, String roleCode) {
+    public TeamUserMapping(String userId, Integer teamId, String roleCode) {
         this.userId = userId;
         this.teamId = teamId;
         this.roleCode = roleCode;
@@ -18,7 +18,7 @@ public class TeamUserMapping {
         return userId;
     }
 
-    public String getTeamId() {
+    public Integer getTeamId() {
         return teamId;
     }
 

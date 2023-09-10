@@ -71,22 +71,22 @@ include::{snippets}/is-duplicate/response-body.adoc[]
 
 === 사용자 정보 조회
 ID로 사용자를 조회
-include::{snippets}/team-is-duplicate/curl-request.adoc[]
+include::{snippets}/select-user-by-id/curl-request.adoc[]
 
 ==== Request (Path Variable)
-include::{snippets}/team-is-duplicate/path-parameters.adoc[]
+include::{snippets}/select-user-by-id/path-parameters.adoc[]
 
 ==== Request Example
-include::{snippets}/team-is-duplicate/http-request.adoc[]
+include::{snippets}/select-user-by-id/http-request.adoc[]
 
 ==== Response
-include::{snippets}/team-is-duplicate/response-fields.adoc[]
+include::{snippets}/select-user-by-id/response-fields.adoc[]
 
 ===== responseCode
-include::{custom-snippets}/team-is-duplicate/response-code.adoc[]
+include::{custom-snippets}/select-user-by-id/response-code.adoc[]
 
 ==== Response Example
-include::{snippets}/team-is-duplicate/response-body.adoc[]
+include::{snippets}/select-user-by-id/response-body.adoc[]
 
 === 사용자 정보 업데이트
 ID로 사용자를 업데이트
@@ -166,3 +166,22 @@ include::{custom-snippets}/team-delete/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-delete/response-body.adoc[]
+
+=== 팀 상세 정보 조회
+ID로 팀 상세 정보 조회
+include::{snippets}/team-select-detail/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-select-detail/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-detail/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-detail/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-detail/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-detail/response-body.adoc[]

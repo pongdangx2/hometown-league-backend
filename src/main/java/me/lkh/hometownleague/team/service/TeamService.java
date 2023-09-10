@@ -3,6 +3,7 @@ package me.lkh.hometownleague.team.service;
 import me.lkh.hometownleague.common.code.RoleCode;
 import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.team.*;
+import me.lkh.hometownleague.common.util.RankService;
 import me.lkh.hometownleague.team.repository.TeamRepository;
 import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.team.domain.TeamPlayLocation;
@@ -23,8 +24,11 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
 
-    public TeamService(TeamRepository teamRepository) {
+    private final RankService rankService;
+
+    public TeamService(TeamRepository teamRepository, RankService rankService) {
         this.teamRepository = teamRepository;
+        this.rankService = rankService;
     }
 
     /**
@@ -61,10 +65,10 @@ public class TeamService {
                 });
     }
 
-    private void insertPlayLocation(String teamId, List<TeamPlayLocation> teamPlayLocations){
+    private void insertPlayLocation(Integer teamId, List<TeamPlayLocation> teamPlayLocations){
         teamPlayLocations.forEach(teamPlayLocation -> {
             try{
-                TeamPlayLocation currentTeamPlayLocation = new TeamPlayLocation(teamId, teamPlayLocation.getLatitude(), teamPlayLocation.getLongitude(), teamPlayLocation.getLegalCode(), teamPlayLocation.getJibunAddress(), teamPlayLocation.getRoadAddress());
+                TeamPlayLocation currentTeamPlayLocation = TeamPlayLocation.forInsertTeamPlayLocation(teamId, teamPlayLocation.getLatitude(), teamPlayLocation.getLongitude(), teamPlayLocation.getLegalCode(), teamPlayLocation.getJibunAddress(), teamPlayLocation.getRoadAddress());
                 if (1 != teamRepository.insertTeamPlayLocation(currentTeamPlayLocation)) {
                     throw new CannotInsertPlayLocationException("Cannot insert TeamPlayLocation info : " + currentTeamPlayLocation);
                 }
@@ -74,10 +78,10 @@ public class TeamService {
         });
     }
 
-    private void insertPlayTime(String teamId, List<TeamPlayTime> teamPlayTimes){
+    private void insertPlayTime(Integer teamId, List<TeamPlayTime> teamPlayTimes){
         teamPlayTimes.forEach(teamPlayTime -> {
             try {
-                TeamPlayTime currentTeamPlayTime = new TeamPlayTime(teamId, teamPlayTime.getDayOfWeek(), teamPlayTime.getPlayTimeFrom(), teamPlayTime.getPlayTimeTo());
+                TeamPlayTime currentTeamPlayTime = TeamPlayTime.forInsertTeamPlayTime(teamId, teamPlayTime.getDayOfWeek(), teamPlayTime.getPlayTimeFrom(), teamPlayTime.getPlayTimeTo());
                 if (1 != teamRepository.insertTeamPlayTime(currentTeamPlayTime)) {
                     throw new CannotInsertPlayTimeException("Cannot insert TeamPlayTime info : " + currentTeamPlayTime);
                 }
@@ -92,7 +96,7 @@ public class TeamService {
      * @param userId
      * @param teamId
      */
-    private void joinTeam(String userId, String teamId){
+    private void joinTeam(String userId, Integer teamId){
         TeamUserMapping teamUserMapping = new TeamUserMapping(userId, teamId, RoleCode.OWNER.getRoleCode());
         teamRepository.joinTeam(teamUserMapping);
     }
@@ -103,7 +107,7 @@ public class TeamService {
      * @return
      */
     public boolean isDuplicate(String name){
-        String id = teamRepository.selectIdByName(name);
+        Integer id = teamRepository.selectIdByName(name);
         return id != null;
     }
 
@@ -114,19 +118,38 @@ public class TeamService {
      */
     public void deleteTeam(String userId, Integer teamId){
         Team team = Team.forOwnerCheck(teamId, userId);
-        Optional.ofNullable(teamRepository.selectOwnerCheck(team))
-                .ifPresentOrElse(ownerCheck -> {
-                    if("Y".equals(ownerCheck.getOwnerYn())){
+        Optional.ofNullable(teamRepository.selectTeam(team))
+                .ifPresentOrElse(baseTeamInfo -> {
+                    if("Y".equals(baseTeamInfo.getOwnerYn())){
                         // 소유주인 경우 논리삭제
-                        teamRepository.deleteTeamLogically(ownerCheck.getTeamId().toString());
+                        teamRepository.deleteTeamLogically(baseTeamInfo.getId());
                     } else {
                         // 요청한 사람이 팀 소유주가 아닐 경우
                         throw new NotOwnerException();
                     }
-                    logger.debug(ownerCheck.toString());
+                    logger.debug(baseTeamInfo.toString());
                 },() -> {
                     // 팀이 존재하지 않는 경우
                     throw new NoSuchTeamIdException();
                 });
     }
+
+    public Team selectTeam(String userId, Integer teamId) {
+        Optional<Team> optionalBaseTeamInfo = Optional.ofNullable(teamRepository.selectTeam(Team.forOwnerCheck(teamId, userId)));
+        // 팀이 존재하지 않는 경우
+        optionalBaseTeamInfo.orElseThrow(NoSuchTeamIdException::new);
+        Team baseTeamInfo = optionalBaseTeamInfo.get();
+
+        return Team.forSelectTeamResponse(baseTeamInfo.getId()
+                                        , baseTeamInfo.getName()
+                                        , baseTeamInfo.getCiPath()
+                                        , baseTeamInfo.getDescription()
+                                        , baseTeamInfo.getRankScore()
+                                        , rankService.getRankName(baseTeamInfo.getRankScore())
+                                        , baseTeamInfo.getKind()
+                                        , baseTeamInfo.getOwnerYn()
+                                        , teamRepository.selectTeamPlayTime(teamId)
+                                        , teamRepository.selectTeamPlayLocation(teamId));
+    }
+
 }

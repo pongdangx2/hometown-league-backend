@@ -1,5 +1,6 @@
 package me.lkh.hometownleague.user.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
@@ -68,7 +69,7 @@ public class UserController {
         // 4. 응답쿠키 설정 (SET-COOKIE)
         SessionUtil.setSessionCookie(response, userSession.getSessionId());
 
-        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+        return new CommonResponse<>(checkedUser);
     }
 
     /**
@@ -124,4 +125,14 @@ public class UserController {
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 
+    /**
+     * 사용자가 속한 팀을 조회
+     * @return
+     */
+    @AuthCheck
+    @GetMapping("/team")
+    public CommonResponse getUserTeams(HttpServletRequest httpServletRequest) {
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        return new CommonResponse<>(userService.selectTeamOfUser(userSession.getUserId()));
+    }
 }

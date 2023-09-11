@@ -1,13 +1,20 @@
 package me.lkh.hometownleague.team.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeamPlayTime {
+
     private final Integer id;
+
     @JsonIgnore
     private final Integer teamId;
+
     private final int dayOfWeek;
+
     private final String playTimeFrom;
+
     private final String playTimeTo;
 
     public static TeamPlayTime forInsertTeamPlayTime(Integer teamId, int dayOfWeek, String playTimeFrom, String playTimeTo){

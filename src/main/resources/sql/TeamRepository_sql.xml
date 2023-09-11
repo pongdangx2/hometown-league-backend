@@ -32,7 +32,7 @@
         VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode})
     </insert>
 
-    <update id="deleteTeamLogically" parameterType="String">
+    <update id="deleteTeamLogically" parameterType="Integer">
         UPDATE team_info
         SET use_yn = 'N'
         WHERE id = #{teamId}

@@ -2,9 +2,11 @@ package me.lkh.hometownleague.user.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
     private final String id;
@@ -15,6 +17,8 @@ public class User {
     private final String password;
 
     private final String description;
+
+    private final String ciPath;
 
     @JsonIgnore
     private final String useYn;
@@ -34,19 +38,23 @@ public class User {
     }
 
     public User(String id, String nickname, String password, String description){
-        this(id, nickname, password, null, description, null, null);
+        this(id, nickname, password, null, description, null, null, null);
     }
 
-    public User(String id, String nickname, String password, String useYn, String description, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
+    public User(String id, String nickname, String password, String useYn, String description, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp, String ciPath) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
         this.description = description;
         this.useYn = useYn;
+        this.ciPath = ciPath;
         this.createTimestamp = createTimestamp;
         this.modifiedTimestamp = modifiedTimestamp;
     }
 
+    public String getCiPath() {
+        return ciPath;
+    }
 
     public String getId() {
         return id;

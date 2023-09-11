@@ -8,6 +8,7 @@ import me.lkh.hometownleague.common.exception.user.WrongPasswordException;
 import me.lkh.hometownleague.common.util.SecurityUtil;
 import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
 import me.lkh.hometownleague.user.domain.User;
+import me.lkh.hometownleague.user.domain.UserTeam;
 import me.lkh.hometownleague.user.domain.request.LoginRequest;
 import me.lkh.hometownleague.user.repository.UserRepository;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -124,5 +126,9 @@ public class UserService {
 
         if(userRepository.updateUser(paramUser) == 0)
             throw new NoSuchUserIdException();
+    }
+
+    public List<UserTeam> selectTeamOfUser(String userId){
+        return userRepository.selectTeamOfUser(userId);
     }
 }

@@ -108,6 +108,24 @@ include::{custom-snippets}/user-update/response-code.adoc[]
 ==== Response Example
 include::{snippets}/user-update/response-body.adoc[]
 
+=== 사용자 소속팀 목록 조회
+사용자 소속팀 목록 조회 (로그인 한 뒤에 사용해야 함)
+include::{snippets}/user-team-select/curl-request.adoc[]
+
+==== Request Example
+include::{snippets}/user-team-select/http-request.adoc[]
+
+==== Response
+include::{snippets}/user-team-select/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/user-team-select/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/user-team-select/response-body.adoc[]
+
+// Team ===================================================================================
+
 == 2. Team
 
 === 팀명 중복 체크

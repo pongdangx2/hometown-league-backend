@@ -103,6 +103,7 @@ public class TeamControllerTest_MockMvc {
         time.add(new TeamPlayTime(null, null, 1, "1000", "1200"));
         time.add(new TeamPlayTime(null, null, 2, "2000", "2200"));
 
+
         List<TeamPlayLocation> location = new ArrayList<>();
         location.add(new TeamPlayLocation(null, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
 
@@ -119,8 +120,6 @@ public class TeamControllerTest_MockMvc {
                 , user.getNickname());
         given(sessionService.getSession(any())).willReturn(userSession);
         given(sessionService.getUserSession(any())).willReturn(userSession);
-
-//        given(SessionUtil.getSessionIdFromRequest(any())).willReturn(Optional.of("spring-session" + SessionUtil.getSessionId(user.getId())));
 
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
 
@@ -142,8 +141,8 @@ public class TeamControllerTest_MockMvc {
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         requestFields(
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("생성할 팀의 이름"),
-                                fieldWithPath("description").type(JsonFieldType.STRING).description("생성할 팀의 소개글 "),
                                 fieldWithPath("kind").type(JsonFieldType.NUMBER).description("생성할 팀의 종목 코드 (축구: 1)"),
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("생성할 팀의 소개글"),
                                 fieldWithPath("time").type(JsonFieldType.ARRAY).description("주로 운동하는 시간"),
                                 fieldWithPath("time[].dayOfWeek").type(JsonFieldType.NUMBER).description("운동하는 요일(1:월요일 ~ 7: 일요일)"),
                                 fieldWithPath("time[].playTimeFrom").type(JsonFieldType.STRING).description("운동 시작시간 (HH24MI형태, ex-1030)"),
@@ -252,7 +251,7 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("조회한 팀의 상세 정보"),
                                 fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("팀 ID"),
                                 fieldWithPath("data.name").type(JsonFieldType.STRING).description("팀 이름"),
-                                fieldWithPath("data.ciPath").type(JsonFieldType.STRING).description("팀 로고 경로"),
+                                fieldWithPath("data.ciPath").type(JsonFieldType.STRING).description("(Optional)팀 로고 경로"),
                                 fieldWithPath("data.description").type(JsonFieldType.STRING).description("팀 설명"),
                                 fieldWithPath("data.rankScore").type(JsonFieldType.NUMBER).description("팀 점수"),
                                 fieldWithPath("data.rank").type(JsonFieldType.STRING).description("팀 점수별 랭크"),

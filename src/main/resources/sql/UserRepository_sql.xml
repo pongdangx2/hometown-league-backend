@@ -19,7 +19,7 @@
 
     <insert id = 'insertUser' parameterType="me.lkh.hometownleague.user.domain.User">
         INSERT INTO user_info
-        VALUES(#{id}, #{nickname}, #{password}, #{description}, 'Y', NOW(), NOW())
+        VALUES(#{id}, #{nickname}, #{password}, #{description}, 'Y', NOW(), NOW(), null)
     </insert>
 
     <select id="selectIsDuplicate" parameterType="me.lkh.hometownleague.user.domain.JoinDuplicateCheck" resultType="String">
@@ -50,4 +50,17 @@
         </if>
         WHERE id = #{id}
     </insert>
+
+    <select id="selectTeamOfUser" parameterType="String" resultType="me.lkh.hometownleague.user.domain.UserTeam">
+        SELECT a.team_id
+             , b.name
+             , b.ci_path
+             , CASE WHEN a.role_code = 'O' THEN 'Y'
+                    ELSE 'N'
+            END AS owner_yn
+        FROM team_user_mapping a INNER JOIN team_info b ON a.team_id = b.id
+        WHERE a.user_id = #{userId}
+          AND b.use_yn = 'Y'
+    </select>
+
 </mapper>

@@ -17,7 +17,7 @@
         WHERE id = #{id} OR nickname = #{nickname}
     </select>
 
-    <insert id = 'insertUser' parameterType="me.lkh.hometownleague.user.domain.User">
+    <insert id="insertUser" parameterType="me.lkh.hometownleague.user.domain.User">
         INSERT INTO user_info
         VALUES(#{id}, #{nickname}, #{password}, #{description}, 'Y', NOW(), NOW(), null)
     </insert>
@@ -36,20 +36,20 @@
             </choose>
     </select>
 
-    <insert id = 'updateUser' parameterType="me.lkh.hometownleague.user.domain.User">
+    <update id="updateUser" parameterType="me.lkh.hometownleague.user.domain.User">
         UPDATE user_info
         SET modified_timestamp = NOW()
         <if test="nickname != null">
             , nickname = #{nickname}
         </if>
-        <if test="nickname != null">
+        <if test="description != null">
             , description = #{description}
         </if>
         <if test="password != null">
             , password = #{password}
         </if>
         WHERE id = #{id}
-    </insert>
+    </update>
 
     <select id="selectTeamOfUser" parameterType="String" resultType="me.lkh.hometownleague.user.domain.UserTeam">
         SELECT a.team_id

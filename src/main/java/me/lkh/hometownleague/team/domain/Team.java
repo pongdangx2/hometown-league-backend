@@ -61,6 +61,9 @@ public class Team {
     public static Team forSelectTeamResponse(Integer id, String name, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerYn, List<TeamPlayTime> time, List<TeamPlayLocation> location){
         return new Team(id, name, null, ciPath, description, rankScore, rank, kind, ownerYn, time, location, null, null, null);
     }
+    public static Team forUpdateTeam(Integer id, String name, String description){
+        return new Team(id, name, null, null, description, null, null, null, null, null, null, null, null, null);
+    }
 
     /**
      * selectTeam 쿼리를 위한 생성자(Mybatis)

@@ -24,4 +24,6 @@ public interface TeamRepository {
     List<TeamPlayLocation> selectTeamPlayLocation(Integer teamId);
 
     List<TeamPlayTime> selectTeamPlayTime(Integer teamId);
+
+    int updateTeam(Team team);
 }

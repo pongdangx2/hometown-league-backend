@@ -5,13 +5,12 @@
 
 <mapper namespace="me.lkh.hometownleague.team.repository.TeamRepository">
 
-
-    <insert id = 'insertTeam' parameterType="me.lkh.hometownleague.team.domain.Team">
+발    <insert id="insertTeam" parameterType="me.lkh.hometownleague.team.domain.Team">
         INSERT INTO team_info(name, ci_path, description, rank_score, kind, use_yn, create_timestamp, modified_timestamp)
         VALUES(#{name}, #{ciPath}, #{description}, #{rankScore}, #{kind}, 'Y', NOW(), NOW())
     </insert>
 
-    <insert id = 'joinTeam' parameterType="me.lkh.hometownleague.team.domain.TeamUserMapping">
+    <insert id="joinTeam" parameterType="me.lkh.hometownleague.team.domain.TeamUserMapping">
         INSERT INTO team_user_mapping(user_id, team_id, role_code, use_yn, create_timestamp, modified_timestamp)
         VALUES(#{userId}, #{teamId}, #{roleCode}, 'Y', NOW(), NOW())
     </insert>
@@ -22,12 +21,12 @@
         WHERE name = #{name}
     </select>
 
-    <insert id = 'insertTeamPlayTime' parameterType="me.lkh.hometownleague.team.domain.TeamPlayTime">
+    <insert id="insertTeamPlayTime" parameterType="me.lkh.hometownleague.team.domain.TeamPlayTime">
         INSERT INTO play_time_info(team_id, from_time, to_time, day_of_week)
         VALUES(#{teamId}, #{playTimeFrom}, #{playTimeTo}, #{dayOfWeek})
     </insert>
 
-    <insert id = 'insertTeamPlayLocation' parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
+    <insert id="insertTeamPlayLocation" parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
         INSERT INTO hometown_info(team_id, jibun_address, road_address, latitude, longitude, legal_code)
         VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode})
     </insert>
@@ -54,9 +53,23 @@
         FROM hometown_info
         WHERE team_id = #{teamId}
     </select>
+
     <select id="selectTeamPlayTime" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayTime">
         SELECT *
         FROM play_time_info
         WHERE team_id = #{teamId}
     </select>
+
+    <update id="updateTeam" parameterType="me.lkh.hometownleague.team.domain.Team">
+        UPDATE team_info
+        SET modified_timestamp = NOW()
+        <if test="name != null">
+            , name = #{name}
+        </if>
+        <if test="description != null">
+            , description = #{description}
+        </if>
+        WHERE id = #{id}
+    </update>
+
 </mapper>

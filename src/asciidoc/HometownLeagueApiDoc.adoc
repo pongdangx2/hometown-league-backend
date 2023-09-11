@@ -203,3 +203,22 @@ include::{custom-snippets}/team-select-detail/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-select-detail/response-body.adoc[]
+
+=== 팀 기본 정보 수정
+팀의 기본 정보 수정
+include::{snippets}/team-update-base/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-update-base/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-base/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-base/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-base/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-base/response-body.adoc[]

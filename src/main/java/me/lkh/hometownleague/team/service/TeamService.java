@@ -117,21 +117,29 @@ public class TeamService {
      * @param teamId 삭제하고자 하는 팀 아이디
      */
     public void deleteTeam(String userId, Integer teamId){
+        // 팀 존재 여부와 팀 소유주 여부 체크
+        Team baseTeamInfo = isOwner(userId, teamId);
+
+        // 소유주인 경우 논리삭제
+        teamRepository.deleteTeamLogically(baseTeamInfo.getId());
+    }
+
+    private Team isOwner(String userId, Integer teamId) {
         Team team = Team.forOwnerCheck(teamId, userId);
-        Optional.ofNullable(teamRepository.selectTeam(team))
+        Optional<Team> optionalTeam = Optional.ofNullable(teamRepository.selectTeam(team));
+
+        optionalTeam
                 .ifPresentOrElse(baseTeamInfo -> {
-                    if("Y".equals(baseTeamInfo.getOwnerYn())){
-                        // 소유주인 경우 논리삭제
-                        teamRepository.deleteTeamLogically(baseTeamInfo.getId());
-                    } else {
+                    if(!"Y".equals(baseTeamInfo.getOwnerYn())){
                         // 요청한 사람이 팀 소유주가 아닐 경우
                         throw new NotOwnerException();
                     }
-                    logger.debug(baseTeamInfo.toString());
                 },() -> {
                     // 팀이 존재하지 않는 경우
                     throw new NoSuchTeamIdException();
                 });
+
+        return optionalTeam.get();
     }
 
     public Team selectTeam(String userId, Integer teamId) {
@@ -152,4 +160,10 @@ public class TeamService {
                                         , teamRepository.selectTeamPlayLocation(teamId));
     }
 
+    public void updateTeam(Team team, String userId){
+        // 팀 존재 여부와 팀 소유주 여부 체크
+        isOwner(userId, team.getId());
+
+        teamRepository.updateTeam(team);
+    }
 }

@@ -8,6 +8,7 @@ import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
+import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
 import me.lkh.hometownleague.team.service.TeamService;
 import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
@@ -81,10 +82,21 @@ public class TeamController {
         return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), teamId));
     }
 
+    /**
+     * 팀 기본정보 업데이트 (장소/시간 제외)
+     * @param updateTeamRequest
+     * @param httpServletRequest
+     * @return
+     */
+    @PatchMapping
+    public CommonResponse updateTeam(@RequestBody UpdateTeamRequest updateTeamRequest, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        // 정보 업데이트
+        teamService.updateTeam(Team.forUpdateTeam(updateTeamRequest.getId(), updateTeamRequest.getName(), updateTeamRequest.getDescription()),
+                userSession.getUserId());
 
-    @PutMapping
-    public CommonResponse updateTeam(HttpServletRequest httpServletRequest){
-        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+        // 업데이트된 정보 다시 조회하여 응답
+        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamRequest.getId()));
     }
 
 

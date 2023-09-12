@@ -8,6 +8,8 @@ import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
+import me.lkh.hometownleague.team.domain.TeamPlayTime;
+import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayTimeRequest;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
 import me.lkh.hometownleague.team.service.TeamService;
 import me.lkh.hometownleague.team.domain.Team;
@@ -15,6 +17,8 @@ import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 팀생성/팀정보변경 등 팀관련 비즈니스로직을 처리
@@ -99,5 +103,13 @@ public class TeamController {
         return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamRequest.getId()));
     }
 
+    @PutMapping("/play-time")
+    public CommonResponse updateTeamPlayTime(@RequestBody UpdateTeamPlayTimeRequest updateTeamPlayTimeRequest, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        teamService.updateTeamPlayTime(updateTeamPlayTimeRequest.getTeamId(), userSession.getUserId(), updateTeamPlayTimeRequest.getTime());
+
+        // 업데이트된 정보 다시 조회하여 응답
+        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamPlayTimeRequest.getTeamId()));
+    }
 
 }

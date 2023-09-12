@@ -222,3 +222,22 @@ include::{custom-snippets}/team-update-base/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-update-base/response-body.adoc[]
+
+=== 팀 운동 시간 정보 수정
+팀의 운동 시간을 변경(대체)
+include::{snippets}/team-update-play-time/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-update-play-time/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-play-time/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-play-time/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-play-time/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-play-time/response-body.adoc[]

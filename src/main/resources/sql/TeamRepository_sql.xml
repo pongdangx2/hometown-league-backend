@@ -5,7 +5,7 @@
 
 <mapper namespace="me.lkh.hometownleague.team.repository.TeamRepository">
 
-발    <insert id="insertTeam" parameterType="me.lkh.hometownleague.team.domain.Team">
+    <insert id="insertTeam" parameterType="me.lkh.hometownleague.team.domain.Team">
         INSERT INTO team_info(name, ci_path, description, rank_score, kind, use_yn, create_timestamp, modified_timestamp)
         VALUES(#{name}, #{ciPath}, #{description}, #{rankScore}, #{kind}, 'Y', NOW(), NOW())
     </insert>
@@ -72,4 +72,12 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateTeamPlayTime" parameterType="me.lkh.hometownleague.team.domain.TeamPlayTime">
+        UPDATE play_time_info
+        SET  from_time = #{playTimeFrom}
+          ,to_time = #{playTimeTo}
+          ,day_of_week=#{dayOfWeek}
+        WHERE id = #{id}
+          AND team_id = #{teamId}
+    </update>
 </mapper>

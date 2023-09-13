@@ -260,3 +260,22 @@ include::{custom-snippets}/team-update-play-location/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-update-play-location/response-body.adoc[]
+
+=== 팀 소속 선수 조회
+팀의 소속 선수 목록을 조회
+include::{snippets}/team-select-users/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-select-users/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-users/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-users/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-users/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-users/response-body.adoc[]

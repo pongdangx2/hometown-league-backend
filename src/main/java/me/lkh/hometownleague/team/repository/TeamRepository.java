@@ -1,6 +1,7 @@
 package me.lkh.hometownleague.team.repository;
 
 import me.lkh.hometownleague.team.domain.*;
+import me.lkh.hometownleague.user.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface TeamRepository {
     int updateTeamPlayTime(TeamPlayTime teamPlayTime);
 
     int updateTeamPlayLocation(TeamPlayLocation teamPlayLocation);
+
+    List<User> selectUserOfTeam(Integer teamId);
 }

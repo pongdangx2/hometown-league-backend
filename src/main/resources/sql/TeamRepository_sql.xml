@@ -92,4 +92,11 @@
           AND team_id = #{teamId}
     </update>
 
+    <select id="selectUserOfTeam" parameterType="Integer" resultType="me.lkh.hometownleague.user.domain.User">
+        SELECT b.id, b.nickname, b.description, b.ci_path
+        FROM team_user_mapping a INNER JOIN user_info b ON a.user_id = b.id and b.use_yn = 'Y'
+        WHERE a.team_id = #{teamId}
+          AND a.use_yn = 'Y'
+    </select>
+
 </mapper>

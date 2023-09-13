@@ -34,7 +34,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -525,4 +527,67 @@ public class TeamControllerTest_MockMvc {
                         )
                 ));
     }
+
+    @DisplayName("팀 소속 선수 조회")
+    @Test
+    void selectUserOfTeam() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, null, "테스트 소개글");
+
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        // 세션 관련 End ======================================================================
+
+        User user2 = new User(id+"1", name+"2", null, "테스트 소개글2");
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        users.add(user2);
+        Map<String, Object> data = new HashMap<>();
+        data.put("users", users);
+        data.put("count", users.size());
+
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(data));
+        given(teamService.selectUserOfTeam(any())).willReturn(users);
+
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team/{teamId}/players", 16)
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("team-select-users",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        pathParameters(
+                                parameterWithName("teamId").description("소속선수를 조회할 팀 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("조회한 소속 선수들의 상세 정보"),
+                                fieldWithPath("data.count").type(JsonFieldType.NUMBER).description("소속 선수의 수"),
+                                fieldWithPath("data.users").type(JsonFieldType.ARRAY).description("소속 선수 목록"),
+                                fieldWithPath("data.users[].id").type(JsonFieldType.STRING).description("선수 ID"),
+                                fieldWithPath("data.users[].nickname").type(JsonFieldType.STRING).description("선수 닉네임"),
+                                fieldWithPath("data.users[].description").type(JsonFieldType.STRING).description("선수 소개글"),
+                                fieldWithPath("data.users[].ciPath").type(JsonFieldType.STRING).description("(Optional) 선수로고 경로").optional(),
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
 }

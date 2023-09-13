@@ -9,6 +9,7 @@ import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.team.domain.TeamPlayLocation;
 import me.lkh.hometownleague.team.domain.TeamPlayTime;
 import me.lkh.hometownleague.team.domain.TeamUserMapping;
+import me.lkh.hometownleague.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -202,5 +203,9 @@ public class TeamService {
                 throw new CannotUpdatePlayLocationException(teamPlayLocation.toString());
             }
         });
+    }
+
+    public List<User> selectUserOfTeam(Integer teamId){
+        return teamRepository.selectUserOfTeam(teamId);
     }
 }

@@ -15,11 +15,14 @@ import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
 import me.lkh.hometownleague.team.service.TeamService;
 import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
+import me.lkh.hometownleague.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 팀생성/팀정보변경 등 팀관련 비즈니스로직을 처리
@@ -140,8 +143,12 @@ public class TeamController {
      * @return
      */
     @GetMapping("/{teamId}/players")
-    public CommonResponse selectTeamPlayers(@PathVariable Integer teamId){
+    public CommonResponse selectUserOfTeam(@PathVariable Integer teamId){
 
-        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+        List<User> userList = teamService.selectUserOfTeam(teamId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("users", userList);
+        result.put("count", userList.size());
+        return new CommonResponse(result);
     }
 }

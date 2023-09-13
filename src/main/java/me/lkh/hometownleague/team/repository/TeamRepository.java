@@ -33,4 +33,6 @@ public interface TeamRepository {
     int updateTeamPlayLocation(TeamPlayLocation teamPlayLocation);
 
     List<User> selectUserOfTeam(Integer teamId);
+
+    int updatePlayerRole(String userId, String teamId, String role);
 }

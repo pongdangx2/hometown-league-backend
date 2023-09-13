@@ -144,11 +144,18 @@ public class TeamController {
      */
     @GetMapping("/{teamId}/players")
     public CommonResponse selectUserOfTeam(@PathVariable Integer teamId){
-
         List<User> userList = teamService.selectUserOfTeam(teamId);
         Map<String, Object> result = new HashMap<>();
         result.put("users", userList);
         result.put("count", userList.size());
         return new CommonResponse(result);
+    }
+
+    @PatchMapping("/{teamId}/owner")
+    public CommonResponse updateTeamOwner(@PathVariable Integer teamId, @RequestBody Map<String, Object> userIdMap, HttpServletRequest httpServletRequest){
+        String userId = userIdMap.get("userId").toString();
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        teamService.updateTeamOwner(userSession.getUserId(), teamId, userId);
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 }

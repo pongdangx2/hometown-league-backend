@@ -208,4 +208,18 @@ public class TeamService {
     public List<User> selectUserOfTeam(Integer teamId){
         return teamRepository.selectUserOfTeam(teamId);
     }
+
+    @Transactional
+    public void updateTeamOwner(String ownerId, Integer teamId, String userId){
+        // 팀 존재 여부와 팀 소유주 여부 체크
+        isOwner(ownerId, teamId);
+
+        if(0 == teamRepository.updatePlayerRole(userId, String.valueOf(teamId), "O")){
+            throw new NoSuchPlayerException("신규 Owner 역할 업데이트 실패");
+        }
+
+        if(0 == teamRepository.updatePlayerRole(ownerId, String.valueOf(teamId), "P")){
+            throw new NoSuchPlayerException("기존 Owner 역할 업데이트 실패");
+        }
+    }
 }

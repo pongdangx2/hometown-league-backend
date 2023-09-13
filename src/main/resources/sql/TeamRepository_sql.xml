@@ -46,6 +46,7 @@
                                                             AND b.role_code = 'O'
                                                             AND b.user_id = #{ownerId}
         WHERE a.id = #{id}
+          AND a.use_yn = 'Y'
     </select>
 
     <select id="selectTeamPlayLocation" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
@@ -98,5 +99,13 @@
         WHERE a.team_id = #{teamId}
           AND a.use_yn = 'Y'
     </select>
+
+    <update id="updatePlayerRole" parameterType="String">
+        UPDATE team_user_mapping
+        SET role_code = #{role}
+        WHERE team_id = #{teamId}
+          AND user_id = #{userId}
+          AND use_yn = 'Y'
+    </update>
 
 </mapper>

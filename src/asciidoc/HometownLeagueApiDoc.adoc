@@ -279,3 +279,25 @@ include::{custom-snippets}/team-select-users/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-select-users/response-body.adoc[]
+
+=== 팀 주장 변경
+팀의 주장을 변경. (주장만 호출 가능)
+include::{snippets}/team-update-owner/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-update-owner/path-parameters.adoc[]
+
+==== Request
+include::{snippets}/team-update-owner/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-owner/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-owner/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-owner/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-owner/response-body.adoc[]

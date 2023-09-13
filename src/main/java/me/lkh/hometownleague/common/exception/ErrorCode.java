@@ -17,6 +17,7 @@ public enum ErrorCode {
     ,NO_SUCH_TEAM_ID("2003", "존재하지 않는 팀ID입니다.")
     ,NOT_OWNER("2004", "소유주가 아닙니다.")
     ,CANNOT_UPDATE_PLAY_TIME("2005", "시간 수정에 실패했습니다.")
+    ,CANNOT_UPDATE_PLAY_LOCATION("2006", "장소 수정에 실패했습니다.")
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;
 

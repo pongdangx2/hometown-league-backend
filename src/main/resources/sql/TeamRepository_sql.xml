@@ -76,8 +76,20 @@
         UPDATE play_time_info
         SET  from_time = #{playTimeFrom}
           ,to_time = #{playTimeTo}
-          ,day_of_week=#{dayOfWeek}
+          ,day_of_week = #{dayOfWeek}
         WHERE id = #{id}
           AND team_id = #{teamId}
     </update>
+
+    <update id="updateTeamPlayLocation" parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
+        UPDATE hometown_info
+        SET  jibun_address = #{jibunAddress}
+          ,road_address = #{roadAddress}
+          ,latitude = #{latitude}
+          ,longitude = #{longitude}
+          ,legal_code = #{legalCode}
+        WHERE id = #{id}
+          AND team_id = #{teamId}
+    </update>
+
 </mapper>

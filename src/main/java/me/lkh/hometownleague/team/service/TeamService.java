@@ -172,7 +172,7 @@ public class TeamService {
         // 팀 존재 여부와 팀 소유주 여부 체크
         isOwner(userId, teamId);
 
-        teamPlayTimes.stream().forEach(teamPlayTime -> {
+        teamPlayTimes.forEach(teamPlayTime -> {
             if(0 == teamRepository.updateTeamPlayTime(new TeamPlayTime(teamPlayTime.getId()
                                                     , teamId
                                                     , teamPlayTime.getDayOfWeek()
@@ -180,6 +180,26 @@ public class TeamService {
                                                     , teamPlayTime.getPlayTimeTo()
             ))){
                 throw new CannotUpdatePlayTimeException(teamPlayTime.toString());
+            }
+        });
+    }
+
+    @Transactional
+    public void updateTeamPlayLocation(Integer teamId, String userId, List<TeamPlayLocation> teamPlayLocations){
+        // 팀 존재 여부와 팀 소유주 여부 체크
+        isOwner(userId, teamId);
+
+        teamPlayLocations.forEach(teamPlayLocation -> {
+            if(0 == teamRepository.updateTeamPlayLocation(new TeamPlayLocation(
+                    teamPlayLocation.getId()
+                    ,teamId
+                    ,teamPlayLocation.getJibunAddress()
+                    ,teamPlayLocation.getRoadAddress()
+                    ,teamPlayLocation.getLatitude()
+                    ,teamPlayLocation.getLongitude()
+                    ,teamPlayLocation.getLegalCode()
+            ))){
+                throw new CannotUpdatePlayLocationException(teamPlayLocation.toString());
             }
         });
     }

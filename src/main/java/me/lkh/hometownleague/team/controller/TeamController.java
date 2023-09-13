@@ -9,6 +9,7 @@ import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.team.domain.TeamPlayTime;
+import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayLocationRequest;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayTimeRequest;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
 import me.lkh.hometownleague.team.service.TeamService;
@@ -103,6 +104,12 @@ public class TeamController {
         return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamRequest.getId()));
     }
 
+    /**
+     * 팀 운동 시간 수정
+     * @param updateTeamPlayTimeRequest
+     * @param httpServletRequest
+     * @return
+     */
     @PutMapping("/play-time")
     public CommonResponse updateTeamPlayTime(@RequestBody UpdateTeamPlayTimeRequest updateTeamPlayTimeRequest, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -112,4 +119,29 @@ public class TeamController {
         return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamPlayTimeRequest.getTeamId()));
     }
 
+    /**
+     * 팀 운동 장소 수정
+     * @param updateTeamPlayLocationRequest
+     * @param httpServletRequest
+     * @return
+     */
+    @PutMapping("/play-location")
+    public CommonResponse updateTeamPlayLocation(@RequestBody UpdateTeamPlayLocationRequest updateTeamPlayLocationRequest, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        teamService.updateTeamPlayLocation(updateTeamPlayLocationRequest.getTeamId(), userSession.getUserId(), updateTeamPlayLocationRequest.getLocation());
+
+        // 업데이트된 정보 다시 조회하여 응답
+        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamPlayLocationRequest.getTeamId()));
+    }
+
+    /**
+     * 팀 소속 선수 조회
+     * @param teamId
+     * @return
+     */
+    @GetMapping("/{teamId}/players")
+    public CommonResponse selectTeamPlayers(@PathVariable Integer teamId){
+
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
 }

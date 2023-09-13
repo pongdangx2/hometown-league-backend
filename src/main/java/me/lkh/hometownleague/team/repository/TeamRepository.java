@@ -28,4 +28,6 @@ public interface TeamRepository {
     int updateTeam(Team team);
 
     int updateTeamPlayTime(TeamPlayTime teamPlayTime);
+
+    int updateTeamPlayLocation(TeamPlayLocation teamPlayLocation);
 }

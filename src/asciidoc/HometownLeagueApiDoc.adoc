@@ -241,3 +241,22 @@ include::{custom-snippets}/team-update-play-time/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-update-play-time/response-body.adoc[]
+
+=== 팀 운동 장소 정보 수정
+팀의 운동 장소를을 변경(대체)
+include::{snippets}/team-update-play-location/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-update-play-location/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-play-location/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-play-location/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-play-location/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-play-location/response-body.adoc[]

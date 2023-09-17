@@ -38,5 +38,10 @@ public interface TeamRepository {
 
     List<Team> selectTeamList(String legalCode, String fromScore, String toScore, String dayOfWeek, String time, String name);
 
-    int insertJoinRequest(String userId, String teamId);
+    Integer selectJoinedTeam(String userId, String teamId);
+
+    TeamJoinRequest selectJoinRequest(String userId, String teamId);
+
+    int insertJoinRequest(String userId, String teamId, String description);
+
 }

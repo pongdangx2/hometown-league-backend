@@ -5,11 +5,8 @@ import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.team.*;
 import me.lkh.hometownleague.common.util.HometownLeagueUtil;
 import me.lkh.hometownleague.common.util.RankService;
+import me.lkh.hometownleague.team.domain.*;
 import me.lkh.hometownleague.team.repository.TeamRepository;
-import me.lkh.hometownleague.team.domain.Team;
-import me.lkh.hometownleague.team.domain.TeamPlayLocation;
-import me.lkh.hometownleague.team.domain.TeamPlayTime;
-import me.lkh.hometownleague.team.domain.TeamUserMapping;
 import me.lkh.hometownleague.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -236,12 +233,31 @@ public class TeamService {
         return result.isEmpty() ? new ArrayList<>() : result.get();
     }
 
-    public void joinRequest(String teamId, String userId){
+    public void joinRequest(String teamId, String userId, String description){
         Team team = Team.forSelectTeam(Integer.valueOf(teamId));
+
+        // 1. 존재하는 팀인지 체크
         Optional.ofNullable(teamRepository.selectTeam(team)).orElseThrow(NoSuchTeamIdException::new);
 
-        if(0 == teamRepository.insertJoinRequest(userId, teamId)){
+        // 2. 이미 가입된 팀인지 체크
+        Optional.ofNullable(teamRepository.selectJoinedTeam(userId, teamId)).ifPresent(joinedTeam -> {
+            throw new AlreadyJoinedTeamException();
+        });
+
+        // 3. 이미 가입요청한 팀인지 체크
+        Optional.ofNullable(teamRepository.selectJoinRequest(userId, teamId)).ifPresent(teamJoinRequest -> {
+            logger.debug(teamJoinRequest.toString());
+
+            throw new DuplicateTeamJoinRequestException();
+        });
+
+        // 4. 가입요청 생성
+        if(0 == teamRepository.insertJoinRequest(userId, teamId, description)){
             throw new CannotRequestJoinTeamException();
         }
+    }
+
+    public List<TeamJoinRequest> selectJoinRequest(String userId, Integer teamId){
+        return null;
     }
 }

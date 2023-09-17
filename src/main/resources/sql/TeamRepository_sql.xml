@@ -148,9 +148,34 @@
         </if>
     </select>
 
+    <select id="selectJoinedTeam" parameterType="String" resultType="Integer">
+        SELECT id
+        FROM team_user_mapping
+        WHERE user_id = #{userId}
+          AND team_id = #{teamId}
+          AND use_yn = 'Y'
+    </select>
+
+    <select id="selectJoinRequest" parameterType="String" resultType="me.lkh.hometownleague.team.domain.TeamJoinRequest">
+        SELECT a.id, a.user_id, a.team_id, a.process_yn, a.description
+        FROM join_request a
+        WHERE team_id = #{teamId}
+          AND user_id = #{userId}
+          AND process_yn = 'N'
+    </select>
+
     <insert id="insertJoinRequest" parameterType="String">
-        INSERT INTO join_request(user_id, team_id, process_yn, create_timestamp)
-        VALUES(#{userId}, #{teamId}, 'N', NOW())
+        INSERT INTO join_request(user_id, team_id, process_yn, description, create_timestamp)
+        VALUES(#{userId}, #{teamId}, 'N',
+        <choose>
+            <when test="description != null">
+                #{description}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+                ,NOW())
     </insert>
 
 </mapper>

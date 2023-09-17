@@ -112,6 +112,7 @@ CREATE TABLE `join_request` (
                                 `user_id` varchar(50) NOT NULL COMMENT '유저ID(email)',
                                 `team_id` int NOT NULL COMMENT '팀ID',
                                 `process_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '처리여부',
+                                `description` varchar(2000) NULL COMMENT '가입요청 소개글',
                                 `create_timestamp` timestamp NOT NULL COMMENT '요청일시',
                                 PRIMARY KEY (`id`),
                                 CONSTRAINT `join_request_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team_info` (`id`),

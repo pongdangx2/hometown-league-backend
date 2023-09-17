@@ -754,7 +754,8 @@ public class TeamControllerTest_MockMvc {
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         requestFields(
-                                fieldWithPath("teamId").type(JsonFieldType.NUMBER).description("가입요청할 팀의 ID")
+                                fieldWithPath("teamId").type(JsonFieldType.NUMBER).description("가입요청할 팀의 ID"),
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("가입요청 시 유저의 자기소개글").optional()
                         ),
                         responseFields(
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),

@@ -188,11 +188,20 @@ public class TeamController {
      * @return
      */
     @PostMapping("join-request")
-    public CommonResponse joinRequest(@RequestBody Map<String, Object> teamIdMap, HttpServletRequest httpServletRequest){
-        String teamId = teamIdMap.get("teamId").toString();
+    public CommonResponse joinRequest(@RequestBody Map<String, Object> teamMap, HttpServletRequest httpServletRequest){
+        String teamId = teamMap.get("teamId").toString();
+        String description = teamMap.containsKey("description") ? teamMap.get("description").toString() : null;
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
 
-        teamService.joinRequest(teamId, userSession.getUserId());
+        teamService.joinRequest(teamId, userSession.getUserId(), description);
+
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+    @GetMapping("/{teamId}/join-request")
+    public CommonResponse selectJoinRequest(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+
 
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }

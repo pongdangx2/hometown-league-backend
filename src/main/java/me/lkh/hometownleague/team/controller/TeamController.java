@@ -8,7 +8,6 @@ import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
-import me.lkh.hometownleague.team.domain.TeamPlayTime;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayLocationRequest;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayTimeRequest;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
@@ -45,6 +44,12 @@ public class TeamController {
         this.sessionService = sessionService;
     }
 
+    /**
+     * 팀 생성
+     * @param makeTeamRequest
+     * @param httpServletRequest
+     * @return
+     */
     @PostMapping
     public CommonResponse makeTeam(@RequestBody MakeTeamRequest makeTeamRequest, HttpServletRequest httpServletRequest){
 
@@ -151,11 +156,30 @@ public class TeamController {
         return new CommonResponse(result);
     }
 
+    /**
+     * 주장 변경
+     * @param teamId
+     * @param userIdMap
+     * @param httpServletRequest
+     * @return
+     */
     @PatchMapping("/{teamId}/owner")
     public CommonResponse updateTeamOwner(@PathVariable Integer teamId, @RequestBody Map<String, Object> userIdMap, HttpServletRequest httpServletRequest){
         String userId = userIdMap.get("userId").toString();
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         teamService.updateTeamOwner(userSession.getUserId(), teamId, userId);
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+    @GetMapping
+    public CommonResponse selectTeamList( @RequestParam(name = "legal-code", required = false) Integer legalCode
+                                         ,@RequestParam(name = "from-score", required = false) Integer fromScore
+                                         ,@RequestParam(name = "to-score", required = false) Integer toScore
+                                         ,@RequestParam(name = "day-of-Week", required = false) Integer dayOfWeek
+                                         ,@RequestParam(name = "time", required = false) String time
+                                         ,@RequestParam(required = false) String name){
+
+        logger.debug("selectTeamList:" + legalCode + ", " + fromScore + ", " + toScore + ", " + name);
+        return new CommonResponse<>(teamService.selectTeamList(legalCode, fromScore, toScore, dayOfWeek, time, name));
     }
 }

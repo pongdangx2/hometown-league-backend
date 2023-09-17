@@ -63,6 +63,9 @@ CREATE TABLE `hometown_info` (
                                  CONSTRAINT `hometown_info_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team_info` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='연고지 정보';
 
+
+
+
 CREATE TABLE `matching_request_info` (
                                          `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
                                          `team_id` int NOT NULL COMMENT '팀ID',

@@ -12,6 +12,24 @@
 == 1. User
 
 === 로그인
+=== 팀 상세 정보 조회
+ID로 팀 상세 정보 조회
+include::{snippets}/team-select-detail/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-select-detail/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-detail/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-detail/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-detail/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-detail/response-body.adoc[]
 사용자 로그인
 include::{snippets}/user-login/curl-request.adoc[]
 
@@ -301,3 +319,22 @@ include::{custom-snippets}/team-update-owner/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-update-owner/response-body.adoc[]
+
+=== 팀 목록 조회
+팀 찾기 화면에서 팀의 목록 조회
+include::{snippets}/team-select-list/curl-request.adoc[]
+
+==== Request (Query Parameters)
+include::{snippets}/team-select-list/query-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-list/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-list/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-list/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-list/response-body.adoc[]

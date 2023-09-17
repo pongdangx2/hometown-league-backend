@@ -3,6 +3,7 @@ package me.lkh.hometownleague.team.service;
 import me.lkh.hometownleague.common.code.RoleCode;
 import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.team.*;
+import me.lkh.hometownleague.common.util.HometownLeagueUtil;
 import me.lkh.hometownleague.common.util.RankService;
 import me.lkh.hometownleague.team.repository.TeamRepository;
 import me.lkh.hometownleague.team.domain.Team;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,7 +133,7 @@ public class TeamService {
 
         optionalTeam
                 .ifPresentOrElse(baseTeamInfo -> {
-                    if(!"Y".equals(baseTeamInfo.getOwnerYn())){
+                    if(!userId.equals(baseTeamInfo.getOwnerId())){
                         // 요청한 사람이 팀 소유주가 아닐 경우
                         throw new NotOwnerException();
                     }
@@ -156,7 +158,8 @@ public class TeamService {
                                         , baseTeamInfo.getRankScore()
                                         , rankService.getRankName(baseTeamInfo.getRankScore())
                                         , baseTeamInfo.getKind()
-                                        , baseTeamInfo.getOwnerYn()
+//                                        , baseTeamInfo.getOwnerYn()
+                                        , baseTeamInfo.getOwnerId()
                                         , teamRepository.selectTeamPlayTime(teamId)
                                         , teamRepository.selectTeamPlayLocation(teamId));
     }
@@ -214,12 +217,22 @@ public class TeamService {
         // 팀 존재 여부와 팀 소유주 여부 체크
         isOwner(ownerId, teamId);
 
-        if(0 == teamRepository.updatePlayerRole(userId, String.valueOf(teamId), "O")){
+        if(0 == teamRepository.updatePlayerRole(userId, String.valueOf(teamId), RoleCode.OWNER.getRoleCode())){
             throw new NoSuchPlayerException("신규 Owner 역할 업데이트 실패");
         }
 
-        if(0 == teamRepository.updatePlayerRole(ownerId, String.valueOf(teamId), "P")){
+        if(0 == teamRepository.updatePlayerRole(ownerId, String.valueOf(teamId), RoleCode.PLAYER.getRoleCode())){
             throw new NoSuchPlayerException("기존 Owner 역할 업데이트 실패");
         }
+    }
+
+    public List<Team> selectTeamList(Integer legalCode, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name){
+        Optional<List<Team>> result = Optional.ofNullable(teamRepository.selectTeamList(HometownLeagueUtil.integerToNullableString(legalCode)
+                , HometownLeagueUtil.integerToNullableString(fromScore)
+                , HometownLeagueUtil.integerToNullableString(toScore)
+                , HometownLeagueUtil.integerToNullableString(dayOfWeek)
+                , time
+                , name));
+        return result.isEmpty() ? new ArrayList<>() : result.get();
     }
 }

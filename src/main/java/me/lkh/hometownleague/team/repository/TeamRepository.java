@@ -35,4 +35,6 @@ public interface TeamRepository {
     List<User> selectUserOfTeam(Integer teamId);
 
     int updatePlayerRole(String userId, String teamId, String role);
+
+    List<Team> selectTeamList(String legalCode, String fromScore, String toScore, String dayOfWeek, String time, String name);
 }

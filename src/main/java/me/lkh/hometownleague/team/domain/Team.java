@@ -1,19 +1,20 @@
 package me.lkh.hometownleague.team.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Team {
 
     private final Integer id;
 
     private final String name;
 
-    @JsonIgnore
     private final String ownerId;
 
     private final String ciPath;
@@ -58,8 +59,8 @@ public class Team {
     public static Team forOwnerCheck(Integer id, String ownerId){
         return new Team(id, null, ownerId, null, null, null, null, null, null,null, null, "Y", null, null);
     }
-    public static Team forSelectTeamResponse(Integer id, String name, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerYn, List<TeamPlayTime> time, List<TeamPlayLocation> location){
-        return new Team(id, name, null, ciPath, description, rankScore, rank, kind, ownerYn, time, location, null, null, null);
+    public static Team forSelectTeamResponse(Integer id, String name, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerId, List<TeamPlayTime> time, List<TeamPlayLocation> location){
+        return new Team(id, name, ownerId, ciPath, description, rankScore, rank, kind, null, time, location, null, null, null);
     }
     public static Team forUpdateTeam(Integer id, String name, String description){
         return new Team(id, name, null, null, description, null, null, null, null, null, null, null, null, null);
@@ -73,10 +74,24 @@ public class Team {
      * @param description
      * @param rankScore
      * @param kind
-     * @param ownerYn
+     * @param ownerId
      */
-    public Team(Integer id, String name, String ciPath, String description, Integer rankScore, Integer kind, String ownerYn){
-        this(id, name, null, ciPath, description, rankScore, null, kind, ownerYn, null, null, null, null, null);
+    public Team(Integer id, String name, String ciPath, String description, Integer rankScore, Integer kind, String ownerId){
+        this(id, name, ownerId, ciPath, description, rankScore, null, kind, null, null, null, null, null, null);
+    }
+
+    /**
+     *
+     * selectTeamList 쿼리를 위한 생성자(Mybatis)
+     * @param id
+     * @param name
+     * @param ciPath
+     * @param description
+     * @param rankScore
+     * @param kind
+     */
+    public Team(Integer id, String name, String ciPath, String description, Integer rankScore, Integer kind){
+        this(id, name, null, ciPath, description,rankScore, null, kind, null, null, null,null, null, null);
     }
 
     public Team(Integer id, String name, String ownerId, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerYn, List<TeamPlayTime> time, List<TeamPlayLocation> location, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {

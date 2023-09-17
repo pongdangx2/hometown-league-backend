@@ -38,13 +38,21 @@
     </update>
 
     <select id="selectTeam" parameterType="me.lkh.hometownleague.team.domain.Team" resultType="me.lkh.hometownleague.team.domain.Team">
-        SELECT a.id, a.name, a.ci_path, a.description, a.rank_score, a.kind
+        <!--SELECT a.id, a.name, a.ci_path, a.description, a.rank_score, a.kind
              , CASE WHEN b.user_id IS NULL THEN 'N'
                     ELSE 'Y'
                END AS owner_yn
+             , b.user_id AS owner_id
         FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id
                                                             AND b.role_code = 'O'
                                                             AND b.user_id = #{ownerId}
+        WHERE a.id =
+          AND a.use_yn = 'Y'
+          -->
+        SELECT a.id, a.name, a.ci_path, a.description, a.rank_score, a.kind
+             , b.user_id AS owner_id
+        FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id
+            AND b.role_code = 'O'
         WHERE a.id = #{id}
           AND a.use_yn = 'Y'
     </select>
@@ -107,5 +115,37 @@
           AND user_id = #{userId}
           AND use_yn = 'Y'
     </update>
+
+    <select id="selectTeamList" parameterType="String" resultType="me.lkh.hometownleague.team.domain.Team">
+        SELECT a.id
+            , a.name
+            , a.ci_path
+            , a.description
+            , a.rank_score
+            , a.kind
+        FROM team_info a
+            <if test="legalCode != null">
+            INNER JOIN hometown_info b ON a.id = b.team_id AND b.legal_code = #{legalCode}
+            </if>
+            <if test="dayOfWeek != null or time != null">
+            INNER JOIN play_time_info c ON a.id = c.team_id
+                                                            <if test="dayOfWeek != null">
+                                                            AND c.day_of_week = #{dayOfWeek}
+                                                            </if>
+                                                            <if test="time != null">
+                                                            AND #{time} BETWEEN c.from_time AND c.to_time
+                                                            </if>
+            </if>
+        WHERE a.use_yn = 'Y'
+        <if test="fromScore != null">
+        AND rank_score <![CDATA[ >= ]]> #{fromScore}
+        </if>
+        <if test="toScore != null">
+        AND rank_score <![CDATA[ <= ]]> #{toScore}
+        </if>
+        <if test="name != null">
+        AND name like '%'|| #{name} || '%'
+        </if>
+    </select>
 
 </mapper>

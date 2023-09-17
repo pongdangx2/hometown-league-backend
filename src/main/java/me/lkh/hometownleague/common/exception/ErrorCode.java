@@ -19,6 +19,7 @@ public enum ErrorCode {
     ,CANNOT_UPDATE_PLAY_TIME("2005", "시간 수정에 실패했습니다.")
     ,CANNOT_UPDATE_PLAY_LOCATION("2006", "장소 수정에 실패했습니다.")
     ,NO_SUCH_PLAYER("2007", "팀의 소속 선수가 아닙니다.")
+    ,CANNOT_REQUEST_JOIN_TEAM("2008", "가입요청에 실패했습니다.")
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;
 

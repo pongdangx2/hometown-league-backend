@@ -128,7 +128,7 @@ public class TeamService {
     }
 
     private Team isOwner(String userId, Integer teamId) {
-        Team team = Team.forOwnerCheck(teamId, userId);
+        Team team = Team.forSelectTeam(teamId);
         Optional<Team> optionalTeam = Optional.ofNullable(teamRepository.selectTeam(team));
 
         optionalTeam
@@ -146,7 +146,7 @@ public class TeamService {
     }
 
     public Team selectTeam(String userId, Integer teamId) {
-        Optional<Team> optionalBaseTeamInfo = Optional.ofNullable(teamRepository.selectTeam(Team.forOwnerCheck(teamId, userId)));
+        Optional<Team> optionalBaseTeamInfo = Optional.ofNullable(teamRepository.selectTeam(Team.forSelectTeam(teamId)));
         // 팀이 존재하지 않는 경우
         optionalBaseTeamInfo.orElseThrow(NoSuchTeamIdException::new);
         Team baseTeamInfo = optionalBaseTeamInfo.get();
@@ -234,5 +234,14 @@ public class TeamService {
                 , time
                 , name));
         return result.isEmpty() ? new ArrayList<>() : result.get();
+    }
+
+    public void joinRequest(String teamId, String userId){
+        Team team = Team.forSelectTeam(Integer.valueOf(teamId));
+        Optional.ofNullable(teamRepository.selectTeam(team)).orElseThrow(NoSuchTeamIdException::new);
+
+        if(0 == teamRepository.insertJoinRequest(userId, teamId)){
+            throw new CannotRequestJoinTeamException();
+        }
     }
 }

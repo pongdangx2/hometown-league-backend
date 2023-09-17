@@ -711,4 +711,55 @@ public class TeamControllerTest_MockMvc {
                         )
                 ));
     }
+
+    @DisplayName("팀 가입요청")
+    @Test
+    void makeJoinTeamRequest() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        // 세션 관련 End ======================================================================
+
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("teamId", 16);
+        String requestContent = objectMapper.writeValueAsString(request);
+        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/team/join-request")
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .content(requestContent)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("team-join-request",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestFields(
+                                fieldWithPath("teamId").type(JsonFieldType.NUMBER).description("가입요청할 팀의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
 }

@@ -37,4 +37,6 @@ public interface TeamRepository {
     int updatePlayerRole(String userId, String teamId, String role);
 
     List<Team> selectTeamList(String legalCode, String fromScore, String toScore, String dayOfWeek, String time, String name);
+
+    int insertJoinRequest(String userId, String teamId);
 }

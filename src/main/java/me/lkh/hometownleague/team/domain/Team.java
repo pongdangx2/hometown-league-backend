@@ -56,8 +56,8 @@ public class Team {
     public static Team forCreatingTeam(String name, String ownerId, String ciPath, String description, int kind){
         return new Team(null, name, ownerId, ciPath, description, 0, null, kind, null,null, null, "Y", null, null);
     }
-    public static Team forOwnerCheck(Integer id, String ownerId){
-        return new Team(id, null, ownerId, null, null, null, null, null, null,null, null, "Y", null, null);
+    public static Team forSelectTeam(Integer id){
+        return new Team(id, null, null, null, null, null, null, null, null,null, null, "Y", null, null);
     }
     public static Team forSelectTeamResponse(Integer id, String name, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerId, List<TeamPlayTime> time, List<TeamPlayLocation> location){
         return new Team(id, name, ownerId, ciPath, description, rankScore, rank, kind, null, time, location, null, null, null);

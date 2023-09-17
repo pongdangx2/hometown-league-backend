@@ -106,3 +106,14 @@ CREATE TABLE `common_code` (
                                `description` varchar(1000) COMMENT '설명'
                                PRIMARY KEY (`group_id`,`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='공통코드';
+
+CREATE TABLE `join_request` (
+                                `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                `user_id` varchar(50) NOT NULL COMMENT '유저ID(email)',
+                                `team_id` int NOT NULL COMMENT '팀ID',
+                                `process_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '처리여부',
+                                `create_timestamp` timestamp NOT NULL COMMENT '요청일시',
+                                PRIMARY KEY (`id`),
+                                CONSTRAINT `join_request_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team_info` (`id`),
+                                CONSTRAINT `join_request_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='팀에 가입 요청';

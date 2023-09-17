@@ -182,4 +182,18 @@ public class TeamController {
         logger.debug("selectTeamList:" + legalCode + ", " + fromScore + ", " + toScore + ", " + name);
         return new CommonResponse<>(teamService.selectTeamList(legalCode, fromScore, toScore, dayOfWeek, time, name));
     }
+
+    /**
+     * 팀에 가입 요청
+     * @return
+     */
+    @PostMapping("join-request")
+    public CommonResponse joinRequest(@RequestBody Map<String, Object> teamIdMap, HttpServletRequest httpServletRequest){
+        String teamId = teamIdMap.get("teamId").toString();
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+
+        teamService.joinRequest(teamId, userSession.getUserId());
+
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
 }

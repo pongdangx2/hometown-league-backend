@@ -148,4 +148,9 @@
         </if>
     </select>
 
+    <insert id="insertJoinRequest" parameterType="String">
+        INSERT INTO join_request(user_id, team_id, process_yn, create_timestamp)
+        VALUES(#{userId}, #{teamId}, 'N', NOW())
+    </insert>
+
 </mapper>

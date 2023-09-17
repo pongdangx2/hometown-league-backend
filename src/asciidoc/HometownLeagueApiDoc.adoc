@@ -338,3 +338,22 @@ include::{custom-snippets}/team-select-list/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-select-list/response-body.adoc[]
+
+=== 팀 입단 요청
+팀에 가입을 요청
+include::{snippets}/team-join-request/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-join-request/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-join-request/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-join-request/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-join-request/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-join-request/response-body.adoc[]

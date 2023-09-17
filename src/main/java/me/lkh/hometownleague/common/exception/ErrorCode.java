@@ -22,6 +22,7 @@ public enum ErrorCode {
     ,CANNOT_REQUEST_JOIN_TEAM("2008", "가입요청에 실패했습니다.")
     ,DUPLICATE_TEAM_JOIN_REQUEST("2009", "이미 가입 요청되었습니다.")
     ,ALREADY_JOINED_TEAM("2010", "이미 가입된 팀입니다.")
+    ,CANNOT_PRODUCE_TEAM_USER_MAPPING("2011", "팀 가입에 실패했습니다.")
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;
 

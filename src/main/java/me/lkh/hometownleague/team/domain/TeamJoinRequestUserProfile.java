@@ -6,13 +6,19 @@ public class TeamJoinRequestUserProfile {
     private final String userId;
     private final String nickname;
     private final String profileDescription;
+    private final String requestDate;
 
-    public TeamJoinRequestUserProfile(Integer id, String description, String userId, String nickname, String profileDescription) {
+    public TeamJoinRequestUserProfile(Integer id, String description, String userId, String nickname, String profileDescription, String requestDate) {
         this.id = id;
         this.description = description;
         this.userId = userId;
         this.nickname = nickname;
         this.profileDescription = profileDescription;
+        this.requestDate = requestDate;
+    }
+
+    public String getRequestDate() {
+        return requestDate;
     }
 
     public Integer getId() {

@@ -181,8 +181,22 @@
 
     <select id="selectJoinRequestUser" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamJoinRequestUserProfile">
         SELECT a.id, a.description, b.id AS user_id, b.nickname, b.description AS profile_description
+                , DATE_FORMAT(a.create_timestamp, '%Y%m%d%H%i') AS request_date
         FROM join_request a INNER JOIN user_info b ON a.user_id = b.id AND b.use_yn = 'Y'
         WHERE a.team_id = #{teamId}
           AND a.process_yn = 'N'
     </select>
+
+    <insert id="insertTeamUserMapping" parameterType="Integer">
+        INSERT INTO team_user_mapping(user_id, team_id, role_code, use_yn, create_timestamp, modified_timestamp)
+        SELECT user_id, team_id, 'P', 'Y', NOW(), NOW()
+        FROM join_request
+        WHERE id = #{joinRequestId}
+    </insert>
+
+    <delete id="deleteJoinRequest" parameterType="Integer">
+        DELETE FROM join_request
+        WHERE id = #{joinRequestId}
+    </delete>
+
 </mapper>

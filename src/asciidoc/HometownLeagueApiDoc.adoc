@@ -376,3 +376,22 @@ include::{custom-snippets}/team-select-join-request-list/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-select-join-request-list/response-body.adoc[]
+
+=== 팀 가입 승인
+팀에 가입 승인
+include::{snippets}/team-join-request-accept/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-join-request-accept/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-join-request-accept/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-join-request-accept/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-join-request-accept/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-join-request-accept/response-body.adoc[]

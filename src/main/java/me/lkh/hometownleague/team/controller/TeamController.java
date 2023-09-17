@@ -8,12 +8,9 @@ import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
-import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayLocationRequest;
-import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayTimeRequest;
-import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
+import me.lkh.hometownleague.team.domain.request.*;
 import me.lkh.hometownleague.team.service.TeamService;
 import me.lkh.hometownleague.team.domain.Team;
-import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 import me.lkh.hometownleague.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,19 +185,35 @@ public class TeamController {
      * @return
      */
     @PostMapping("join-request")
-    public CommonResponse joinRequest(@RequestBody Map<String, Object> teamMap, HttpServletRequest httpServletRequest){
-        String teamId = teamMap.get("teamId").toString();
-        String description = teamMap.containsKey("description") ? teamMap.get("description").toString() : null;
+    public CommonResponse joinRequest(@RequestBody MakeJoinRequestRequest makeJoinRequestRequest, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
-
-        teamService.joinRequest(teamId, userSession.getUserId(), description);
+        teamService.joinRequest(String.valueOf(makeJoinRequestRequest.getTeamId()), userSession.getUserId(), makeJoinRequestRequest.getDescription());
 
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 
+    /**
+     * 팀에 가입요청한 유저의 목록 조회
+     * @param teamId
+     * @param httpServletRequest
+     * @return
+     */
     @GetMapping("/{teamId}/join-request")
     public CommonResponse selectJoinRequest(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         return new CommonResponse<>(teamService.selectJoinRequest(userSession.getUserId(), teamId));
+    }
+
+    /**
+     * 가입 요청한 유저의 가입 승인
+     * @param makeJoinAcceptRequest
+     * @param httpServletRequest
+     * @return
+     */
+    @PostMapping("/accept")
+    public CommonResponse acceptJoinRequest(@RequestBody MakeJoinAcceptRequest makeJoinAcceptRequest, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        teamService.acceptJoinRequest(userSession.getUserId(), makeJoinAcceptRequest.getTeamId(), makeJoinAcceptRequest.getJoinRequestId());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 }

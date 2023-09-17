@@ -46,4 +46,7 @@ public interface TeamRepository {
 
     List<TeamJoinRequestUserProfile> selectJoinRequestUser(Integer teamId);
 
+    int insertTeamUserMapping(Integer joinRequestId);
+
+    int deleteJoinRequest(Integer joinRequestId);
 }

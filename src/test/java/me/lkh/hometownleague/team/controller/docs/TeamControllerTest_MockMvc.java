@@ -10,13 +10,10 @@ import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.team.controller.TeamController;
 import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.team.domain.TeamJoinRequestUserProfile;
-import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayLocationRequest;
-import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayTimeRequest;
-import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
+import me.lkh.hometownleague.team.domain.request.*;
 import me.lkh.hometownleague.team.service.TeamService;
 import me.lkh.hometownleague.team.domain.TeamPlayLocation;
 import me.lkh.hometownleague.team.domain.TeamPlayTime;
-import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 import me.lkh.hometownleague.user.domain.User;
 import org.junit.Rule;
 import org.junit.jupiter.api.DisplayName;
@@ -783,7 +780,7 @@ public class TeamControllerTest_MockMvc {
         // 세션 관련 End ======================================================================
 
         List<TeamJoinRequestUserProfile> responseList = new ArrayList<>();
-        TeamJoinRequestUserProfile teamJoinRequestUserProfile = new TeamJoinRequestUserProfile(1, "가입승인 부탁드립니다.", "testId@gmail.com", "messi", "미드필더를 주로하는 동호인");
+        TeamJoinRequestUserProfile teamJoinRequestUserProfile = new TeamJoinRequestUserProfile(1, "가입승인 부탁드립니다.", "testId@gmail.com", "messi", "미드필더를 주로하는 동호인", "202309171210");
         responseList.add(teamJoinRequestUserProfile);
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
         given(teamService.selectJoinRequest(any(), any())).willReturn(responseList);
@@ -813,6 +810,57 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("data[].userId").type(JsonFieldType.STRING).description("가입요청한 사용자 ID"),
                                 fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("가입요청한 사용자의 닉네임"),
                                 fieldWithPath("data[].profileDescription").type(JsonFieldType.STRING).description("가입요청한 사용자의 프로필 자기소개"),
+                                fieldWithPath("data[].requestDate").type(JsonFieldType.STRING).description("가입요청 일시 (YYYYMMDDHH24MI형태)"),
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("팀 가입요청 승인")
+    @Test
+    void acceptJoinRequest() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        // 세션 관련 End ======================================================================
+
+        String requestContent = objectMapper.writeValueAsString(new MakeJoinAcceptRequest(16, 1));
+        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/team/accept")
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .content(requestContent)
+                .content(requestContent)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("team-join-request-accept",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestFields(
+                                fieldWithPath("teamId").type(JsonFieldType.NUMBER).description("가입요청할 팀의 ID"),
+                                fieldWithPath("joinRequestId").type(JsonFieldType.NUMBER).description("승인할 가입 요청 ID")
+                        ),
+                        responseFields(
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )

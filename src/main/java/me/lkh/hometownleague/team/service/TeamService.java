@@ -262,4 +262,18 @@ public class TeamService {
 
         return teamRepository.selectJoinRequestUser(teamId);
     }
+
+    @Transactional
+    public void acceptJoinRequest(String userId, Integer teamId, Integer joinRequestId){
+        // 팀 존재 여부와 팀 소유주 여부 체크
+        isOwner(userId, teamId);
+
+        // 가입
+        if(0 == teamRepository.insertTeamUserMapping(joinRequestId))
+            throw new CannotProduceTeamUserMappingException("가입 데이터 생성 실패");
+
+        // 요청 삭제
+        if(0 == teamRepository.deleteJoinRequest(joinRequestId))
+            throw new CannotProduceTeamUserMappingException("요청 데이터 삭제 실패");
+    }
 }

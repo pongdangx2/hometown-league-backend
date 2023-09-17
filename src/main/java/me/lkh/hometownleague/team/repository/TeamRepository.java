@@ -44,4 +44,6 @@ public interface TeamRepository {
 
     int insertJoinRequest(String userId, String teamId, String description);
 
+    List<TeamJoinRequestUserProfile> selectJoinRequestUser(Integer teamId);
+
 }

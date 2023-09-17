@@ -201,8 +201,6 @@ public class TeamController {
     @GetMapping("/{teamId}/join-request")
     public CommonResponse selectJoinRequest(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
-
-
-        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+        return new CommonResponse<>(teamService.selectJoinRequest(userSession.getUserId(), teamId));
     }
 }

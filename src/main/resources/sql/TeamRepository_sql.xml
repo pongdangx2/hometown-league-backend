@@ -178,4 +178,11 @@
                 ,NOW())
     </insert>
 
+
+    <select id="selectJoinRequestUser" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamJoinRequestUserProfile">
+        SELECT a.id, a.description, b.id AS user_id, b.nickname, b.description AS profile_description
+        FROM join_request a INNER JOIN user_info b ON a.user_id = b.id AND b.use_yn = 'Y'
+        WHERE a.team_id = #{teamId}
+          AND a.process_yn = 'N'
+    </select>
 </mapper>

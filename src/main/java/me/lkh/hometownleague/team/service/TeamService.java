@@ -224,13 +224,12 @@ public class TeamService {
     }
 
     public List<Team> selectTeamList(Integer legalCode, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name){
-        Optional<List<Team>> result = Optional.ofNullable(teamRepository.selectTeamList(HometownLeagueUtil.integerToNullableString(legalCode)
+        return teamRepository.selectTeamList(HometownLeagueUtil.integerToNullableString(legalCode)
                 , HometownLeagueUtil.integerToNullableString(fromScore)
                 , HometownLeagueUtil.integerToNullableString(toScore)
                 , HometownLeagueUtil.integerToNullableString(dayOfWeek)
                 , time
-                , name));
-        return result.isEmpty() ? new ArrayList<>() : result.get();
+                , name);
     }
 
     public void joinRequest(String teamId, String userId, String description){
@@ -257,7 +256,10 @@ public class TeamService {
         }
     }
 
-    public List<TeamJoinRequest> selectJoinRequest(String userId, Integer teamId){
-        return null;
+    public List<TeamJoinRequestUserProfile> selectJoinRequest(String userId, Integer teamId){
+        // 팀 존재 여부와 팀 소유주 여부 체크
+        isOwner(userId, teamId);
+
+        return teamRepository.selectJoinRequestUser(teamId);
     }
 }

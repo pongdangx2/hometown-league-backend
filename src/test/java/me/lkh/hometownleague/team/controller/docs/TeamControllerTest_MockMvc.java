@@ -9,6 +9,7 @@ import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.team.controller.TeamController;
 import me.lkh.hometownleague.team.domain.Team;
+import me.lkh.hometownleague.team.domain.TeamJoinRequestUserProfile;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayLocationRequest;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamPlayTimeRequest;
 import me.lkh.hometownleague.team.domain.request.UpdateTeamRequest;
@@ -755,9 +756,63 @@ public class TeamControllerTest_MockMvc {
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         requestFields(
                                 fieldWithPath("teamId").type(JsonFieldType.NUMBER).description("가입요청할 팀의 ID"),
-                                fieldWithPath("description").type(JsonFieldType.STRING).description("가입요청 시 유저의 자기소개글").optional()
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("(Optional)가입요청 시 유저의 자기소개글").optional()
                         ),
                         responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("팀 가입 요청 목록 조회")
+    @Test
+    void selectTeamJoinRequestList() throws Exception {
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        // 세션 관련 End ======================================================================
+
+        List<TeamJoinRequestUserProfile> responseList = new ArrayList<>();
+        TeamJoinRequestUserProfile teamJoinRequestUserProfile = new TeamJoinRequestUserProfile(1, "가입승인 부탁드립니다.", "testId@gmail.com", "messi", "미드필더를 주로하는 동호인");
+        responseList.add(teamJoinRequestUserProfile);
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
+        given(teamService.selectJoinRequest(any(), any())).willReturn(responseList);
+
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team/{teamId}/join-request", 16)
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("team-select-join-request-list",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        pathParameters(
+                                parameterWithName("teamId").description("가입요청목록을 조회할 팀ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("조회한 가입요청 목록"),
+                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("가입요청 ID(가입요청 테이블의 KEY)"),
+                                fieldWithPath("data[].description").type(JsonFieldType.STRING).description("(Optional)가입요청 시 유저가 작성한 소개글").optional(),
+                                fieldWithPath("data[].userId").type(JsonFieldType.STRING).description("가입요청한 사용자 ID"),
+                                fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("가입요청한 사용자의 닉네임"),
+                                fieldWithPath("data[].profileDescription").type(JsonFieldType.STRING).description("가입요청한 사용자의 프로필 자기소개"),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )

@@ -395,3 +395,26 @@ include::{custom-snippets}/team-join-request-accept/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-join-request-accept/response-body.adoc[]
+
+// Matching ===================================================================================
+
+== 3. Matching
+
+=== 매칭 요청
+신규 매칭 요청
+include::{snippets}/matching-request/curl-request.adoc[]
+
+==== Request
+include::{snippets}/matching-request/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/matching-request/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-request/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-request/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-request/response-body.adoc[]

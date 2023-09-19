@@ -23,6 +23,10 @@ public enum ErrorCode {
     ,DUPLICATE_TEAM_JOIN_REQUEST("2009", "이미 가입 요청되었습니다.")
     ,ALREADY_JOINED_TEAM("2010", "이미 가입된 팀입니다.")
     ,CANNOT_PRODUCE_TEAM_USER_MAPPING("2011", "팀 가입에 실패했습니다.")
+    // 3000 : Matching 관련
+    ,MATCHING_REQUEST_ALREADY_EXIST("3000", "이미 요청했습니다.")
+    ,MATCHING_ALREADY_EXIST("3001", "이전 경기가 종료되지 않았습니다.")
+    ,MATCHING_REQUEST_FAIL("3002", "매칭 요청에 실패했습니다.")
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;
 

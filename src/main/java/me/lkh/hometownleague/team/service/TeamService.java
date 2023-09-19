@@ -124,7 +124,7 @@ public class TeamService {
         teamRepository.deleteTeamLogically(baseTeamInfo.getId());
     }
 
-    private Team isOwner(String userId, Integer teamId) {
+    public Team isOwner(String userId, Integer teamId) {
         Team team = Team.forSelectTeam(teamId);
         Optional<Team> optionalTeam = Optional.ofNullable(teamRepository.selectTeam(team));
 

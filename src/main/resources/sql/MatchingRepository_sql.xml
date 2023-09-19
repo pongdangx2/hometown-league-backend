@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.lkh.hometownleague.matching.repository.MatchingRepository">
+
+    <select id="selectMatchingRequest" parameterType="Integer" resultType="Integer">
+        SELECT id
+        FROM matching_request_info
+        WHERE process_yn = 'N'
+          AND team_id = #{teamId}
+    </select>
+
+    <select id="selectMatchingInProgress" parameterType="Integer" resultType="Integer">
+        SELECT id
+        FROM matching_info
+        WHERE status != 'E'
+          AND (team_a_id = #{teamId} OR team_b_id = #{teamId})
+    </select>
+
+    <insert id="insertMatchingRequest" parameterType="Integer">
+        INSERT INTO matching_request_info(team_id, process_yn, request_timestamp)
+        VALUES(#{teamId}, 'N', NOW())
+    </insert>
+
+</mapper>

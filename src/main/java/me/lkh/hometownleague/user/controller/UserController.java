@@ -135,4 +135,16 @@ public class UserController {
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         return new CommonResponse<>(userService.selectTeamOfUser(userSession.getUserId()));
     }
+
+    /**
+     * 로그아웃
+     * @param httpServletRequest
+     * @return
+     */
+    @AuthCheck
+    @DeleteMapping("/logout")
+    public CommonResponse logout(HttpServletRequest httpServletRequest){
+        sessionService.deleteUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
 }

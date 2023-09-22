@@ -38,10 +38,9 @@ public class User {
     }
 
     public User(String id, String nickname, String password, String description){
-        this(id, nickname, password, null, description, null, null, null);
+        this(id, nickname, password, description, null, null, null, null);
     }
-
-    public User(String id, String nickname, String password, String useYn, String description, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp, String ciPath) {
+    public User(String id, String nickname, String password, String description, String ciPath,String useYn,   LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;

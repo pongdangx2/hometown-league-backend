@@ -142,6 +142,22 @@ include::{custom-snippets}/user-team-select/response-code.adoc[]
 ==== Response Example
 include::{snippets}/user-team-select/response-body.adoc[]
 
+=== 로그아웃
+로그아웃
+include::{snippets}/user-logout/curl-request.adoc[]
+
+==== Request Example
+include::{snippets}/user-logout/http-request.adoc[]
+
+==== Response
+include::{snippets}/user-logout/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/user-logout/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/user-logout/response-body.adoc[]
+
 // Team ===================================================================================
 
 == 2. Team

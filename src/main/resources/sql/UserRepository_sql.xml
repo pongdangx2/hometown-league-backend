@@ -5,7 +5,7 @@
 
 <mapper namespace="me.lkh.hometownleague.user.repository.UserRepository">
     <select id="selectUserById" parameterType="String" resultType="me.lkh.hometownleague.user.domain.User">
-        SELECT *
+        SELECT id, nickname, password, description, ci_path, use_yn, create_timestamp, modified_timestamp
         FROM user_info
         WHERE id = #{id}
     </select>
@@ -18,8 +18,8 @@
     </select>
 
     <insert id="insertUser" parameterType="me.lkh.hometownleague.user.domain.User">
-        INSERT INTO user_info
-        VALUES(#{id}, #{nickname}, #{password}, #{description}, 'Y', NOW(), NOW(), null)
+        INSERT INTO user_info(id, nickname, password, description, ci_path, use_yn, create_timestamp, modified_timestamp)
+        VALUES(#{id}, #{nickname}, #{password}, #{description}, null, 'Y', NOW(), NOW())
     </insert>
 
     <select id="selectIsDuplicate" parameterType="me.lkh.hometownleague.user.domain.JoinDuplicateCheck" resultType="String">

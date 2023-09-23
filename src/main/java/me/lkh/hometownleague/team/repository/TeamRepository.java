@@ -8,11 +8,13 @@ import java.util.List;
 
 @Mapper
 public interface TeamRepository {
+
+
     int insertTeam(Team team);
 
     int joinTeam(TeamUserMapping teamUserMapping);
 
-    Integer selectIdByName(String name);
+    Team selectTeamByName(String name);
 
     int insertTeamPlayTime(TeamPlayTime teamPlayTime);
 

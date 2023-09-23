@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,16 +48,16 @@ public class TeamService {
         // 1. 팀생성
         teamRepository.insertTeam(team);
 
-        Optional.ofNullable(teamRepository.selectIdByName(team.getName())).ifPresentOrElse(teamId -> {
+        Optional.ofNullable(teamRepository.selectTeamByName(team.getName())).ifPresentOrElse(selectedTeam -> {
 
                     // 2. 소유주 등록
-                    joinTeam(team.getOwnerId(), teamId);
+                    joinTeam(team.getOwnerId(), selectedTeam.getId());
 
                     // 3. 운동시간 생성
-                    insertPlayTime(teamId, teamPlayTimes);
+                    insertPlayTime(selectedTeam.getId(), teamPlayTimes);
 
                     // 4. 운동지역 생성
-                    insertPlayLocation(teamId, teamPlayLocations);
+                    insertPlayLocation(selectedTeam.getId(), teamPlayLocations);
                 }
                 ,()-> {
                     throw new CommonErrorException();
@@ -68,7 +67,7 @@ public class TeamService {
     private void insertPlayLocation(Integer teamId, List<TeamPlayLocation> teamPlayLocations){
         teamPlayLocations.forEach(teamPlayLocation -> {
             try{
-                TeamPlayLocation currentTeamPlayLocation = TeamPlayLocation.forInsertTeamPlayLocation(teamId, teamPlayLocation.getLatitude(), teamPlayLocation.getLongitude(), teamPlayLocation.getLegalCode(), teamPlayLocation.getJibunAddress(), teamPlayLocation.getRoadAddress());
+                TeamPlayLocation currentTeamPlayLocation = TeamPlayLocation.forInsertTeamPlayLocation(teamId, teamPlayLocation.getName(), teamPlayLocation.getLatitude(), teamPlayLocation.getLongitude(), teamPlayLocation.getLegalCode(), teamPlayLocation.getJibunAddress(), teamPlayLocation.getRoadAddress());
                 if (1 != teamRepository.insertTeamPlayLocation(currentTeamPlayLocation)) {
                     throw new CannotInsertPlayLocationException("Cannot insert TeamPlayLocation info : " + currentTeamPlayLocation);
                 }
@@ -107,8 +106,7 @@ public class TeamService {
      * @return
      */
     public boolean isDuplicate(String name){
-        Integer id = teamRepository.selectIdByName(name);
-        return id != null;
+        return Optional.ofNullable(teamRepository.selectTeamByName(name)).isPresent();
     }
 
     /**
@@ -142,7 +140,7 @@ public class TeamService {
         return optionalTeam.get();
     }
 
-    public Team selectTeam(String userId, Integer teamId) {
+    public Team selectTeam(Integer teamId) {
         Optional<Team> optionalBaseTeamInfo = Optional.ofNullable(teamRepository.selectTeam(Team.forSelectTeam(teamId)));
         // 팀이 존재하지 않는 경우
         optionalBaseTeamInfo.orElseThrow(NoSuchTeamIdException::new);
@@ -193,11 +191,12 @@ public class TeamService {
         teamPlayLocations.forEach(teamPlayLocation -> {
             if(0 == teamRepository.updateTeamPlayLocation(new TeamPlayLocation(
                     teamPlayLocation.getId()
+                    ,teamPlayLocation.getName()
                     ,teamId
-                    ,teamPlayLocation.getJibunAddress()
-                    ,teamPlayLocation.getRoadAddress()
                     ,teamPlayLocation.getLatitude()
                     ,teamPlayLocation.getLongitude()
+                    ,teamPlayLocation.getJibunAddress()
+                    ,teamPlayLocation.getRoadAddress()
                     ,teamPlayLocation.getLegalCode()
             ))){
                 throw new CannotUpdatePlayLocationException(teamPlayLocation.toString());

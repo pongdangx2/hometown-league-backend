@@ -94,6 +94,10 @@ public class Team {
         this(id, name, null, ciPath, description,rankScore, null, kind, null, null, null,null, null, null);
     }
 
+    public Team(Integer id, String name, String ciPath, String description, Integer rankScore, Integer kind, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp){
+        this(id, name, null, ciPath, description, rankScore, null, kind, null, null, null, useYn, createTimestamp, modifiedTimestamp);
+    }
+
     public Team(Integer id, String name, String ownerId, String ciPath, String description, Integer rankScore, String rank, Integer kind, String ownerYn, List<TeamPlayTime> time, List<TeamPlayLocation> location, String useYn, LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
         this.id = id;
         this.name = name;

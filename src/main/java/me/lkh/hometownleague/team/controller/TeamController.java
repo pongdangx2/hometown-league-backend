@@ -87,9 +87,8 @@ public class TeamController {
      * @return
      */
     @GetMapping("/{teamId}")
-    public CommonResponse selectTeam(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
-        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
-        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), teamId));
+    public CommonResponse selectTeam(@PathVariable Integer teamId){
+        return new CommonResponse<>(teamService.selectTeam(teamId));
     }
 
     /**
@@ -106,7 +105,7 @@ public class TeamController {
                 userSession.getUserId());
 
         // 업데이트된 정보 다시 조회하여 응답
-        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamRequest.getId()));
+        return new CommonResponse<>(teamService.selectTeam(updateTeamRequest.getId()));
     }
 
     /**
@@ -121,7 +120,7 @@ public class TeamController {
         teamService.updateTeamPlayTime(updateTeamPlayTimeRequest.getTeamId(), userSession.getUserId(), updateTeamPlayTimeRequest.getTime());
 
         // 업데이트된 정보 다시 조회하여 응답
-        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamPlayTimeRequest.getTeamId()));
+        return new CommonResponse<>(teamService.selectTeam(updateTeamPlayTimeRequest.getTeamId()));
     }
 
     /**
@@ -136,7 +135,7 @@ public class TeamController {
         teamService.updateTeamPlayLocation(updateTeamPlayLocationRequest.getTeamId(), userSession.getUserId(), updateTeamPlayLocationRequest.getLocation());
 
         // 업데이트된 정보 다시 조회하여 응답
-        return new CommonResponse<>(teamService.selectTeam(userSession.getUserId(), updateTeamPlayLocationRequest.getTeamId()));
+        return new CommonResponse<>(teamService.selectTeam(updateTeamPlayLocationRequest.getTeamId()));
     }
 
     /**

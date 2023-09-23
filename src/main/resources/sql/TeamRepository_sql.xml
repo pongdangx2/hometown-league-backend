@@ -15,8 +15,8 @@
         VALUES(#{userId}, #{teamId}, #{roleCode}, 'Y', NOW(), NOW())
     </insert>
 
-    <select id="selectIdByName" parameterType="String" resultType="Integer">
-        SELECT id
+    <select id="selectTeamByName" parameterType="String" resultType="me.lkh.hometownleague.team.domain.Team">
+        SELECT id, name, ci_path, description, rank_score, kind, use_yn, create_timestamp, modified_timestamp
         FROM team_info
         WHERE name = #{name}
     </select>
@@ -27,8 +27,8 @@
     </insert>
 
     <insert id="insertTeamPlayLocation" parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
-        INSERT INTO hometown_info(team_id, jibun_address, road_address, latitude, longitude, legal_code)
-        VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode})
+        INSERT INTO hometown_info(team_id, jibun_address, road_address, latitude, longitude, legal_code<if test="name != null"> ,name </if>)
+        VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode} <if test="name != null"> ,#{name} </if> )
     </insert>
 
     <update id="deleteTeamLogically" parameterType="Integer">
@@ -38,17 +38,6 @@
     </update>
 
     <select id="selectTeam" parameterType="me.lkh.hometownleague.team.domain.Team" resultType="me.lkh.hometownleague.team.domain.Team">
-        <!--SELECT a.id, a.name, a.ci_path, a.description, a.rank_score, a.kind
-             , CASE WHEN b.user_id IS NULL THEN 'N'
-                    ELSE 'Y'
-               END AS owner_yn
-             , b.user_id AS owner_id
-        FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id
-                                                            AND b.role_code = 'O'
-                                                            AND b.user_id = #{ownerId}
-        WHERE a.id =
-          AND a.use_yn = 'Y'
-          -->
         SELECT a.id, a.name, a.ci_path, a.description, a.rank_score, a.kind
              , b.user_id AS owner_id
         FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id
@@ -58,13 +47,13 @@
     </select>
 
     <select id="selectTeamPlayLocation" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
-        SELECT *
+        SELECT id, name, team_id, latitude, longitude, legal_code, jibun_address, road_address
         FROM hometown_info
         WHERE team_id = #{teamId}
     </select>
 
     <select id="selectTeamPlayTime" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayTime">
-        SELECT *
+        SELECT id, team_id, day_of_week, from_time, to_time
         FROM play_time_info
         WHERE team_id = #{teamId}
     </select>
@@ -97,6 +86,7 @@
           ,latitude = #{latitude}
           ,longitude = #{longitude}
           ,legal_code = #{legalCode}
+          ,name=#{name}
         WHERE id = #{id}
           AND team_id = #{teamId}
     </update>

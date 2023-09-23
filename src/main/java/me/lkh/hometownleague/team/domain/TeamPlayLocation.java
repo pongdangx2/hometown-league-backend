@@ -8,6 +8,8 @@ public class TeamPlayLocation {
 
     private final Integer id;
 
+    private final String name;  //  장소명
+
     @JsonIgnore
     private final Integer teamId;
 
@@ -21,17 +23,23 @@ public class TeamPlayLocation {
 
     private final String roadAddress; // 도로명주소
 
-    public static TeamPlayLocation forInsertTeamPlayLocation(Integer teamId, double latitude, double longitude, String legalCode, String jibunAddress, String roadAddress){
-        return new TeamPlayLocation(null, teamId, jibunAddress, roadAddress, latitude, longitude, legalCode);
+    public static TeamPlayLocation forInsertTeamPlayLocation(Integer teamId, String name, double latitude, double longitude, String legalCode, String jibunAddress, String roadAddress){
+        return new TeamPlayLocation(null, name, teamId, latitude, longitude, legalCode, jibunAddress, roadAddress);
     }
-    public TeamPlayLocation(Integer id, Integer teamId, String jibunAddress, String roadAddress, double latitude, double longitude, String legalCode) {
+
+    public TeamPlayLocation(Integer id, String name, Integer teamId, double latitude, double longitude, String legalCode, String jibunAddress, String roadAddress) {
         this.id = id;
+        this.name = name;
         this.teamId = teamId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.legalCode = legalCode;
         this.jibunAddress = jibunAddress;
         this.roadAddress = roadAddress;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Integer getId() {

@@ -109,7 +109,7 @@ public class TeamControllerTest_MockMvc {
 
 
         List<TeamPlayLocation> location = new ArrayList<>();
-        location.add(new TeamPlayLocation(null, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
+        location.add(new TeamPlayLocation(null, "서울과기대",null, 37.6317692339419, 127.0803445512275, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", "11350103"));
 
         String teamName = "testTeamName";
         String requestContent = objectMapper.writeValueAsString(new MakeTeamRequest(teamName, null, "tempPath", "테스트로 만든 팀입니다.", 0, 3, time, location));
@@ -155,6 +155,7 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("location[].latitude").type(JsonFieldType.NUMBER).description("위도"),
                                 fieldWithPath("location[].longitude").type(JsonFieldType.NUMBER).description("경도"),
                                 fieldWithPath("location[].legalCode").type(JsonFieldType.STRING).description("법정동 코드"),
+                                fieldWithPath("location[].name").type(JsonFieldType.STRING).description("(Optional)장소명").optional(),
                                 fieldWithPath("location[].jibunAddress").type(JsonFieldType.STRING).description("(Optional)지번주소").optional(),
                                 fieldWithPath("location[].roadAddress").type(JsonFieldType.STRING).description("(Optional)도로명주소").optional()
                         ),
@@ -214,12 +215,12 @@ public class TeamControllerTest_MockMvc {
         time.add(new TeamPlayTime(2, null, 2, "2000", "2200"));
 
         List<TeamPlayLocation> location = new ArrayList<>();
-        location.add(new TeamPlayLocation(1, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
+        location.add(new TeamPlayLocation(1, null, null, 37.6317692339419, 127.0803445512275, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", "11350103"));
 
 //        Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "Y", time, location);
         Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "testId@gmail.com", time, location);
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(team));
-        given(teamService.selectTeam(any(), any())).willReturn(team);
+        given(teamService.selectTeam(any())).willReturn(team);
         // 세션 관련 Start ======================================================================
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
 
@@ -289,12 +290,12 @@ public class TeamControllerTest_MockMvc {
         time.add(new TeamPlayTime(2, null, 2, "2000", "2200"));
 
         List<TeamPlayLocation> location = new ArrayList<>();
-        location.add(new TeamPlayLocation(1, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
+        location.add(new TeamPlayLocation(1, null,null, 37.6317692339419, 127.0803445512275, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", "11350103"));
 
 //        Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "Y", time, location);
         Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "testId@gmail.com", time, location);
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(team));
-        given(teamService.selectTeam(any(), any())).willReturn(team);
+        given(teamService.selectTeam(any())).willReturn(team);
         // 세션 관련 Start ======================================================================
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
 
@@ -371,12 +372,12 @@ public class TeamControllerTest_MockMvc {
         time.add(new TeamPlayTime(2, null, 2, "2000", "2200"));
 
         List<TeamPlayLocation> location = new ArrayList<>();
-        location.add(new TeamPlayLocation(1, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
+        location.add(new TeamPlayLocation(1, null, null, 37.6317692339419, 127.0803445512275, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", "11350103"));
 
 //        Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "Y", time, location);
         Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "testId@gmail.com", time, location);
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(team));
-        given(teamService.selectTeam(any(), any())).willReturn(team);
+        given(teamService.selectTeam(any())).willReturn(team);
         // 세션 관련 Start ======================================================================
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
 
@@ -456,11 +457,11 @@ public class TeamControllerTest_MockMvc {
         time.add(new TeamPlayTime(2, null, 2, "2000", "2200"));
 
         List<TeamPlayLocation> location = new ArrayList<>();
-        location.add(new TeamPlayLocation(1, null, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", 37.6317692339419, 127.0803445512275, "11350103"));
+        location.add(new TeamPlayLocation(1, "서울과기대", null,37.6317692339419, 127.0803445512275, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", "11350103"));
 
         Team team = Team.forSelectTeamResponse(16, "Sunny Eleven", "..", "테스트 설명입니다.", 0, "UNRANKED", 1, "testId@gmail.com", time, location);
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(team));
-        given(teamService.selectTeam(any(), any())).willReturn(team);
+        given(teamService.selectTeam(any())).willReturn(team);
         // 세션 관련 Start ======================================================================
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
 
@@ -501,6 +502,7 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("location[].latitude").type(JsonFieldType.NUMBER).description("위도"),
                                 fieldWithPath("location[].longitude").type(JsonFieldType.NUMBER).description("경도"),
                                 fieldWithPath("location[].legalCode").type(JsonFieldType.STRING).description("법정동 코드"),
+                                fieldWithPath("location[].name").type(JsonFieldType.STRING).description("(Optional)장소명").optional(),
                                 fieldWithPath("location[].jibunAddress").type(JsonFieldType.STRING).description("(Optional)지번주소").optional(),
                                 fieldWithPath("location[].roadAddress").type(JsonFieldType.STRING).description("(Optional)도로명주소").optional()
                         ),
@@ -525,6 +527,7 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("data.location[].latitude").type(JsonFieldType.NUMBER).description("위도"),
                                 fieldWithPath("data.location[].longitude").type(JsonFieldType.NUMBER).description("경도"),
                                 fieldWithPath("data.location[].legalCode").type(JsonFieldType.STRING).description("법정동 코드"),
+                                fieldWithPath("data.location[].name").type(JsonFieldType.STRING).description("(Optional)장소명").optional(),
                                 fieldWithPath("data.location[].jibunAddress").type(JsonFieldType.STRING).description("(Optional)지번주소").optional(),
                                 fieldWithPath("data.location[].roadAddress").type(JsonFieldType.STRING).description("(Optional)도로명주소").optional(),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),

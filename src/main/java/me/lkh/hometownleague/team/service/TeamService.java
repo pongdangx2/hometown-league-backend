@@ -123,29 +123,26 @@ public class TeamService {
     }
 
     public Team isOwner(String userId, Integer teamId) {
+        Team selectedTeam = isExist(teamId);
+        if(!userId.equals(selectedTeam.getOwnerId())){
+            // 요청한 사람이 팀 소유주가 아닐 경우
+            throw new NotOwnerException();
+        }
+
+        return selectedTeam;
+    }
+
+    public Team isExist(Integer teamId){
         Team team = Team.forSelectTeam(teamId);
         Optional<Team> optionalTeam = Optional.ofNullable(teamRepository.selectTeam(team));
 
-        optionalTeam
-                .ifPresentOrElse(baseTeamInfo -> {
-                    if(!userId.equals(baseTeamInfo.getOwnerId())){
-                        // 요청한 사람이 팀 소유주가 아닐 경우
-                        throw new NotOwnerException();
-                    }
-                },() -> {
-                    // 팀이 존재하지 않는 경우
-                    throw new NoSuchTeamIdException();
-                });
-
+        // 팀이 존재하지 않는 경우
+        optionalTeam.orElseThrow(NoSuchTeamIdException::new);
         return optionalTeam.get();
     }
 
     public Team selectTeam(Integer teamId) {
-        Optional<Team> optionalBaseTeamInfo = Optional.ofNullable(teamRepository.selectTeam(Team.forSelectTeam(teamId)));
-        // 팀이 존재하지 않는 경우
-        optionalBaseTeamInfo.orElseThrow(NoSuchTeamIdException::new);
-        Team baseTeamInfo = optionalBaseTeamInfo.get();
-
+        Team baseTeamInfo = isExist(teamId);
         return Team.forSelectTeamResponse(baseTeamInfo.getId()
                                         , baseTeamInfo.getName()
                                         , baseTeamInfo.getCiPath()
@@ -255,9 +252,10 @@ public class TeamService {
         }
     }
 
-    public List<TeamJoinRequestUserProfile> selectJoinRequest(String userId, Integer teamId){
-        // 팀 존재 여부와 팀 소유주 여부 체크
-        isOwner(userId, teamId);
+    public List<TeamJoinRequestUserProfile> selectJoinRequest(Integer teamId){
+        // 소유주 여부 체크
+//        isOwner(userId, teamId);
+        isExist(teamId);
 
         return teamRepository.selectJoinRequestUser(teamId);
     }

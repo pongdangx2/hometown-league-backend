@@ -786,7 +786,7 @@ public class TeamControllerTest_MockMvc {
         TeamJoinRequestUserProfile teamJoinRequestUserProfile = new TeamJoinRequestUserProfile(1, "가입승인 부탁드립니다.", "testId@gmail.com", "messi", "미드필더를 주로하는 동호인", "202309171210");
         responseList.add(teamJoinRequestUserProfile);
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
-        given(teamService.selectJoinRequest(any(), any())).willReturn(responseList);
+        given(teamService.selectJoinRequest(any())).willReturn(responseList);
 
         ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team/{teamId}/join-request", 16)
                 .header("cookie", "SESSION=" + userSession.getSessionId())

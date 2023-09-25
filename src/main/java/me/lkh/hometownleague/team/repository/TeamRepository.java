@@ -51,4 +51,6 @@ public interface TeamRepository {
     int insertTeamUserMapping(Integer joinRequestId);
 
     int deleteJoinRequest(Integer joinRequestId);
+
+    int leaveTeam(String teamId, String userId);
 }

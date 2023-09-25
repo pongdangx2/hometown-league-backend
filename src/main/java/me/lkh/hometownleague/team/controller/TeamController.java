@@ -3,6 +3,7 @@ package me.lkh.hometownleague.team.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.exception.common.CommonErrorException;
+import me.lkh.hometownleague.common.exception.user.InvalidSessionException;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.session.domain.AuthCheck;
@@ -221,8 +222,13 @@ public class TeamController {
      */
     @DeleteMapping("/leave")
     public CommonResponse leaveTeam(@RequestBody LeaveTeamRequest leaveTeamRequest, HttpServletRequest httpServletRequest){
+
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
-        // @TODO : 사용자ID랑 세션에 있는 ID랑 같은지 비교해야함, Delete인지 논리삭제인지도 확인해야함.
+        if(!leaveTeamRequest.getUserId().equals(userSession.getUserId())){
+            throw new InvalidSessionException();
+        }
+
+        teamService.leaveTeam(leaveTeamRequest.getUserId(), leaveTeamRequest.getTeamId());
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 }

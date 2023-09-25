@@ -189,4 +189,11 @@
         WHERE id = #{joinRequestId}
     </delete>
 
+    <update id="leaveTeam" parameterType="String">
+        UPDATE team_user_mapping
+        SET  use_yn = 'N'
+        WHERE user_id = #{userId}
+          AND team_id = #{teamId}
+    </update>
+
 </mapper>

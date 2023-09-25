@@ -64,6 +64,11 @@ public class TeamService {
                 });
     }
 
+    /**
+     * 팀 생성 시 운동 장소 데이터 Insert
+     * @param teamId
+     * @param teamPlayLocations
+     */
     private void insertPlayLocation(Integer teamId, List<TeamPlayLocation> teamPlayLocations){
         teamPlayLocations.forEach(teamPlayLocation -> {
             try{
@@ -77,6 +82,11 @@ public class TeamService {
         });
     }
 
+    /**
+     * 팀 생성 시 운동 시간 데이터 Insert
+     * @param teamId
+     * @param teamPlayTimes
+     */
     private void insertPlayTime(Integer teamId, List<TeamPlayTime> teamPlayTimes){
         teamPlayTimes.forEach(teamPlayTime -> {
             try {
@@ -122,6 +132,12 @@ public class TeamService {
         teamRepository.deleteTeamLogically(baseTeamInfo.getId());
     }
 
+    /**
+     * 팀이 존재하는지 확인, 소유주인지 확인
+     * @param userId
+     * @param teamId
+     * @return
+     */
     public Team isOwner(String userId, Integer teamId) {
         Team selectedTeam = isExist(teamId);
         if(!userId.equals(selectedTeam.getOwnerId())){
@@ -132,6 +148,11 @@ public class TeamService {
         return selectedTeam;
     }
 
+    /**
+     * 팀이 존재하는지 확인
+     * @param teamId
+     * @return
+     */
     public Team isExist(Integer teamId){
         Team team = Team.forSelectTeam(teamId);
         Optional<Team> optionalTeam = Optional.ofNullable(teamRepository.selectTeam(team));
@@ -141,6 +162,11 @@ public class TeamService {
         return optionalTeam.get();
     }
 
+    /**
+     * 팀 정보 조회
+     * @param teamId
+     * @return
+     */
     public Team selectTeam(Integer teamId) {
         Team baseTeamInfo = isExist(teamId);
         return Team.forSelectTeamResponse(baseTeamInfo.getId()
@@ -156,6 +182,11 @@ public class TeamService {
                                         , teamRepository.selectTeamPlayLocation(teamId));
     }
 
+    /**
+     * 팀 정보 수정
+     * @param team
+     * @param userId
+     */
     public void updateTeam(Team team, String userId){
         // 팀 존재 여부와 팀 소유주 여부 체크
         isOwner(userId, team.getId());
@@ -163,6 +194,12 @@ public class TeamService {
         teamRepository.updateTeam(team);
     }
 
+    /**
+     * 팀 운동 시간 업데이트
+     * @param teamId
+     * @param userId
+     * @param teamPlayTimes
+     */
     @Transactional
     public void updateTeamPlayTime(Integer teamId, String userId, List<TeamPlayTime> teamPlayTimes){
         // 팀 존재 여부와 팀 소유주 여부 체크
@@ -180,6 +217,12 @@ public class TeamService {
         });
     }
 
+    /**
+     * 팀 운동 장소 업데이트
+     * @param teamId
+     * @param userId
+     * @param teamPlayLocations
+     */
     @Transactional
     public void updateTeamPlayLocation(Integer teamId, String userId, List<TeamPlayLocation> teamPlayLocations){
         // 팀 존재 여부와 팀 소유주 여부 체크
@@ -201,10 +244,21 @@ public class TeamService {
         });
     }
 
+    /**
+     * 사용자가 속한 팀 조회
+     * @param teamId
+     * @return
+     */
     public List<User> selectUserOfTeam(Integer teamId){
         return teamRepository.selectUserOfTeam(teamId);
     }
 
+    /**
+     * 팀 소유주 변경
+     * @param ownerId
+     * @param teamId
+     * @param userId
+     */
     @Transactional
     public void updateTeamOwner(String ownerId, Integer teamId, String userId){
         // 팀 존재 여부와 팀 소유주 여부 체크
@@ -219,6 +273,16 @@ public class TeamService {
         }
     }
 
+    /**
+     * 팀 목록 조회
+     * @param legalCode
+     * @param fromScore
+     * @param toScore
+     * @param dayOfWeek
+     * @param time
+     * @param name
+     * @return
+     */
     public List<Team> selectTeamList(Integer legalCode, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name){
         return teamRepository.selectTeamList(HometownLeagueUtil.integerToNullableString(legalCode)
                 , HometownLeagueUtil.integerToNullableString(fromScore)
@@ -228,6 +292,12 @@ public class TeamService {
                 , name);
     }
 
+    /**
+     * 팀에 가입 요청
+     * @param teamId
+     * @param userId
+     * @param description
+     */
     public void joinRequest(String teamId, String userId, String description){
         Team team = Team.forSelectTeam(Integer.valueOf(teamId));
 
@@ -252,6 +322,11 @@ public class TeamService {
         }
     }
 
+    /**
+     * 팀 가입요청 목록 조회
+     * @param teamId
+     * @return
+     */
     public List<TeamJoinRequestUserProfile> selectJoinRequest(Integer teamId){
         // 소유주 여부 체크
 //        isOwner(userId, teamId);
@@ -260,6 +335,12 @@ public class TeamService {
         return teamRepository.selectJoinRequestUser(teamId);
     }
 
+    /**
+     * 팀 가입요청 승인
+     * @param userId
+     * @param teamId
+     * @param joinRequestId
+     */
     @Transactional
     public void acceptJoinRequest(String userId, Integer teamId, Integer joinRequestId){
         // 팀 존재 여부와 팀 소유주 여부 체크
@@ -272,5 +353,14 @@ public class TeamService {
         // 요청 삭제
         if(0 == teamRepository.deleteJoinRequest(joinRequestId))
             throw new CannotProduceTeamUserMappingException("요청 데이터 삭제 실패");
+    }
+
+    /**
+     * 팀 탈퇴
+     * @param teamId
+     */
+    public void leaveTeam(String userId, Integer teamId){
+        isExist(teamId);
+        teamRepository.leaveTeam(String.valueOf(teamId), userId);
     }
 }

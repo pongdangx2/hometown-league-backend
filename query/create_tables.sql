@@ -22,7 +22,7 @@ CREATE TABLE `team_info` (
                              `modified_timestamp` timestamp NOT NULL COMMENT '수정일시',
                              PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='팀 정보 테이블';
-
+select * from team_info;
 CREATE TABLE `team_user_mapping` (
                                      `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
                                      `user_id` varchar(100) NOT NULL COMMENT '유저ID',
@@ -80,7 +80,7 @@ CREATE TABLE `matching_info` (
                                  `status` varchar(1) NOT NULL COMMENT '매치 진행 상태 - 공통코드 0011',
                                  PRIMARY KEY (`id`,`team_a_id`,`team_b_id`),
                                  KEY `matching_request_a_id` (`team_a_id`),
-                                 KEY `matching_request_b_id` (`team_b_id`),
+                                 KEY `matching_request_b_id` (`team_b_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='매칭 정보';
 
 CREATE TABLE `matching_result_info` (

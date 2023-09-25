@@ -5,45 +5,195 @@
 
 <mapper namespace="me.lkh.hometownleague.team.repository.TeamRepository">
 
-
-    <insert id = 'insertTeam' parameterType="me.lkh.hometownleague.team.domain.Team">
+    <insert id="insertTeam" parameterType="me.lkh.hometownleague.team.domain.Team">
         INSERT INTO team_info(name, ci_path, description, rank_score, kind, use_yn, create_timestamp, modified_timestamp)
         VALUES(#{name}, #{ciPath}, #{description}, #{rankScore}, #{kind}, 'Y', NOW(), NOW())
     </insert>
 
-    <insert id = 'joinTeam' parameterType="me.lkh.hometownleague.team.domain.TeamUserMapping">
+    <insert id="joinTeam" parameterType="me.lkh.hometownleague.team.domain.TeamUserMapping">
         INSERT INTO team_user_mapping(user_id, team_id, role_code, use_yn, create_timestamp, modified_timestamp)
         VALUES(#{userId}, #{teamId}, #{roleCode}, 'Y', NOW(), NOW())
     </insert>
 
-    <select id="selectIdByName" parameterType="String" resultType="String">
-        SELECT id
+    <select id="selectTeamByName" parameterType="String" resultType="me.lkh.hometownleague.team.domain.Team">
+        SELECT id, name, ci_path, description, rank_score, kind, use_yn, create_timestamp, modified_timestamp
         FROM team_info
         WHERE name = #{name}
     </select>
 
-    <insert id = 'insertTeamPlayTime' parameterType="me.lkh.hometownleague.team.domain.TeamPlayTime">
+    <insert id="insertTeamPlayTime" parameterType="me.lkh.hometownleague.team.domain.TeamPlayTime">
         INSERT INTO play_time_info(team_id, from_time, to_time, day_of_week)
         VALUES(#{teamId}, #{playTimeFrom}, #{playTimeTo}, #{dayOfWeek})
     </insert>
 
-    <insert id = 'insertTeamPlayLocation' parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
-        INSERT INTO hometown_info(team_id, jibun_address, road_address, latitude, longitude, legal_code)
-        VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode})
+    <insert id="insertTeamPlayLocation" parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
+        INSERT INTO hometown_info(team_id, jibun_address, road_address, latitude, longitude, legal_code<if test="name != null"> ,name </if>)
+        VALUES(#{teamId}, #{jibunAddress}, #{roadAddress}, #{latitude}, #{longitude}, #{legalCode} <if test="name != null"> ,#{name} </if> )
     </insert>
 
-    <select id="selectOwnerCheck" parameterType="me.lkh.hometownleague.team.domain.Team" resultType="me.lkh.hometownleague.team.domain.OwnerCheck">
-        SELECT a.id AS team_id
-             , CASE WHEN b.user_id = #{ownerId} THEN 'Y'
-                    ELSE 'N'
-               END AS owner_yn
-        FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id AND b.role_code = 'O'
-        WHERE a.id = #{id} AND a.use_yn = 'Y'
-    </select>
-
-    <update id="deleteTeamLogically" parameterType="String">
+    <update id="deleteTeamLogically" parameterType="Integer">
         UPDATE team_info
         SET use_yn = 'N'
         WHERE id = #{teamId}
     </update>
+
+    <select id="selectTeam" parameterType="me.lkh.hometownleague.team.domain.Team" resultType="me.lkh.hometownleague.team.domain.Team">
+        SELECT a.id, a.name, a.ci_path, a.description, a.rank_score, a.kind
+             , b.user_id AS owner_id
+        FROM team_info a LEFT OUTER JOIN team_user_mapping b ON a.id = b.team_id
+            AND b.role_code = 'O'
+        WHERE a.id = #{id}
+          AND a.use_yn = 'Y'
+    </select>
+
+    <select id="selectTeamPlayLocation" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
+        SELECT id, name, team_id, latitude, longitude, legal_code, jibun_address, road_address
+        FROM hometown_info
+        WHERE team_id = #{teamId}
+    </select>
+
+    <select id="selectTeamPlayTime" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamPlayTime">
+        SELECT id, team_id, day_of_week, from_time, to_time
+        FROM play_time_info
+        WHERE team_id = #{teamId}
+    </select>
+
+    <update id="updateTeam" parameterType="me.lkh.hometownleague.team.domain.Team">
+        UPDATE team_info
+        SET modified_timestamp = NOW()
+        <if test="name != null">
+            , name = #{name}
+        </if>
+        <if test="description != null">
+            , description = #{description}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateTeamPlayTime" parameterType="me.lkh.hometownleague.team.domain.TeamPlayTime">
+        UPDATE play_time_info
+        SET  from_time = #{playTimeFrom}
+          ,to_time = #{playTimeTo}
+          ,day_of_week = #{dayOfWeek}
+        WHERE id = #{id}
+          AND team_id = #{teamId}
+    </update>
+
+    <update id="updateTeamPlayLocation" parameterType="me.lkh.hometownleague.team.domain.TeamPlayLocation">
+        UPDATE hometown_info
+        SET  jibun_address = #{jibunAddress}
+          ,road_address = #{roadAddress}
+          ,latitude = #{latitude}
+          ,longitude = #{longitude}
+          ,legal_code = #{legalCode}
+          ,name=#{name}
+        WHERE id = #{id}
+          AND team_id = #{teamId}
+    </update>
+
+    <select id="selectUserOfTeam" parameterType="Integer" resultType="me.lkh.hometownleague.user.domain.User">
+        SELECT b.id, b.nickname, b.description, b.ci_path
+        FROM team_user_mapping a INNER JOIN user_info b ON a.user_id = b.id and b.use_yn = 'Y'
+        WHERE a.team_id = #{teamId}
+          AND a.use_yn = 'Y'
+    </select>
+
+    <update id="updatePlayerRole" parameterType="String">
+        UPDATE team_user_mapping
+        SET role_code = #{role}
+        WHERE team_id = #{teamId}
+          AND user_id = #{userId}
+          AND use_yn = 'Y'
+    </update>
+
+    <select id="selectTeamList" parameterType="String" resultType="me.lkh.hometownleague.team.domain.Team">
+        SELECT a.id
+            , a.name
+            , a.ci_path
+            , a.description
+            , a.rank_score
+            , a.kind
+        FROM team_info a
+            <if test="legalCode != null">
+            INNER JOIN hometown_info b ON a.id = b.team_id AND b.legal_code = #{legalCode}
+            </if>
+            <if test="dayOfWeek != null or time != null">
+            INNER JOIN play_time_info c ON a.id = c.team_id
+                                                            <if test="dayOfWeek != null">
+                                                            AND c.day_of_week = #{dayOfWeek}
+                                                            </if>
+                                                            <if test="time != null">
+                                                            AND #{time} BETWEEN c.from_time AND c.to_time
+                                                            </if>
+            </if>
+        WHERE a.use_yn = 'Y'
+        <if test="fromScore != null">
+        AND rank_score <![CDATA[ >= ]]> #{fromScore}
+        </if>
+        <if test="toScore != null">
+        AND rank_score <![CDATA[ <= ]]> #{toScore}
+        </if>
+        <if test="name != null">
+        AND name like '%'|| #{name} || '%'
+        </if>
+    </select>
+
+    <select id="selectJoinedTeam" parameterType="String" resultType="Integer">
+        SELECT id
+        FROM team_user_mapping
+        WHERE user_id = #{userId}
+          AND team_id = #{teamId}
+          AND use_yn = 'Y'
+    </select>
+
+    <select id="selectJoinRequest" parameterType="String" resultType="me.lkh.hometownleague.team.domain.TeamJoinRequest">
+        SELECT a.id, a.user_id, a.team_id, a.process_yn, a.description
+        FROM join_request a
+        WHERE team_id = #{teamId}
+          AND user_id = #{userId}
+          AND process_yn = 'N'
+    </select>
+
+    <insert id="insertJoinRequest" parameterType="String">
+        INSERT INTO join_request(user_id, team_id, process_yn, description, create_timestamp)
+        VALUES(#{userId}, #{teamId}, 'N',
+        <choose>
+            <when test="description != null">
+                #{description}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+                ,NOW())
+    </insert>
+
+
+    <select id="selectJoinRequestUser" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.TeamJoinRequestUserProfile">
+        SELECT a.id, a.description, b.id AS user_id, b.nickname, b.description AS profile_description
+                , DATE_FORMAT(a.create_timestamp, '%Y%m%d%H%i') AS request_date
+        FROM join_request a INNER JOIN user_info b ON a.user_id = b.id AND b.use_yn = 'Y'
+        WHERE a.team_id = #{teamId}
+          AND a.process_yn = 'N'
+    </select>
+
+    <insert id="insertTeamUserMapping" parameterType="Integer">
+        INSERT INTO team_user_mapping(user_id, team_id, role_code, use_yn, create_timestamp, modified_timestamp)
+        SELECT user_id, team_id, 'P', 'Y', NOW(), NOW()
+        FROM join_request
+        WHERE id = #{joinRequestId}
+    </insert>
+
+    <delete id="deleteJoinRequest" parameterType="Integer">
+        DELETE FROM join_request
+        WHERE id = #{joinRequestId}
+    </delete>
+
+    <update id="leaveTeam" parameterType="String">
+        UPDATE team_user_mapping
+        SET  use_yn = 'N'
+        WHERE user_id = #{userId}
+          AND team_id = #{teamId}
+    </update>
+
 </mapper>

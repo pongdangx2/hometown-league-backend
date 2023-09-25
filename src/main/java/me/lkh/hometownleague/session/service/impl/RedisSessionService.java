@@ -113,4 +113,9 @@ public class RedisSessionService implements SessionService {
 
         return userSession;
     }
+
+    @Override
+    public void deleteUserSession(String userSessionId) {
+        sessionRedisTemplate.delete(userSessionId);
+    }
 }

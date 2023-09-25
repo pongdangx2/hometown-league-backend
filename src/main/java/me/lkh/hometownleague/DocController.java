@@ -16,8 +16,6 @@ public class DocController {
      */
     @RequestMapping ("/docs.do")
     public String doc(){
-        String test = "123";
-        System.out.println(test);
         return "HometownLeagueApiDoc";
     }
 }

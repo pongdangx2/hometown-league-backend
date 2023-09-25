@@ -5,8 +5,8 @@
 :toc: left
 :toclevels: 2
 :sectlinks:
-:snippets: /Users/lkhz/Workspace/dev_study/java/hometown-league/target/generated-snippets
-:custom-snippets: /Users/lkhz/Workspace/dev_study/java/hometown-league/target/custom-snippets
+:snippets: /Users/lkhz/Workspace/workspace/java/hometown-league/target/generated-snippets
+:custom-snippets: /Users/lkhz/Workspace/workspace/java/hometown-league/target/custom-snippets
 
 [[overview]]
 == 1. User
@@ -71,22 +71,22 @@ include::{snippets}/is-duplicate/response-body.adoc[]
 
 === 사용자 정보 조회
 ID로 사용자를 조회
-include::{snippets}/team-is-duplicate/curl-request.adoc[]
+include::{snippets}/select-user-by-id/curl-request.adoc[]
 
 ==== Request (Path Variable)
-include::{snippets}/team-is-duplicate/path-parameters.adoc[]
+include::{snippets}/select-user-by-id/path-parameters.adoc[]
 
 ==== Request Example
-include::{snippets}/team-is-duplicate/http-request.adoc[]
+include::{snippets}/select-user-by-id/http-request.adoc[]
 
 ==== Response
-include::{snippets}/team-is-duplicate/response-fields.adoc[]
+include::{snippets}/select-user-by-id/response-fields.adoc[]
 
 ===== responseCode
-include::{custom-snippets}/team-is-duplicate/response-code.adoc[]
+include::{custom-snippets}/select-user-by-id/response-code.adoc[]
 
 ==== Response Example
-include::{snippets}/team-is-duplicate/response-body.adoc[]
+include::{snippets}/select-user-by-id/response-body.adoc[]
 
 === 사용자 정보 업데이트
 ID로 사용자를 업데이트
@@ -107,6 +107,40 @@ include::{custom-snippets}/user-update/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/user-update/response-body.adoc[]
+
+=== 사용자 소속팀 목록 조회
+사용자 소속팀 목록 조회 (로그인 한 뒤에 사용해야 함)
+include::{snippets}/user-team-select/curl-request.adoc[]
+
+==== Request Example
+include::{snippets}/user-team-select/http-request.adoc[]
+
+==== Response
+include::{snippets}/user-team-select/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/user-team-select/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/user-team-select/response-body.adoc[]
+
+=== 로그아웃
+로그아웃
+include::{snippets}/user-logout/curl-request.adoc[]
+
+==== Request Example
+include::{snippets}/user-logout/http-request.adoc[]
+
+==== Response
+include::{snippets}/user-logout/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/user-logout/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/user-logout/response-body.adoc[]
+
+// Team ===================================================================================
 
 == 2. Team
 
@@ -166,3 +200,237 @@ include::{custom-snippets}/team-delete/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/team-delete/response-body.adoc[]
+
+=== 팀 상세 정보 조회
+ID로 팀 상세 정보 조회
+include::{snippets}/team-select-detail/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-select-detail/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-detail/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-detail/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-detail/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-detail/response-body.adoc[]
+
+=== 팀 기본 정보 수정
+팀의 기본 정보 수정
+include::{snippets}/team-update-base/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-update-base/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-base/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-base/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-base/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-base/response-body.adoc[]
+
+=== 팀 운동 시간 정보 수정
+팀의 운동 시간을 변경(대체)
+include::{snippets}/team-update-play-time/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-update-play-time/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-play-time/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-play-time/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-play-time/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-play-time/response-body.adoc[]
+
+=== 팀 운동 장소 정보 수정
+팀의 운동 장소를을 변경(대체)
+include::{snippets}/team-update-play-location/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-update-play-location/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-play-location/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-play-location/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-play-location/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-play-location/response-body.adoc[]
+
+=== 팀 소속 선수 조회
+팀의 소속 선수 목록을 조회
+include::{snippets}/team-select-users/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-select-users/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-users/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-users/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-users/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-users/response-body.adoc[]
+
+=== 팀 주장 변경
+팀의 주장을 변경. (주장만 호출 가능)
+include::{snippets}/team-update-owner/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-update-owner/path-parameters.adoc[]
+
+==== Request
+include::{snippets}/team-update-owner/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-update-owner/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-update-owner/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-update-owner/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-update-owner/response-body.adoc[]
+
+=== 팀 목록 조회
+팀 찾기 화면에서 팀의 목록 조회
+include::{snippets}/team-select-list/curl-request.adoc[]
+
+==== Request (Query Parameters)
+include::{snippets}/team-select-list/query-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-list/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-list/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-list/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-list/response-body.adoc[]
+
+=== 팀 가입 요청
+팀에 가입을 요청
+include::{snippets}/team-join-request/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-join-request/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-join-request/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-join-request/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-join-request/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-join-request/response-body.adoc[]
+
+=== 팀 가입요청 목록 조회
+팀에 가입요청을 보낸 유저들의 목록 조회
+include::{snippets}/team-select-join-request-list/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/team-select-join-request-list/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/team-select-join-request-list/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-select-join-request-list/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-select-join-request-list/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-select-join-request-list/response-body.adoc[]
+
+=== 팀 가입 승인
+팀에 가입 승인
+include::{snippets}/team-join-request-accept/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-join-request-accept/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-join-request-accept/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-join-request-accept/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-join-request-accept/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-join-request-accept/response-body.adoc[]
+
+=== 팀 탈퇴
+팀 탈퇴
+include::{snippets}/team-leave/curl-request.adoc[]
+
+==== Request
+include::{snippets}/team-join-request-accept/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/team-leave/http-request.adoc[]
+
+==== Response
+include::{snippets}/team-leave/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/team-leave/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/team-leave/response-body.adoc[]
+// Matching ===================================================================================
+
+== 3. Matching
+
+=== 매칭 요청
+신규 매칭 요청
+include::{snippets}/matching-request/curl-request.adoc[]
+
+==== Request
+include::{snippets}/matching-request/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/matching-request/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-request/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-request/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-request/response-body.adoc[]

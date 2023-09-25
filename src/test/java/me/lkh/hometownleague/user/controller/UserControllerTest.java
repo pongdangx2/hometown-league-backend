@@ -5,8 +5,14 @@ import me.lkh.hometownleague.common.exception.user.DuplicateNameException;
 import me.lkh.hometownleague.common.exception.user.NoSuchUserIdException;
 import me.lkh.hometownleague.common.exception.user.WrongPasswordException;
 import me.lkh.hometownleague.common.util.SecurityUtil;
+import me.lkh.hometownleague.team.domain.Team;
+import me.lkh.hometownleague.team.domain.TeamPlayLocation;
+import me.lkh.hometownleague.team.domain.TeamPlayTime;
+import me.lkh.hometownleague.team.repository.TeamRepository;
+import me.lkh.hometownleague.team.service.TeamService;
 import me.lkh.hometownleague.user.domain.JoinDuplicateCheck;
 import me.lkh.hometownleague.user.domain.User;
+import me.lkh.hometownleague.user.domain.UserTeam;
 import me.lkh.hometownleague.user.repository.UserRepository;
 import me.lkh.hometownleague.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -29,6 +37,12 @@ class UserControllerTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TeamService teamService;
+
+    @Autowired
+    TeamRepository teamRepository;
 
     @DisplayName("로그인 테스트")
     @Transactional
@@ -270,5 +284,30 @@ class UserControllerTest {
         User updateUser = new User(id, name, password, description);
 
         assertThrows(NoSuchUserIdException.class, () -> userService.updateUser(updateUser));
+    }
+
+    @DisplayName("사용자가 속한 팀 조회")
+    @Transactional
+    @Test
+    void 사용자소속팀조회() {
+        String ownerId = "testUser!gmail.com";
+
+        List<TeamPlayTime> time = new ArrayList<>();
+        time.add(new TeamPlayTime(null, null, 1, "1000", "1200"));
+        time.add(new TeamPlayTime(null, null, 2, "2000", "2200"));
+
+        List<TeamPlayLocation> location = new ArrayList<>();
+        location.add(new TeamPlayLocation(null, "서울과기대",null, 37.6317692339419, 127.0803445512275, "11350103", "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232"));
+
+        String teamName = "testTeamName";
+        Team team = Team.forCreatingTeam(teamName, ownerId, "temp", "테스트로만든팀",1);
+        teamService.makeTeam(team, time, location);
+
+        Integer teamId = teamRepository.selectTeamByName(teamName).getId();
+
+        UserTeam selectedUserTeam = userService.selectTeamOfUser(ownerId).get(0);
+        assertThat(teamId).isEqualTo(selectedUserTeam.getId());
+        assertThat(team.getName()).isEqualTo(selectedUserTeam.getName());
+        assertThat("Y").isEqualTo(selectedUserTeam.getOwnerYn());
     }
 }

@@ -37,4 +37,11 @@ public interface SessionService {
      * @return
      */
     UserSession getUserSession(String userSessionId);
+
+    /**
+     * 세션 저장소로부터 세션 정보 삭제
+     * @param userSessionId
+     */
+    void deleteUserSession(String userSessionId);
+
 }

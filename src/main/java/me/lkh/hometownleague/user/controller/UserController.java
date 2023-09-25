@@ -1,10 +1,8 @@
 package me.lkh.hometownleague.user.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.lkh.hometownleague.common.exception.ErrorCode;
-import me.lkh.hometownleague.common.exception.common.CommonErrorException;
-import me.lkh.hometownleague.common.exception.user.NoSuchUserIdException;
-import me.lkh.hometownleague.common.exception.user.WrongPasswordException;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.service.SessionService;
@@ -71,7 +69,7 @@ public class UserController {
         // 4. 응답쿠키 설정 (SET-COOKIE)
         SessionUtil.setSessionCookie(response, userSession.getSessionId());
 
-        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+        return new CommonResponse<>(checkedUser);
     }
 
     /**
@@ -127,4 +125,26 @@ public class UserController {
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 
+    /**
+     * 사용자가 속한 팀을 조회
+     * @return
+     */
+    @AuthCheck
+    @GetMapping("/team")
+    public CommonResponse getUserTeams(HttpServletRequest httpServletRequest) {
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        return new CommonResponse<>(userService.selectTeamOfUser(userSession.getUserId()));
+    }
+
+    /**
+     * 로그아웃
+     * @param httpServletRequest
+     * @return
+     */
+    @AuthCheck
+    @DeleteMapping("/logout")
+    public CommonResponse logout(HttpServletRequest httpServletRequest){
+        sessionService.deleteUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
 }

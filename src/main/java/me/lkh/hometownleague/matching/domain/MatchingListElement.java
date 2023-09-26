@@ -8,8 +8,9 @@ public class MatchingListElement {
     private final Integer kind;
     private final String description;
     private final String status;
+    private final String statusName;
 
-    public MatchingListElement(Integer teamId, Integer matchingRequestId, String name, Integer rankScore, Integer kind, String description, String status) {
+    public MatchingListElement(Integer teamId, Integer matchingRequestId, String name, Integer rankScore, Integer kind, String description, String status, String statusName) {
         this.teamId = teamId;
         this.matchingRequestId = matchingRequestId;
         this.name = name;
@@ -17,6 +18,7 @@ public class MatchingListElement {
         this.kind = kind;
         this.description = description;
         this.status = status;
+        this.statusName = statusName;
     }
 
     public Integer getTeamId() {
@@ -45,5 +47,9 @@ public class MatchingListElement {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getStatusName() {
+        return statusName;
     }
 }

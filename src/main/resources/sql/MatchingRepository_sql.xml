@@ -24,4 +24,15 @@
         VALUES(#{teamId}, 'N', NOW())
     </insert>
 
+    <select id="selectMatching" parameterType="String" resultType="me.lkh.hometownleague.matching.domain.MatchingListElement">
+        SELECT a.team_id, b.id, c.name, c.rank_score, c.kind, c.description,
+               CASE WHEN d.id IS NULL THEN 'W' -- 대기
+                    ELSE d.status
+                   END AS status
+        FROM team_user_mapping a INNER JOIN matching_request_info b ON a.team_id = b.team_id AND b.process_yn='N'
+                                 INNER JOIN team_info c ON a.team_id = c.id AND c.use_yn = 'Y'
+                                 LEFT OUTER JOIN matching_info d ON (a.team_id = d.team_a_id OR a.team_id = d.team_b_id)
+        WHERE a.user_id = #{userId}
+    </select>
+
 </mapper>

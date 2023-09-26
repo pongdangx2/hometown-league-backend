@@ -3,10 +3,12 @@ package me.lkh.hometownleague.matching.service;
 import me.lkh.hometownleague.common.exception.matching.MatchingAlreadyExistException;
 import me.lkh.hometownleague.common.exception.matching.MatchingRequestAlreadyExistException;
 import me.lkh.hometownleague.common.exception.matching.MatchingRequestFailException;
+import me.lkh.hometownleague.matching.domain.MatchingListElement;
 import me.lkh.hometownleague.matching.repository.MatchingRepository;
 import me.lkh.hometownleague.team.service.TeamService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +39,8 @@ public class MatchingService {
         if(0 == matchingRepository.insertMatchingRequest(teamId)){
             throw new MatchingRequestFailException();
         }
+    }
+    public List<MatchingListElement> selectMatching(String userId){
+        return matchingRepository.selectMatching(userId);
     }
 }

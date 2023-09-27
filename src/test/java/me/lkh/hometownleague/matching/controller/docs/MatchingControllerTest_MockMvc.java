@@ -10,10 +10,6 @@ import me.lkh.hometownleague.matching.domain.MatchingListElement;
 import me.lkh.hometownleague.matching.service.MatchingService;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
-import me.lkh.hometownleague.team.domain.TeamPlayLocation;
-import me.lkh.hometownleague.team.domain.TeamPlayTime;
-import me.lkh.hometownleague.team.domain.request.MakeJoinAcceptRequest;
-import me.lkh.hometownleague.team.domain.request.MakeTeamRequest;
 import me.lkh.hometownleague.user.domain.User;
 import org.junit.Rule;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +26,6 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

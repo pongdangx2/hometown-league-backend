@@ -9,6 +9,31 @@
 :custom-snippets: /Users/lkhz/Workspace/workspace/java/hometown-league/target/custom-snippets
 
 [[overview]]
+
+== 0. Common
+
+=== 공통코드 조회
+공통코드 조회
+include::{snippets}/common-select-common-code/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/common-select-common-code/path-parameters.adoc[]
+
+===== groupId
+include::{custom-snippets}/common-select-common-code/group-id.adoc[]
+
+==== Request Example
+include::{snippets}/common-select-common-code/http-request.adoc[]
+
+==== Response
+include::{snippets}/common-select-common-code/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/common-select-common-code/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/common-select-common-code/response-body.adoc[]
+
 == 1. User
 
 === 로그인

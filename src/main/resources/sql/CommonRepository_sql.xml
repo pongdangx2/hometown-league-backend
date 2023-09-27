@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.lkh.hometownleague.common.common.repository.CommonRepository">
+
+    <select id="selectCommonCode" parameterType="String" resultType="map">
+        SELECT code, code_name AS codeName
+        FROM common_code
+        WHERE use_yn = 'Y'
+          AND group_id = #{groupId}
+    </select>
+
+</mapper>

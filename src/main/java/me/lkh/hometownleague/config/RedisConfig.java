@@ -1,5 +1,6 @@
 package me.lkh.hometownleague.config;
 
+import me.lkh.hometownleague.matching.domain.MatchingQueueElement;
 import me.lkh.hometownleague.session.domain.UserSession;
 //import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,6 +67,20 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
+
+    /**
+     * 매칭 큐를 다루기 위한 RedisTemplate 빈
+     * @return
+     */
+    @Bean
+    public RedisTemplate<String, String> matchingQueueRedisTemplate() {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(MatchingQueueElement.class));
         return redisTemplate;
     }
 }

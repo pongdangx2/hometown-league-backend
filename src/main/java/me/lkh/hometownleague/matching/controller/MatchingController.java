@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
+import me.lkh.hometownleague.matching.service.MatchingRedisService;
 import me.lkh.hometownleague.matching.service.MatchingService;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;

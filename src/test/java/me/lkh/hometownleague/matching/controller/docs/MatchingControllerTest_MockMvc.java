@@ -246,16 +246,6 @@ public class MatchingControllerTest_MockMvc {
                                 fieldWithPath("data.matchingDetail.matchLongitude").type(JsonFieldType.NUMBER).description("(Optional) 매칭된 경기 장소 경도").optional(),
                                 fieldWithPath("data.matchingDetail.roadAddress").type(JsonFieldType.STRING).description("(Optional) 매칭된 경기 장소 도로명주소").optional(),
                                 fieldWithPath("data.matchingDetail.jibunAddress").type(JsonFieldType.STRING).description("(Optional) 매칭된 경기 장소 지번주소").optional(),
-/*
-
-    private final Integer teamId;
-    private final String status;
-    private final String statusName;
-    private final String acceptTimestamp;
-    private final Team team;
-    private final List<User> players;
- */
-//                                fieldWithPath("data[].description").type(JsonFieldType.STRING).description("매칭의 팀 설명"),
                                 fieldWithPath("data.ourTeam").type(JsonFieldType.OBJECT).description("매칭과 관련된 우리팀 정보"),
                                 fieldWithPath("data.ourTeam.status").type(JsonFieldType.STRING).description("매칭 관련 우리팀 상태"),
                                 fieldWithPath("data.ourTeam.statusName").type(JsonFieldType.STRING).description("매칭 관련 우리팀 상태명"),

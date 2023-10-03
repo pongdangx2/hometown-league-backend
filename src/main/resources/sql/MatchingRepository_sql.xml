@@ -59,8 +59,12 @@
 
     <select id="selectMatchingDetailTeam" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam">
         SELECT a.team_id
-             , b.status
-             , (SELECT code_name FROM common_code WHERE group_id = '0011' AND code = b.status)
+             , CASE WHEN b.id IS NULL THEN 'W' -- 대기
+                    ELSE b.status
+                END AS status
+             , CASE WHEN b.id IS NULL THEN (SELECT code_name FROM common_code WHERE use_yn='Y' AND group_id='0011' AND code='W')
+                    ELSE (SELECT code_name FROM common_code WHERE use_yn='Y' AND group_id='0011' AND code=b.status)
+               END AS status_name
              , DATE_FORMAT(b.accept_timestamp, '%Y%m%d%H%i%s') AS accept_time
         FROM matching_request_info a LEFT OUTER JOIN matching_info b ON a.id = b.matching_request_id
         WHERe a.id = #{matchingRequestId}

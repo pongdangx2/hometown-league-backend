@@ -479,3 +479,22 @@ include::{custom-snippets}/matching-select-request/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/matching-select-request/response-body.adoc[]
+
+=== 매칭 상세정보 조회
+매칭 상세정보 조회
+include::{snippets}/matching-select-request-detail/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/matching-select-request-detail/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/matching-select-request-detail/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-select-request-detail/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-select-request-detail/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-select-request-detail/response-body.adoc[]

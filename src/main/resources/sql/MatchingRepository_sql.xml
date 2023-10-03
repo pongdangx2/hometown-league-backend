@@ -28,14 +28,42 @@
         SELECT a.team_id, b.id, c.name, c.rank_score, c.kind, c.description,
                CASE WHEN d.id IS NULL THEN 'W' -- 대기
                     ELSE d.status
-               END AS status,
+                   END AS status,
                CASE WHEN d.id IS NULL THEN (SELECT code_name FROM common_code WHERE use_yn='Y' AND group_id='0011' AND code='W')
                     ELSE (SELECT code_name FROM common_code WHERE use_yn='Y' AND group_id='0011' AND code=d.status)
-               END AS status_name
+                   END AS status_name
         FROM team_user_mapping a INNER JOIN matching_request_info b ON a.team_id = b.team_id AND b.process_yn='N'
                                  INNER JOIN team_info c ON a.team_id = c.id AND c.use_yn = 'Y'
-                                 LEFT OUTER JOIN matching_info d ON (a.team_id = d.team_a_id OR a.team_id = d.team_b_id)
+                                 LEFT OUTER JOIN matching_request_mapping d ON (b.id = d.b_team_matching_request_id OR b.id = d.a_team_matching_request_id)
         WHERE a.user_id = #{userId}
+    </select>
+
+    <select id="selectMatchingDetailBase" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.response.MatchingDetailBase">
+        SELECT b.id
+             , a.team_id
+             , CASE WHEN a.id = b.a_team_matching_request_id THEN b.b_team_matching_request_id
+                    ELSE b.a_team_matching_request_id
+               END
+             , DATE_FORMAT(a.request_timestamp, '%Y%m%d%H%i%s') AS requestTime
+             , DATE_FORMAT(b.create_timestamp, '%Y%m%d%H%i%s') AS makeTime
+             , DATE_FORMAT(b.match_timestamp, '%Y%m%d%H%i%s') AS matchTime
+             , IFNULL(b.status, 'W')
+             , (SELECT code_name FROM common_code WHERE group_id = '0011' AND code = IFNULL(b.status, 'W') AND use_yn = 'Y')
+             , b.latitude
+             , b.longitude
+             , b.road_address
+             , b.jibun_address
+        FROM matching_request_info a LEFT OUTER JOIN matching_request_mapping b ON (a.id = b.a_team_matching_request_id OR a.id = b.b_team_matching_request_id)
+        WHERE a.id = #{matchingRequestId}
+    </select>
+
+    <select id="selectMatchingDetailTeam" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam">
+        SELECT a.team_id
+             , b.status
+             , (SELECT code_name FROM common_code WHERE group_id = '0011' AND code = b.status)
+             , DATE_FORMAT(b.accept_timestamp, '%Y%m%d%H%i%s') AS accept_time
+        FROM matching_request_info a LEFT OUTER JOIN matching_info b ON a.id = b.matching_request_id
+        WHERe a.id = #{matchingRequestId}
     </select>
 
 </mapper>

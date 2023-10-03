@@ -168,6 +168,16 @@ public class TeamController {
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 
+    /**
+     * 팀 목록 조회
+     * @param legalCode
+     * @param fromScore
+     * @param toScore
+     * @param dayOfWeek
+     * @param time
+     * @param name
+     * @return
+     */
     @GetMapping
     public CommonResponse selectTeamList( @RequestParam(name = "legal-code", required = false) Integer legalCode
                                          ,@RequestParam(name = "from-score", required = false) Integer fromScore

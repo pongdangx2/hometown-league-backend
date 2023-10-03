@@ -22,7 +22,7 @@ CREATE TABLE `team_info` (
                              `modified_timestamp` timestamp NOT NULL COMMENT '수정일시',
                              PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='팀 정보 테이블';
-select * from team_info;
+
 CREATE TABLE `team_user_mapping` (
                                      `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
                                      `user_id` varchar(100) NOT NULL COMMENT '유저ID',
@@ -65,23 +65,33 @@ CREATE TABLE `matching_request_info` (
                                          `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
                                          `team_id` int NOT NULL COMMENT '팀ID',
                                          `process_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '매칭 처리 여부',
-                                         `request_timestamp` timestamp NOT NULL COMMENT '요청일시',
+                                         `request_timestamp` timestamp NOT NULL COMMENT '요청 일시',
+                                         `process_timestamp` timestamp NOT NULL COMMENT '매칭 처리 일시',
                                          PRIMARY KEY (`id`,`team_id`),
                                          KEY `team_id` (`team_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='매칭 요청 정보';
 
+CREATE TABLE `matching_request_mapping` (
+                                            `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                            `a_team_matching_request_id` int NOT NULL COMMENT 'A 팀 매칭 요청 ID',
+                                            `b_team_matching_request_id`int NOT NULL COMMENT 'B 팀ID',
+                                            `match_timestamp` timestamp NOT NULL COMMENT '경기 시간',
+                                            `road_address` varchar(200) DEFAULT NULL COMMENT '경기장소 도로명주소',
+                                            `jibun_address` varchar(200) DEFAULT NULL COMMENT '경기장소 지번주소',
+                                            `latitude` double NOT NULL COMMENT '경기장소 위도',
+                                            `longitude` double NOT NULL COMMENT '경기장소 경도',
+                                            `status` varchar(1) NOT NULL COMMENT '매칭 진행 상태',
+                                            `create_timestamp` timestamp NOT NULL COMMENT '매칭 시간',
+                                            PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='매칭 매핑 정보';
+
 CREATE TABLE `matching_info` (
                                  `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID',
-                                 `team_a_id` int NOT NULL COMMENT 'A팀 ID',
-                                 `team_b_id` int NOT NULL COMMENT 'B팀 ID',
-                                 `matching_timestamp` timestamp NOT NULL COMMENT '경기 일시',
-                                 `team_a_accept_timestamp` timestamp NULL DEFAULT NULL COMMENT 'A팀 확정 일시',
-                                 `team_b_accept_timestamp` timestamp NULL DEFAULT NULL COMMENT 'B팀 확정 일시',
-                                 `status` varchar(1) NOT NULL COMMENT '매치 진행 상태 - 공통코드 0011',
-                                 PRIMARY KEY (`id`,`team_a_id`,`team_b_id`),
-                                 KEY `matching_request_a_id` (`team_a_id`),
-                                 KEY `matching_request_b_id` (`team_b_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='매칭 정보';
+                                 `matching_request_id` int NOT NULL COMMENT '매칭 요청 ID',
+                                 `status` varchar(1) NOT NULL COMMENT '팀 매칭 진행 상태',
+                                 `accept_timestamp` timestamp NULL DEFAULT NULL COMMENT '확정 일시',
+                                 PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='각 팀의 매칭 상세 정보';
 
 CREATE TABLE `matching_result_info` (
                                         `matching_id` int NOT NULL COMMENT '매칭 ID',

@@ -4,11 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
-import me.lkh.hometownleague.matching.service.MatchingRedisService;
 import me.lkh.hometownleague.matching.service.MatchingService;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,6 +18,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/matching")
 public class MatchingController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final MatchingService matchingService;
     private final SessionService sessionService;
@@ -49,5 +52,15 @@ public class MatchingController {
     @GetMapping("/{userId}")
     public CommonResponse selectMatching(@PathVariable("userId") String userId){
         return new CommonResponse(matchingService.selectMatching(userId));
+    }
+
+    /**
+     * 매칭의 상세정보 조회
+     * @param matchingRequestId
+     * @return
+     */
+    @GetMapping("/{matchingRequestId}/detail")
+    public CommonResponse selectMatchingDetail(@PathVariable("matchingRequestId") Integer matchingRequestId){
+        return new CommonResponse(matchingService.selectMatchingDetail(matchingRequestId));
     }
 }

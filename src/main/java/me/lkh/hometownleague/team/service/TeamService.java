@@ -245,7 +245,7 @@ public class TeamService {
     }
 
     /**
-     * 사용자가 속한 팀 조회
+     * 팀 소속 선수 조회
      * @param teamId
      * @return
      */

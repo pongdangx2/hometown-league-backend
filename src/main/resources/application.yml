@@ -2,13 +2,13 @@ spring:
   datasource:
     hikari:
       htldb:
-        connection-timeout: 5000
-        validation-timeout: 1000
-        maximum-pool-size: 30
-        jdbc-url: jdbc:mysql://218.232.175.4:49154/htldbp?useSSL=false&serverTimezone=Asia/Seoul
+        connection-timeout:
+        validation-timeout:
+        maximum-pool-size:
+        jdbc-url:
         username:
         password:
-        transaction-isolation: TRANSACTION_READ_COMMITTED
+        transaction-isolation:
   #session:
    # store-type: redis
     # * Spring Boot + redis 참고
@@ -20,10 +20,14 @@ spring:
       #namespace: spring:session # Namespace for keys used to store sessions.
   data:
     redis:
-      host: 218.232.175.4 # Redis server host.
+      host:  # Redis server host.
       password:  # Login password of the redis server.
       port:  # Redis server port.
 
   session:
-    namespace: spring-session-  # 세션 ID에 붙는 Prefix
-    expire-minute: 1  # 세션 만료 시간(분)
+    namespace:   # 세션 ID에 붙는 Prefix
+    expire-minute:   # 세션 만료 시간(분)
+
+matching:
+  queue:
+    key:

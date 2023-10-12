@@ -10,4 +10,11 @@
         FROM (${query}) A
     </select>
 
+    <select id="getCommonCode" parameterType="me.lkh.hometownleague.domain.CommonCodeKey" resultType="me.lkh.hometownleague.domain.CommonCode">
+        SELECT group_id, code, code_name
+        FROM common_code
+        WHERE group_id = #{groupId}
+          AND code = #{code}
+    </select>
+
 </mapper>

@@ -18,4 +18,5 @@ public class DocController {
     public String doc(){
         return "HometownLeagueApiDoc";
     }
+
 }

@@ -13,10 +13,10 @@
     </select>
 
     <select id="selectMatchingInProgress" parameterType="Integer" resultType="Integer">
-        SELECT id
-        FROM matching_info
-        WHERE status != 'E'
-          AND (team_a_id = #{teamId} OR team_b_id = #{teamId})
+        SELECT b.id
+        FROM  matching_request_info a LEFT OUTER JOIN matching_request_mapping b
+                                                      ON (a.team_id = b.b_team_matching_request_id OR a.team_id = b.a_team_matching_request_id) AND b.status != 'E'
+        WHERE a.team_id = #{teamId}
     </select>
 
     <insert id="insertMatchingRequest" parameterType="Integer">

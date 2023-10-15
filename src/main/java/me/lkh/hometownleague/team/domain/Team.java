@@ -54,7 +54,7 @@ public class Team {
      * @see me.lkh.hometownleague.team.controller.TeamController#makeTeam(MakeTeamRequest, HttpServletRequest)
      */
     public static Team forCreatingTeam(String name, String ownerId, String ciPath, String description, int kind){
-        return new Team(null, name, ownerId, ciPath, description, 0, null, kind, null,null, null, "Y", null, null);
+        return new Team(null, name, ownerId, ciPath, description, 1500, null, kind, null,null, null, "Y", null, null);
     }
     public static Team forSelectTeam(Integer id){
         return new Team(id, null, null, null, null, null, null, null, null,null, null, "Y", null, null);

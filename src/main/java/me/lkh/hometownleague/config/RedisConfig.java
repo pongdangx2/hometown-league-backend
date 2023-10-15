@@ -75,8 +75,8 @@ public class RedisConfig {
      * @return
      */
     @Bean
-    public RedisTemplate<String, String> matchingQueueRedisTemplate() {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, MatchingQueueElement> matchingQueueRedisTemplate() {
+        RedisTemplate<String, MatchingQueueElement> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
 
         redisTemplate.setKeySerializer(new StringRedisSerializer());

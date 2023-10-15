@@ -11,6 +11,15 @@ public class MatchingQueueElement {
         return new MatchingQueueElement(matchingRequestId, teamId, HometownLeagueUtil.getCurrentTimestamp());
     }
 
+    /**
+     * deserialization을 위한 생성자
+     */
+    public MatchingQueueElement() {
+        this.matchingRequestId = null;
+        this.teamId = null;
+        this.requestTimestamp = null;
+    }
+
     private MatchingQueueElement(Integer matchingRequestId, Integer teamId, String requestTimestamp) {
         this.matchingRequestId = matchingRequestId;
         this.teamId = teamId;

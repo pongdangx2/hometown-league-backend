@@ -32,4 +32,26 @@
         AND ABS(b.rank_score - #{myScore}) < #{scoreMaxDiff}
         ]]>
     </select>
+
+    <select id="selectMyTeamMatchingLocation" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingLocation">
+        SELECT team_id, latitude, longitude, legal_code
+        FROM hometown_info
+        WHERE team_id = #{teamId}
+    </select>
+
+    <select id="selectMyTeamMatchingTime" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingTime">
+        SELECT team_id, from_time, to_time, day_of_week
+        FROM play_time_info
+        WHERE team_id = #{teamId}
+    </select>
+
+    <select id="selectPlayTimeList" parameterType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingBaseInfo" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingTime">
+        SELECT team_id, from_time, to_time, day_of_week
+        FROM play_time_info
+        WHERE team_id in
+        <foreach collection='list' item='item' open='(' close=')' separator=','>
+            #{item.teamId}
+        </foreach>
+    </select>
+
 </mapper>

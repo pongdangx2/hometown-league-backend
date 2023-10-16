@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.lkh.hometownleague.schedule.matching.repository.location.CoordinateFilterRepository">
+
+    <select id="selectHometownList" parameterType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingBaseInfo" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingLocation">
+        SELECT team_id, latitude, longitude, legal_code
+        FROM hometown_info
+        WHERE team_id in
+        <foreach collection='list' item='item' open='(' close=')' separator=','>
+            #{item.teamId}
+        </foreach>
+    </select>
+
+</mapper>

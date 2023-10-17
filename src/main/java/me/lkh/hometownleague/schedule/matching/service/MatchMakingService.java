@@ -127,7 +127,7 @@ public class MatchMakingService {
         return true;
     }
 
-    // 1. 1차 필터링 - 위치 기반 필터링
+    // 2. 2차 필터링 - 위치 기반 필터링
     private List<TeamMatchingBaseInfo> locationFiltering(Integer teamId, List<TeamMatchingBaseInfo> scoreFilterdTeamList){
         // 1. 우리팀 경기 장소 조회
         List<TeamMatchingLocation> myTeamMatchingLocation = matchMakingRepository.selectMyTeamMatchingLocation(teamId);
@@ -135,11 +135,11 @@ public class MatchMakingService {
         return locationFilteringStrategy.doFilter(myTeamMatchingLocation, scoreFilterdTeamList);
     }
 
-    // 2. 2차 필터링 - 경기 시간 기반 필터링
+    // 3. 3차 필터링 - 경기 시간 기반 필터링
     private Optional<TeamMatchingBaseInfo> timeFiltering(Integer teamId, List<TeamMatchingBaseInfo> teamListAfterLocationFilter) {
 
         // 1. 우리팀 경기 시간 조회
-        List<TeamMatchingTime> myTeamMatchingTimeList = matchMakingRepository.selectMyTeamMatchingTime(teamId);
+        List<TeamMatchingTime> myTeamMatchingTimeList = matchMakingRepository.selectTeamMatchingTime(teamId);
 
         // 2. 대상 팀들의 경기 시간 조회
         List<TeamMatchingTime> teamMatchingTimeList = matchMakingRepository.selectPlayTimeList(teamListAfterLocationFilter);
@@ -158,7 +158,7 @@ public class MatchMakingService {
         return Optional.empty();
     }
 
-    // 2-1. 같은요일이고 경기시간이 조금이라도 겹치는지 여부를 리턴하는 메서드
+    // 3-1. 같은요일이고 경기시간이 조금이라도 겹치는지 여부를 리턴하는 메서드
     private boolean isPossibleTime(TeamMatchingTime myMatchingTime, TeamMatchingTime otherMatchingTime){
         // 1. 요일이 다르면 바로 false
         if(myMatchingTime.getDayOfWeek() != otherMatchingTime.getDayOfWeek())
@@ -187,8 +187,30 @@ public class MatchMakingService {
         return false;
     }
 
-    // 3. 매칭 정보 생성
+    // 4. 매칭 정보 생성
     public void matchMaking(MatchingRequestInfo ourMatchingRequestInfo, TeamMatchingBaseInfo otherMatchingBaseInfo){
 
+        // 1. 경기장소 조회
+        List<TeamMatchingLocation> myTeamMatchingLocation = matchMakingRepository.selectMyTeamMatchingLocation(ourMatchingRequestInfo.getTeamId());
+        List<TeamMatchingLocation> otherTeamMatchingLocation = matchMakingRepository.selectMyTeamMatchingLocation(otherMatchingBaseInfo.getTeamId());
+
+        TeamMatchingLocation matchLocation = locationFilteringStrategy.getMatchingLocation(myTeamMatchingLocation, otherTeamMatchingLocation);
+
+        // 2. 경기 시간 조회
+        List<TeamMatchingTime> myTeamMatchingTimeList = matchMakingRepository.selectTeamMatchingTime(ourMatchingRequestInfo.getTeamId());
+        List<TeamMatchingTime> otherTeamMatchingTimeList = matchMakingRepository.selectTeamMatchingTime(otherMatchingBaseInfo.getTeamId());
+        TeamMatchingTime matchTime = getMatchingTime(myTeamMatchingTimeList, otherTeamMatchingTimeList);
+
+        //@TODO: 여기서 matching_request_mapping / matching_info에 insert해야함.
+    }
+
+    private TeamMatchingTime getMatchingTime(List<TeamMatchingTime> myTeamMatchingTimeList, List<TeamMatchingTime> otherTeamMatchingTimeList){
+        for(TeamMatchingTime myTeamMatchingTime : myTeamMatchingTimeList){
+            for(TeamMatchingTime otherTeamMatchingTime : otherTeamMatchingTimeList){
+                if(isPossibleTime(myTeamMatchingTime, otherTeamMatchingTime))
+                    return myTeamMatchingTime;
+            }
+        }
+        return null;
     }
 }

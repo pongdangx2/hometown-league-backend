@@ -23,7 +23,7 @@ public interface MatchMakingRepository {
 
     List<TeamMatchingLocation>  selectMyTeamMatchingLocation(Integer teamId);
 
-    List<TeamMatchingTime>  selectMyTeamMatchingTime(Integer teamId);
+    List<TeamMatchingTime>  selectTeamMatchingTime(Integer teamId);
 
     List<TeamMatchingTime> selectPlayTimeList(List<TeamMatchingBaseInfo> teamMatchingBaseInfoList);
 

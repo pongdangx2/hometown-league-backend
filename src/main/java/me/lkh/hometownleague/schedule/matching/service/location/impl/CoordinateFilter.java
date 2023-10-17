@@ -49,4 +49,20 @@ public class CoordinateFilter implements LocationFilteringStrategy {
 
         return teamMatchingBaseInfoList.stream().filter(teamMatchingBaseInfo -> countMap.containsKey(teamMatchingBaseInfo.getTeamId())).toList();
     }
+
+    @Override
+    public TeamMatchingLocation getMatchingLocation(List<TeamMatchingLocation> myTeamMatchingLocationList, List<TeamMatchingLocation> otherTeamMatchingLocationList) {
+
+        for (TeamMatchingLocation myTeamMatchingLocation : myTeamMatchingLocationList) {
+            for(TeamMatchingLocation otherTeamMatchingLocation : otherTeamMatchingLocationList) {
+                // 최대 거리차이보다 거리 차이가 작으면 리턴
+                double distance = LocationUtil.getDistance(myTeamMatchingLocation.getLatitude(), myTeamMatchingLocation.getLongitude(), otherTeamMatchingLocation.getLatitude(), otherTeamMatchingLocation.getLongitude());
+                if (distanceDiff >= distance) {
+                    return myTeamMatchingLocation;
+                }
+            }
+        }
+
+        return null;
+    }
 }

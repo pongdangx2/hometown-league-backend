@@ -48,7 +48,7 @@
         WHERE team_id = #{teamId}
     </select>
 
-    <select id="selectMyTeamMatchingTime" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingTime">
+    <select id="selectTeamMatchingTime" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingTime">
         SELECT team_id, from_time, to_time, day_of_week
         FROM play_time_info
         WHERE team_id = #{teamId}

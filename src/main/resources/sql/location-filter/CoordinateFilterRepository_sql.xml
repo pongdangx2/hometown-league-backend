@@ -6,7 +6,7 @@
 <mapper namespace="me.lkh.hometownleague.schedule.matching.repository.location.CoordinateFilterRepository">
 
     <select id="selectHometownList" parameterType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingBaseInfo" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingLocation">
-        SELECT team_id, latitude, longitude, legal_code
+        SELECT team_id, name, road_address, jibun_address, latitude, longitude, legal_code
         FROM hometown_info
         WHERE team_id in
         <foreach collection='list' item='item' open='(' close=')' separator=','>

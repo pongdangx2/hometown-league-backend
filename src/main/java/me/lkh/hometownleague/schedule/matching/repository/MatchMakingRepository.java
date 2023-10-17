@@ -17,6 +17,8 @@ public interface MatchMakingRepository {
 
     int updateProcessTimestamp(Integer matchingRequestId);
 
+    int updateRequestInfo(Integer matchingRequestId);
+
     List<TeamMatchingBaseInfo> selectTeamMatchingBaseInfo(Integer matchingRequestId, Integer myScore, Integer scoreMaxDiff);
 
     List<TeamMatchingLocation>  selectMyTeamMatchingLocation(Integer teamId);

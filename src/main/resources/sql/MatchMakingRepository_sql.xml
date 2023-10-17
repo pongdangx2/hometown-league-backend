@@ -9,6 +9,7 @@
         SELECT a.id, a.team_id, a.process_yn, b.rank_score
         FROM matching_request_info a INNER JOIN team_info b ON a.team_id = b.id and b.use_yn = 'Y'
         WHERE a.id = #{matchingRequestId}
+          AND a.process_yn = 'N'
     </select>
 
     <update id="updateProcessYn" parameterType="Integer">
@@ -23,6 +24,14 @@
         WHERE id = #{matchingRequestId}
     </update>
 
+    <update id="updateRequestInfo" parameterType="Integer">
+        UPDATE matching_request_info
+        SET processed_timestamp = NOW()
+          , process_yn = 'Y'
+        WHERE id = #{matchingRequestId}
+          AND process_yn != 'Y'
+    </update>
+
     <select id="selectTeamMatchingBaseInfo" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingBaseInfo">
         <![CDATA[
         SELECT a.id AS matching_request_id, b.id AS team_id, b.rank_score
@@ -34,7 +43,7 @@
     </select>
 
     <select id="selectMyTeamMatchingLocation" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingLocation">
-        SELECT team_id, latitude, longitude, legal_code
+        SELECT team_id, name, road_address, jibun_address, latitude, longitude, legal_code
         FROM hometown_info
         WHERE team_id = #{teamId}
     </select>

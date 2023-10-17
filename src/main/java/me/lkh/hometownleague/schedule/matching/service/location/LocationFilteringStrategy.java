@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface LocationFilteringStrategy {
     List<TeamMatchingBaseInfo> doFilter(List<TeamMatchingLocation> myTeamMatchingLocationList, List<TeamMatchingBaseInfo> teamMatchingBaseInfoList);
+
 }

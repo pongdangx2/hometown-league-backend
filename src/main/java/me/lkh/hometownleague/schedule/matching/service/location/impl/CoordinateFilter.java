@@ -8,11 +8,7 @@ import me.lkh.hometownleague.schedule.matching.service.location.LocationFilterin
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Qualifier("coordinateFilter")
 @Component
@@ -51,9 +47,6 @@ public class CoordinateFilter implements LocationFilteringStrategy {
             }
         });
 
-        // 거리차이 오름차순으로 정렬 (가장 앞에 가장 가까운 팀이 오도록)
-        List<TeamMatchingBaseInfo> result = teamMatchingBaseInfoList.stream().filter(teamMatchingBaseInfo -> countMap.containsKey(teamMatchingBaseInfo.getTeamId())).toList();
-        result.sort((o1, o2) -> (int) (countMap.get(o1.getTeamId()) - countMap.get(o2.getTeamId())));
-        return result;
+        return teamMatchingBaseInfoList.stream().filter(teamMatchingBaseInfo -> countMap.containsKey(teamMatchingBaseInfo.getTeamId())).toList();
     }
 }

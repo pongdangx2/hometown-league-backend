@@ -17,7 +17,7 @@ public class MatchMakingScheduler {
         this.matchMakingService = matchMakingService;
     }
 
-//    @Scheduled(fixedRate = 1000) // 1초마다 실행 (앞의 작업이 끝나야 수행)
+    @Scheduled(fixedRate = 1000) // 1초마다 실행 (앞의 작업이 끝나야 수행)
     public void run(){
         matchMakingService.matchMakingJob();
     }

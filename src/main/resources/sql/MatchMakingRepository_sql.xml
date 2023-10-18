@@ -63,4 +63,32 @@
         </foreach>
     </select>
 
+    <insert id="insertTeamMatchingRequestMapping" parameterType="me.lkh.hometownleague.schedule.matching.domain.TeamMatchingRequestMapping">
+        INSERT INTO matching_request_mapping(
+                                               a_team_matching_request_id
+                                             , b_team_matching_request_id
+                                             , match_timestamp
+                                             , road_address
+                                             , jibun_address
+                                             , latitude
+                                             , longitude
+                                             , status
+                                             , create_timestamp)
+        VALUES(
+                  #{aTeamRequestId}
+                , #{bTeamRequestId}
+                , #{matchTimestamp}
+                , #{roadAddress}
+                , #{jibunAddress}
+                , #{latitude}
+                , #{longitude}
+                , 'W'
+                , NOW()
+              )
+    </insert>
+    <insert id="insertMatchingInfo" parameterType="Integer">
+        INSERT INTO matching_info(matching_request_id, status)
+        VALUES(#{matchingRequestId}, 'W')
+    </insert>
+
 </mapper>

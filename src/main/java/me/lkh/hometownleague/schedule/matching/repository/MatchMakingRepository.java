@@ -1,9 +1,6 @@
 package me.lkh.hometownleague.schedule.matching.repository;
 
-import me.lkh.hometownleague.schedule.matching.domain.MatchingRequestInfo;
-import me.lkh.hometownleague.schedule.matching.domain.TeamMatchingBaseInfo;
-import me.lkh.hometownleague.schedule.matching.domain.TeamMatchingLocation;
-import me.lkh.hometownleague.schedule.matching.domain.TeamMatchingTime;
+import me.lkh.hometownleague.schedule.matching.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -27,4 +24,7 @@ public interface MatchMakingRepository {
 
     List<TeamMatchingTime> selectPlayTimeList(List<TeamMatchingBaseInfo> teamMatchingBaseInfoList);
 
+    int insertTeamMatchingRequestMapping(TeamMatchingRequestMapping teamMatchingRequestMapping);
+
+    int insertMatchingInfo(Integer matchingRequestId);
 }

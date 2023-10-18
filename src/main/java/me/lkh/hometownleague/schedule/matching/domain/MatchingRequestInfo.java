@@ -29,4 +29,13 @@ public class MatchingRequestInfo {
         return rankScore;
     }
 
+    @Override
+    public String toString() {
+        return "MatchingRequestInfo{" +
+                "id=" + id +
+                ", teamId=" + teamId +
+                ", processYn='" + processYn + '\'' +
+                ", rankScore=" + rankScore +
+                '}';
+    }
 }

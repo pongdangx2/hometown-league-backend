@@ -3,10 +3,7 @@ package me.lkh.hometownleague.schedule.matching.service;
 import me.lkh.hometownleague.common.util.HometownLeagueUtil;
 import me.lkh.hometownleague.matching.domain.MatchingQueueElement;
 import me.lkh.hometownleague.matching.service.MatchingRedisService;
-import me.lkh.hometownleague.schedule.matching.domain.MatchingRequestInfo;
-import me.lkh.hometownleague.schedule.matching.domain.TeamMatchingBaseInfo;
-import me.lkh.hometownleague.schedule.matching.domain.TeamMatchingLocation;
-import me.lkh.hometownleague.schedule.matching.domain.TeamMatchingTime;
+import me.lkh.hometownleague.schedule.matching.domain.*;
 import me.lkh.hometownleague.schedule.matching.repository.MatchMakingRepository;
 import me.lkh.hometownleague.schedule.matching.service.location.LocationFilteringStrategy;
 import org.slf4j.Logger;
@@ -50,8 +47,8 @@ public class MatchMakingService {
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void matchMakingJob(){
         // redis 대기열에서 가져오기
-//        MatchingQueueElement matchingQueueElement = matchingRedisService.popLeft();
-        MatchingQueueElement matchingQueueElement = matchingRedisService.getLeft();
+        MatchingQueueElement matchingQueueElement = matchingRedisService.popLeft();
+//        MatchingQueueElement matchingQueueElement = matchingRedisService.getLeft();
 
         // 처리되지 않은 요청이 있는 경우에만 매칭 처리
         Optional.ofNullable(matchMakingRepository.selectMatchingRequestInfo(matchingQueueElement.getMatchingRequestId()))
@@ -201,7 +198,30 @@ public class MatchMakingService {
         List<TeamMatchingTime> otherTeamMatchingTimeList = matchMakingRepository.selectTeamMatchingTime(otherMatchingBaseInfo.getTeamId());
         TeamMatchingTime matchTime = getMatchingTime(myTeamMatchingTimeList, otherTeamMatchingTimeList);
 
-        //@TODO: 여기서 matching_request_mapping / matching_info에 insert해야함.
+        // 3. 매치 매핑 데이터 INSERT
+        TeamMatchingRequestMapping teamMatchingRequestMapping = new TeamMatchingRequestMapping(ourMatchingRequestInfo.getId()
+                , otherMatchingBaseInfo.getMatchingRequestId()
+                , HometownLeagueUtil.getMatchTimestamp(matchTime)
+                , matchLocation.getRoadAddress()
+                , matchLocation.getJibunAddress()
+                , matchLocation.getLatitude()
+                , matchLocation.getLongitude());
+        if(matchMakingRepository.insertTeamMatchingRequestMapping(teamMatchingRequestMapping) != 1){
+            logger.error("ERROR: matching_request_mapping INSERT FAILED:"+ ourMatchingRequestInfo.toString());
+            throw new RuntimeException();
+        }
+
+        // 4. 우리팀의 match_info INSERT
+        if(matchMakingRepository.insertMatchingInfo(ourMatchingRequestInfo.getId()) != 1){
+            logger.error("ERROR: matching_info INSERT FAILED:"+ ourMatchingRequestInfo.toString());
+            throw new RuntimeException();
+        }
+
+        // 5. 상대팀의 match_info INSERT
+        if(matchMakingRepository.insertMatchingInfo(otherMatchingBaseInfo.getMatchingRequestId()) != 1){
+            logger.error("ERROR: matching_info INSERT FAILED:"+ otherMatchingBaseInfo.toString());
+            throw new RuntimeException();
+        }
     }
 
     private TeamMatchingTime getMatchingTime(List<TeamMatchingTime> myTeamMatchingTimeList, List<TeamMatchingTime> otherTeamMatchingTimeList){
@@ -212,5 +232,16 @@ public class MatchMakingService {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "MatchMakingService{" +
+                "matchingRedisService=" + matchingRedisService +
+                ", matchMakingRepository=" + matchMakingRepository +
+                ", locationFilteringStrategy=" + locationFilteringStrategy +
+                ", maxNumber=" + maxNumber +
+                ", maxDistance=" + maxDistance +
+                '}';
     }
 }

@@ -77,7 +77,7 @@
         VALUES(
                   #{aTeamRequestId}
                 , #{bTeamRequestId}
-                , #{matchTimestamp}
+                , STR_TO_DATE(#{matchTimestamp}, '%Y%m%d%H%i')
                 , #{roadAddress}
                 , #{jibunAddress}
                 , #{latitude}

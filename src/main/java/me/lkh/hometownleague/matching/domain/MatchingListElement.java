@@ -1,5 +1,8 @@
 package me.lkh.hometownleague.matching.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatchingListElement {
     private final Integer teamId;
     private final Integer matchingRequestId;
@@ -9,8 +12,9 @@ public class MatchingListElement {
     private final String description;
     private final String status;
     private final String statusName;
+    private final String matchTimestamp;
 
-    public MatchingListElement(Integer teamId, Integer matchingRequestId, String name, Integer rankScore, Integer kind, String description, String status, String statusName) {
+    public MatchingListElement(Integer teamId, Integer matchingRequestId, String name, Integer rankScore, Integer kind, String description, String status, String statusName, String matchTimestamp) {
         this.teamId = teamId;
         this.matchingRequestId = matchingRequestId;
         this.name = name;
@@ -19,6 +23,7 @@ public class MatchingListElement {
         this.description = description;
         this.status = status;
         this.statusName = statusName;
+        this.matchTimestamp = matchTimestamp;
     }
 
     public Integer getTeamId() {
@@ -51,5 +56,9 @@ public class MatchingListElement {
 
     public String getStatusName() {
         return statusName;
+    }
+
+    public String getMatchTimestamp() {
+        return matchTimestamp;
     }
 }

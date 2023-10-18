@@ -140,7 +140,7 @@ public class MatchingControllerTest_MockMvc {
         // 세션 관련 End ======================================================================
 
         List<MatchingListElement> responseList = new ArrayList<>();
-        responseList.add(new MatchingListElement(2, 1, "test team", 1500, 1, "test description", "W", "대기"));
+        responseList.add(new MatchingListElement(2, 1, "test team", 1500, 1, "test description", "W", "대기", "202310182033"));
 
         given(matchingService.selectMatching(any())).willReturn(responseList);
 
@@ -175,6 +175,7 @@ public class MatchingControllerTest_MockMvc {
                                 fieldWithPath("data[].rankScore").type(JsonFieldType.NUMBER).description("매칭의 팀 점수"),
                                 fieldWithPath("data[].kind").type(JsonFieldType.NUMBER).description("매칭의 팀 종목"),
                                 fieldWithPath("data[].description").type(JsonFieldType.STRING).description("매칭의 팀 설명"),
+                                fieldWithPath("data[].matchTimestamp").type(JsonFieldType.STRING).description("(Optional) 매칭의 경기시간(YYYYMMDDHH24MI 형태. ex-202310182058)").optional(),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )

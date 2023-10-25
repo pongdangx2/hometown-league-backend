@@ -11,4 +11,9 @@ public interface CacheRepository {
     Map<String, Object> getValue(String query);
 
     CommonCode getCommonCode(CommonCodeKey commonCodeKey);
+
+    int insertCommonCode(CommonCode commonCode);
+
+    int deleteCommonCode(CommonCodeKey commonCodeKey);
+
 }

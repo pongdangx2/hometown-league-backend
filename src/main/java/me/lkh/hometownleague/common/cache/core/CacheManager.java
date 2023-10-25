@@ -1,7 +1,6 @@
 package me.lkh.hometownleague.common.cache.core;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import me.lkh.hometownleague.common.cache.core.domain.Cache;
 import me.lkh.hometownleague.common.cache.core.domain.Origin;
 import me.lkh.hometownleague.common.cache.core.exception.CacheInsertFailedException;
@@ -9,7 +8,6 @@ import me.lkh.hometownleague.common.cache.core.exception.CacheInsertFailedExcept
 import java.util.Optional;
 
 public class CacheManager<K, V> {
-
 
     public Optional<V> getData(K key, Class<V> valueClass, Cache cache, Origin origin){
         // 캐시에서 먼저 체크

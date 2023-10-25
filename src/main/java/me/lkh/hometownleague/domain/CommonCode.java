@@ -5,6 +5,12 @@ public class CommonCode {
     private final String code;
     private final String codeName;
 
+    public CommonCode() {
+        this.groupId = null;
+        this.code = null;
+        this.codeName = null;
+    }
+
     public CommonCode(String groupId, String code, String codeName) {
         this.groupId = groupId;
         this.code = code;

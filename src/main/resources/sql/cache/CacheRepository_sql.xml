@@ -17,4 +17,14 @@
           AND code = #{code}
     </select>
 
+    <insert id="insertCommonCode" parameterType="me.lkh.hometownleague.domain.CommonCode">
+        INSERT INTO common_code(group_id, code, code_name, use_yn)
+        VALUES(#{groupId}, #{code}, #{codeName}, 'Y')
+    </insert>
+
+    <delete id="deleteCommonCode" parameterType="me.lkh.hometownleague.domain.CommonCodeKey">
+        DELETE FROM common_code
+        WHERE group_id = #{groupId} AND code = #{code}
+    </delete>
+
 </mapper>

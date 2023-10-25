@@ -63,4 +63,11 @@ public class MatchingController {
     public CommonResponse selectMatchingDetail(@PathVariable("matchingRequestId") Integer matchingRequestId){
         return new CommonResponse(matchingService.selectMatchingDetail(matchingRequestId));
     }
+
+    @DeleteMapping("/{matchingRequestId}")
+    public CommonResponse deleteMatchingRequest(@PathVariable("matchingRequestId") Integer matchingRequestId, HttpServletRequest httpServletRequest) {
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        matchingService.deleteMatchingRequest(matchingRequestId, userSession.getUserId());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
 }

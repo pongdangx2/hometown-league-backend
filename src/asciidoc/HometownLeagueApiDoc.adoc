@@ -498,3 +498,22 @@ include::{custom-snippets}/matching-select-request-detail/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/matching-select-request-detail/response-body.adoc[]
+
+=== 매칭 요청 취소
+매칭 요청 취소 - 이미 매칭된 경우에는 취소 불가
+include::{snippets}/matching-cancel-request/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/matching-cancel-request/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/matching-cancel-request/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-cancel-request/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-cancel-request/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-cancel-request/response-body.adoc[]

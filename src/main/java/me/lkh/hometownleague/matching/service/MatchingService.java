@@ -1,10 +1,9 @@
 package me.lkh.hometownleague.matching.service;
 
 import me.lkh.hometownleague.common.code.MatchingStatusCode;
-import me.lkh.hometownleague.common.exception.matching.MatchingAlreadyExistException;
-import me.lkh.hometownleague.common.exception.matching.MatchingRequestAlreadyExistException;
-import me.lkh.hometownleague.common.exception.matching.MatchingRequestFailException;
-import me.lkh.hometownleague.common.exception.matching.NoSuchMatchingRequestIdException;
+import me.lkh.hometownleague.common.exception.matching.*;
+import me.lkh.hometownleague.common.exception.team.NoSuchTeamIdException;
+import me.lkh.hometownleague.common.exception.team.NotOwnerException;
 import me.lkh.hometownleague.matching.domain.MatchingListElement;
 import me.lkh.hometownleague.matching.domain.MatchingQueueElement;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
@@ -101,5 +100,23 @@ public class MatchingService {
                                     , teamService.isExist(matchingDetailTeam.getTeamId())
                                     , teamService.selectUserOfTeam(matchingDetailTeam.getTeamId())
         );
+    }
+
+    public void deleteMatchingRequest(Integer matchingRequestId, String userId) throws NotOwnerException, NoSuchTeamIdException, NoSuchMatchingRequestIdException {
+        Optional.ofNullable(matchingRepository.matchingRequestDeleteCheck(matchingRequestId))
+                .ifPresentOrElse(matchingRequestDeleteCheck -> {
+                    // 소유주가 아니면 삭제할 수 없음.
+                    Team selectedTeam = teamService.isOwner(userId, matchingRequestDeleteCheck.getTeamId());
+
+                    // 이미 처리된 경우 삭제할 수 없음.
+                    if(matchingRequestDeleteCheck.getStatus() != null || "Y".equals(matchingRequestDeleteCheck.getProcessYn())){
+                        throw new MatchingRequestAlreadyProcessedException();
+                    }
+                    // 매칭요청 삭제에 실패한 경우
+                    if(1 != matchingRepository.deleteMatchingRequest(matchingRequestId)){
+                        throw new CannotCancelMatchingRequestException();
+                    }
+                },
+                () -> { throw new NoSuchMatchingRequestIdException(); });
     }
 }

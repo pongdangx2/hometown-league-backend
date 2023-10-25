@@ -71,4 +71,15 @@
         WHERe a.id = #{matchingRequestId}
     </select>
 
+    <select id="matchingRequestDeleteCheck" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.MatchingRequestDeleteCheck">
+        SELECT a.id, a.team_id, a.process_yn, b.status
+        FROM matching_request_info a LEFT OUTER JOIN matching_request_mapping b ON(a.id = b.a_team_matching_request_id OR a.id = b.b_team_matching_request_id)
+        WHERE a.id = #{matchingRequestId}
+    </select>
+
+    <delete id="deleteMatchingRequest" parameterType="Integer">
+        DELETE FROM matching_request_info
+        WHERE id = #{matchingRequestId}
+    </delete>
+
 </mapper>

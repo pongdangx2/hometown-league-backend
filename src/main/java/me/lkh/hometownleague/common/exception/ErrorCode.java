@@ -28,6 +28,8 @@ public enum ErrorCode {
     ,MATCHING_ALREADY_EXIST("3001", "이전 경기가 종료되지 않았습니다.")
     ,MATCHING_REQUEST_FAIL("3002", "매칭 요청에 실패했습니다.")
     ,NO_SUCH_MATCHING_REQUEST_ID("3003", "존재하지 않는 매칭 요청 ID입니다.")
+    ,MATCHING_REQUEST_ALREADY_PROCESSED("3004", "매칭 요청이 이미 처리되었습니다.")
+    ,CANNOT_CANCEL_MATCHING_REQUEST("3005", "매칭요청 취소에 실패했습니다")
     // 9000 : Common Error
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;

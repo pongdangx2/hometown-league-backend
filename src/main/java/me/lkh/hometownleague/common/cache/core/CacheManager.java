@@ -1,29 +1,99 @@
 package me.lkh.hometownleague.common.cache.core;
 
 
-import me.lkh.hometownleague.common.cache.core.domain.Cache;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.lkh.hometownleague.common.cache.core.domain.Origin;
-import me.lkh.hometownleague.common.cache.core.exception.CacheInsertFailedException;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.Optional;
 
 public class CacheManager<K, V> {
 
-    public Optional<V> getData(K key, Class<V> valueClass, Cache cache, Origin origin){
-        // 캐시에서 먼저 체크
-        Optional<V> result = cache.checkCache(key, valueClass);
+    /**
+     * Redis 캐시
+     * @param key
+     * @param valueClass
+     * @param origin
+     * @param redisTemplate
+     * @return
+     * @throws JsonProcessingException
+     */
+    public Optional<V> getDataWithRedisCache(K key, Class<V> valueClass, Origin origin, RedisTemplate redisTemplate) throws JsonProcessingException {
 
-        // 캐시 Miss
-        if(result.isEmpty()){
-            // 원본 조회
-            result = origin.getOriginData(key, valueClass);
-            // 캐시 세팅
-            result.ifPresent(value -> {
-                if(!cache.setCache(key, value)){
-                    throw new CacheInsertFailedException();
-                }
-            });
+        Optional<V> cacheResult = getRedisCacheData(key, valueClass, redisTemplate);
+        // Cache Hit
+        if(cacheResult.isPresent()){
+            return cacheResult;
         }
+        // Cache Miss
+        else {
+            Optional<V> originData = origin.getOriginData(key, valueClass);
+            // 원본 데이터 미존재
+            if(originData.isEmpty()){
+                return Optional.empty();
+            } else {
+
+                // 캐시에 데이터 추가
+                if(setRedisCacheData(key, originData.get(), redisTemplate))
+                    return originData;
+                // 캐시에 데이터 추가 실패
+                else
+                    return Optional.empty();
+            }
+        }
+    }
+
+    /**
+     * Redis 캐시에 데이터가 있는지 확인
+     * @param key
+     * @param valueClass
+     * @param redisTemplate
+     * @return
+     * @throws JsonProcessingException
+     */
+    private Optional<V> getRedisCacheData(K key, Class<V> valueClass, RedisTemplate redisTemplate) throws JsonProcessingException {
+        Optional<V> result;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String stringKey;
+        try {
+            stringKey = objectMapper.writeValueAsString(key);
+        } catch(JsonProcessingException jsonProcessingException){
+            return Optional.empty();
+        }
+
+        ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
+        Optional<String> optionalStringResult = Optional.ofNullable(stringValueOperations.get(stringKey));
+
+        // Cache miss
+        if(optionalStringResult.isEmpty()){
+            result = Optional.empty();
+        }
+        // Cahce hit
+        else {
+            result = Optional.ofNullable(objectMapper.readValue(optionalStringResult.get(), valueClass));
+        }
+
         return result;
+    }
+
+    /**
+     * Redis 캐시에 데이터 저장
+     * @param key
+     * @param value
+     * @param redisTemplate
+     * @return
+     */
+    private boolean setRedisCacheData(K key, V value, RedisTemplate redisTemplate){
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
+        try {
+            stringValueOperations.set(objectMapper.writeValueAsString(key), objectMapper.writeValueAsString(value));
+        } catch(JsonProcessingException jsonProcessingException){
+            return false;
+        }
+        return true;
     }
 }

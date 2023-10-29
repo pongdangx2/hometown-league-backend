@@ -3,7 +3,6 @@ package me.lkh.hometownleague.cache;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.lkh.hometownleague.common.cache.core.CacheManager;
-import me.lkh.hometownleague.common.cache.core.domain.Cache;
 import me.lkh.hometownleague.common.cache.core.domain.Origin;
 import me.lkh.hometownleague.common.cache.repository.CacheRepository;
 import me.lkh.hometownleague.domain.CommonCode;
@@ -46,49 +45,12 @@ public class CacheTest {
         stringValueOperations.getAndDelete(objectMapper.writeValueAsString(commonCodeKey));
 
         // 3. 캐시 데이터 조회 (Look aside cache)
-        Optional<CommonCode> commonCodeResult = cacheManager.getData(commonCodeKey, CommonCode.class, new Cache() {
-            @Override
-            public <K, V> Optional<V> checkCache(K key, Class<V> valueClass) {
-                Optional<V> result;
-                ObjectMapper objectMapper = new ObjectMapper();
-                String stringKey;
-                try {
-                    stringKey = objectMapper.writeValueAsString(key);
-                } catch(JsonProcessingException jsonProcessingException){
-                    return Optional.empty();
-                }
-
-                if(redisStringTemplate.hasKey(stringKey)){
-                    ValueOperations<String, String> stringValueOperations = redisStringTemplate.opsForValue();
-                    String stringResult = stringValueOperations.get(stringKey);
-                    try {
-                        result = Optional.ofNullable(objectMapper.readValue(stringResult, valueClass));
-                    } catch(JsonProcessingException jsonProcessingException){
-                        return Optional.empty();
-                    }
-                } else {
-                    result = Optional.empty();
-                }
-                return result;
-            }
-
-            @Override
-            public <K, V> boolean setCache(K key, V value) {
-
-                ValueOperations<String, String> stringValueOperations = redisStringTemplate.opsForValue();
-                try {
-                    stringValueOperations.set(objectMapper.writeValueAsString(key), objectMapper.writeValueAsString(value));
-                } catch(JsonProcessingException jsonProcessingException){
-                    return false;
-                }
-                return true;
-            }
-        }, new Origin() {
+        Optional<CommonCode> commonCodeResult = cacheManager.getDataWithRedisCache(commonCodeKey, CommonCode.class, new Origin() {
             @Override
             public <K, V> Optional<V> getOriginData(K key, Class<V> valueClass) {
                 return Optional.ofNullable((V)cacheRepository.getCommonCode((CommonCodeKey)key));
             }
-        });
+        }, redisStringTemplate);
 
         // 4.조회된 값 테스트
         assertThat(commonCodeResult).isNotEmpty();
@@ -123,50 +85,12 @@ public class CacheTest {
 
 
         // 3. 캐시 데이터 조회 (Look aside cache)
-        Optional<CommonCode> commonCodeResult = cacheManager.getData(commonCodeKey, CommonCode.class, new Cache() {
-            @Override
-            public <K, V> Optional<V> checkCache(K key, Class<V> valueClass) {
-                Optional<V> result;
-                ObjectMapper objectMapper = new ObjectMapper();
-                String stringKey;
-                try {
-                    stringKey = objectMapper.writeValueAsString(key);
-                } catch(JsonProcessingException jsonProcessingException){
-                    return Optional.empty();
-                }
-
-                if(redisStringTemplate.hasKey(stringKey)){
-                    ValueOperations<String, String> stringValueOperations = redisStringTemplate.opsForValue();
-                    String stringResult = stringValueOperations.get(stringKey);
-                    try {
-                        result = Optional.ofNullable(objectMapper.readValue(stringResult, valueClass));
-                    } catch(JsonProcessingException jsonProcessingException){
-                        jsonProcessingException.printStackTrace();
-                        return Optional.empty();
-                    }
-                } else {
-                    result = Optional.empty();
-                }
-                return result;
-            }
-
-            @Override
-            public <K, V> boolean setCache(K key, V value) {
-
-                ValueOperations<String, String> stringValueOperations = redisStringTemplate.opsForValue();
-                try {
-                    stringValueOperations.set(objectMapper.writeValueAsString(key), objectMapper.writeValueAsString(value));
-                } catch(JsonProcessingException jsonProcessingException){
-                    return false;
-                }
-                return true;
-            }
-        }, new Origin() {
+        Optional<CommonCode> commonCodeResult = cacheManager.getDataWithRedisCache(commonCodeKey, CommonCode.class, new Origin() {
             @Override
             public <K, V> Optional<V> getOriginData(K key, Class<V> valueClass) {
                 return Optional.ofNullable((V)cacheRepository.getCommonCode((CommonCodeKey)key));
             }
-        });
+        }, redisStringTemplate);
 
         // 4.조회된 값 테스트
         assertThat(commonCodeResult).isNotEmpty();

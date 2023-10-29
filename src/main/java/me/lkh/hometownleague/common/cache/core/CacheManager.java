@@ -12,7 +12,7 @@ import java.util.Optional;
 public class CacheManager<K, V> {
 
     /**
-     * Redis 캐시
+     * Redis 캐시 모듈(Look aside cache)
      * @param key
      * @param valueClass
      * @param origin

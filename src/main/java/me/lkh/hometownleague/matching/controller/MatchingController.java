@@ -64,10 +64,23 @@ public class MatchingController {
         return new CommonResponse(matchingService.selectMatchingDetail(matchingRequestId));
     }
 
+    /**
+     * 아직 매칭이 되지 않았을 경우 매칭 취소
+     * @param matchingRequestId
+     * @param httpServletRequest
+     * @return
+     */
     @DeleteMapping("/{matchingRequestId}")
     public CommonResponse deleteMatchingRequest(@PathVariable("matchingRequestId") Integer matchingRequestId, HttpServletRequest httpServletRequest) {
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         matchingService.deleteMatchingRequest(matchingRequestId, userSession.getUserId());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+    @PostMapping("/accept/{matchingRequestId}")
+    public CommonResponse acceptMatching(@PathVariable("matchingRequestId") Integer matchingRequestId, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 }

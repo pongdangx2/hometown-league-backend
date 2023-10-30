@@ -30,6 +30,8 @@ public enum ErrorCode {
     ,NO_SUCH_MATCHING_REQUEST_ID("3003", "존재하지 않는 매칭 요청 ID입니다.")
     ,MATCHING_REQUEST_ALREADY_PROCESSED("3004", "매칭 요청이 이미 처리되었습니다.")
     ,CANNOT_CANCEL_MATCHING_REQUEST("3005", "매칭요청 취소에 실패했습니다")
+    ,CANNOT_ACCEPT_MATCHING("3006", "매칭을 수락할 수 없는 상태입니다.")
+    ,ONLY_CONFIRM_WAITING_CAN_BE_ACCEPTED("3007", "수락대기상태인 경우만 수락할 수 있습니다.")
     // 9000 : Common Error
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;

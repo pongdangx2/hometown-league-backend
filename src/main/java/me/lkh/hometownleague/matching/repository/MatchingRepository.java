@@ -1,5 +1,6 @@
 package me.lkh.hometownleague.matching.repository;
 
+import me.lkh.hometownleague.matching.domain.MatchingInfo;
 import me.lkh.hometownleague.matching.domain.MatchingListElement;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam;
@@ -7,6 +8,7 @@ import me.lkh.hometownleague.schedule.matching.domain.MatchingRequestDeleteCheck
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface MatchingRepository {
@@ -27,4 +29,9 @@ public interface MatchingRepository {
 
     int deleteMatchingRequest(Integer matchingRequestId);
 
+    MatchingInfo selectMatchingInfo(Integer matchingRequestId);
+
+    int updateMatchingInfoToAccept(Integer matchingInfoId);
+
+    int updateMatfingRequestMapping(Map<String, Object> param);
 }

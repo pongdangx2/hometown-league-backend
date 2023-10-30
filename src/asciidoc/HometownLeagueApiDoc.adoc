@@ -517,3 +517,22 @@ include::{custom-snippets}/matching-cancel-request/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/matching-cancel-request/response-body.adoc[]
+
+=== 매칭 수락
+매칭 수락
+include::{snippets}/matching-request-accept/curl-request.adoc[]
+
+==== Request
+include::{snippets}/matching-request-accept/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/matching-request-accept/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-request-accept/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-request-accept/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-request-accept/response-body.adoc[]

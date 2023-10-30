@@ -72,7 +72,7 @@
     </select>
 
     <select id="matchingRequestDeleteCheck" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.MatchingRequestDeleteCheck">
-        SELECT a.id, a.team_id, a.process_yn, b.status
+        SELECT a.id, a.team_id, a.process_yn, b.status, b.id
         FROM matching_request_info a LEFT OUTER JOIN matching_request_mapping b ON(a.id = b.a_team_matching_request_id OR a.id = b.b_team_matching_request_id)
         WHERE a.id = #{matchingRequestId}
     </select>
@@ -81,5 +81,24 @@
         DELETE FROM matching_request_info
         WHERE id = #{matchingRequestId}
     </delete>
+
+    <select id="selectMatchingInfo" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.MatchingInfo">
+        SELECT a.id, a.matching_request_id, a.status, DATE_FORMAT(a.accept_timestamp, '%Y%m%d%H%i') as accept_timestamp
+        FROM matching_info a
+        WHERE a.id = #{matchingRequestId}
+    </select>
+
+    <update id="updateMatchingInfoToAccept" parameterType="Integer">
+        UPDATE matching_info
+        SET status = 'S'
+           ,accept_timestamp = NOW()
+        WHERE id = #{matchingInfoId}
+    </update>
+
+    <update id="updateMatfingRequestMapping" parameterType="Map">
+        UPDATE matching_request_mapping
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
 
 </mapper>

@@ -5,12 +5,14 @@ public class MatchingRequestDeleteCheck {
     private final Integer teamId;
     private final String processYn;
     private final String status;
+    private final Integer requestMappingId;
 
-    public MatchingRequestDeleteCheck(Integer matchingRequestId, Integer teamId, String processYn, String status) {
+    public MatchingRequestDeleteCheck(Integer matchingRequestId, Integer teamId, String processYn, String status, Integer requestMappingId) {
         this.matchingRequestId = matchingRequestId;
         this.teamId = teamId;
         this.processYn = processYn;
         this.status = status;
+        this.requestMappingId = requestMappingId;
     }
 
     public Integer getMatchingRequestId() {
@@ -27,5 +29,9 @@ public class MatchingRequestDeleteCheck {
 
     public String getStatus() {
         return status;
+    }
+
+    public Integer getRequestMappingId() {
+        return requestMappingId;
     }
 }

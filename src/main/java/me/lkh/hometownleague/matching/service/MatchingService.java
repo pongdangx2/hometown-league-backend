@@ -15,7 +15,9 @@ import me.lkh.hometownleague.team.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -118,5 +120,48 @@ public class MatchingService {
                     }
                 },
                 () -> { throw new NoSuchMatchingRequestIdException(); });
+    }
+
+    @Transactional
+    public void acceptMatching(Integer matchingRequestId, String userId){
+        Optional.ofNullable(matchingRepository.matchingRequestDeleteCheck(matchingRequestId))
+                .ifPresentOrElse(matchingRequestDeleteCheck -> {
+                            // 소유주가 아니면 수락할 수 없음.
+                            Team selectedTeam = teamService.isOwner(userId, matchingRequestDeleteCheck.getTeamId());
+
+                            // 한팀 수락 혹은 수락대기가 아닌 경우 수락 불가.
+                            if(!("C".equals(matchingRequestDeleteCheck.getStatus()) || "O".equals(matchingRequestDeleteCheck.getStatus()))){
+                                throw new CannotAcceptMatchingException();
+                            }
+
+                            Optional.ofNullable(matchingRepository.selectMatchingInfo(matchingRequestId)).ifPresentOrElse(matchingInfo -> {
+                                        // 팀의 요청 상태가 수락대기인 경우 수락 가능
+                                        if("C".equals(matchingInfo.getStatus())){
+                                            // 팀의 요청상태가 수락대기이며, 매칭의 상태가 한팀수락 혹은 수락대기인 경우 -> 수락 가능
+                                            // 팀의 요청상태를 수락으로 변경(S)
+                                            matchingRepository.updateMatchingInfoToAccept(matchingInfo.getId());
+
+                                            Map<String, Object> param = new HashMap<>();
+                                            param.put("id", matchingRequestDeleteCheck.getRequestMappingId());
+                                            // 매칭요청상태가 수락대기(C)인 경우 -> 한팀수락(O)로 변경
+                                            if("C".equals(matchingRequestDeleteCheck.getStatus())){
+                                                param.put("status", "O");
+                                            }
+                                            // 매칭요청상태가 O(한팀수락)인 경우 -> 양팀수락(S)로 변경
+                                            else {
+                                                param.put("status", "S");
+                                            }
+                                            matchingRepository.updateMatfingRequestMapping(param);
+
+                                        }
+                                        // 팀의 요청 상태가 수락대기가 아닌 경우 수락 불가
+                                        else {
+                                            throw new OnlyConfirmWaitingCanBeAcceptedException();
+                                        }
+                                    },
+                                    () -> { throw new NoSuchMatchingRequestIdException();   }
+                            );
+                        },
+                        () -> { throw new NoSuchMatchingRequestIdException(); });
     }
 }

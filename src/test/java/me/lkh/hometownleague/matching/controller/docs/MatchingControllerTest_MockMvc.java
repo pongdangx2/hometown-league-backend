@@ -141,7 +141,7 @@ public class MatchingControllerTest_MockMvc {
         // 세션 관련 End ======================================================================
 
         List<MatchingListElement> responseList = new ArrayList<>();
-        responseList.add(new MatchingListElement(2, 1, "test team", 1500, 1, "test description", "W", "대기", "202310182033"));
+        responseList.add(new MatchingListElement(2, 1, "N","test team",1500, 1, "test description", "W", "대기", "202310182033"));
 
         given(matchingService.selectMatching(any())).willReturn(responseList);
 

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchingService {
@@ -71,7 +72,15 @@ public class MatchingService {
     }
 
     public List<MatchingListElement> selectMatching(String userId){
-        return matchingRepository.selectMatching(userId);
+        return matchingRepository.selectMatching(userId).stream().filter(matchingListElement -> {
+            // 아직 처리되지 않은 경우 포함
+            if("N".equals(matchingListElement.getProcessYn()))
+                return true;
+            else {
+                // 완료된 경우 걸러내고, 완료되지 않은 경우 포함
+                return !"E".equals(matchingListElement.getStatus());
+            }
+        }).collect(Collectors.toList());
     }
 
     public MatchingDetailResponse selectMatchingDetail(Integer matchingRequestId){

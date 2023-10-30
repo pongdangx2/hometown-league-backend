@@ -25,7 +25,7 @@
     </insert>
 
     <select id="selectMatching" parameterType="String" resultType="me.lkh.hometownleague.matching.domain.MatchingListElement">
-        SELECT a.team_id, b.id, c.name, c.rank_score, c.kind, c.description,
+        SELECT a.team_id, b.id, b.process_yn, c.name, c.rank_score, c.kind, c.description,
                CASE WHEN d.id IS NULL THEN 'W' -- 대기
                     ELSE d.status
                    END AS status,
@@ -33,7 +33,7 @@
                     ELSE (SELECT code_name FROM common_code WHERE use_yn='Y' AND group_id='0011' AND code=d.status)
                    END AS status_name,
                DATE_FORMAT(d.match_timestamp, '%Y%m%d%H%i') AS match_timestamp
-        FROM team_user_mapping a INNER JOIN matching_request_info b ON a.team_id = b.team_id AND b.process_yn='N'
+        FROM team_user_mapping a INNER JOIN matching_request_info b ON a.team_id = b.team_id
                                  INNER JOIN team_info c ON a.team_id = c.id AND c.use_yn = 'Y'
                                  LEFT OUTER JOIN matching_request_mapping d ON (b.id = d.b_team_matching_request_id OR b.id = d.a_team_matching_request_id)
         WHERE a.user_id = #{userId}

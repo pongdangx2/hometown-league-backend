@@ -27,7 +27,6 @@ import java.util.Map;
  * @author leekh
  * @see me.lkh.hometownleague.common.exception.HomeTownLeagueExceptionHandler
  */
-@AuthCheck
 @RestController
 @RequestMapping("/team")
 public class TeamController {
@@ -48,6 +47,7 @@ public class TeamController {
      * @param httpServletRequest
      * @return
      */
+    @AuthCheck
     @PostMapping
     public CommonResponse makeTeam(@RequestBody MakeTeamRequest makeTeamRequest, HttpServletRequest httpServletRequest){
 
@@ -63,6 +63,7 @@ public class TeamController {
      * @return 이미 존재하면 "Y"
      * @throws CommonErrorException 기타 에러가 발생한 경우
      */
+    @AuthCheck
     @GetMapping("/is-duplicate/{name}")
     public CommonResponse isDuplicate(@PathVariable String name) throws CommonErrorException{
         boolean isDuplicate = teamService.isDuplicate(name);
@@ -75,6 +76,7 @@ public class TeamController {
      * @param httpServletRequest
      * @return
      */
+    @AuthCheck
     @DeleteMapping("/{teamId}")
     public CommonResponse deleteTeam(@PathVariable Integer teamId, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -87,6 +89,7 @@ public class TeamController {
      * @param teamId
      * @return
      */
+    @AuthCheck
     @GetMapping("/{teamId}")
     public CommonResponse selectTeam(@PathVariable Integer teamId){
         return new CommonResponse<>(teamService.selectTeam(teamId));
@@ -98,6 +101,7 @@ public class TeamController {
      * @param httpServletRequest
      * @return
      */
+    @AuthCheck
     @PatchMapping
     public CommonResponse updateTeam(@RequestBody UpdateTeamRequest updateTeamRequest, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -115,6 +119,7 @@ public class TeamController {
      * @param httpServletRequest
      * @return
      */
+    @AuthCheck
     @PutMapping("/play-time")
     public CommonResponse updateTeamPlayTime(@RequestBody UpdateTeamPlayTimeRequest updateTeamPlayTimeRequest, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -130,6 +135,7 @@ public class TeamController {
      * @param httpServletRequest
      * @return
      */
+    @AuthCheck
     @PutMapping("/play-location")
     public CommonResponse updateTeamPlayLocation(@RequestBody UpdateTeamPlayLocationRequest updateTeamPlayLocationRequest, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -144,6 +150,7 @@ public class TeamController {
      * @param teamId
      * @return
      */
+    @AuthCheck
     @GetMapping("/{teamId}/players")
     public CommonResponse selectUserOfTeam(@PathVariable Integer teamId){
         List<User> userList = teamService.selectUserOfTeam(teamId);
@@ -160,6 +167,7 @@ public class TeamController {
      * @param httpServletRequest
      * @return
      */
+    @AuthCheck
     @PatchMapping("/{teamId}/owner")
     public CommonResponse updateTeamOwner(@PathVariable Integer teamId, @RequestBody Map<String, Object> userIdMap, HttpServletRequest httpServletRequest){
         String userId = userIdMap.get("userId").toString();
@@ -194,6 +202,7 @@ public class TeamController {
      * 팀에 가입 요청
      * @return
      */
+    @AuthCheck
     @PostMapping("join-request")
     public CommonResponse joinRequest(@RequestBody MakeJoinRequestRequest makeJoinRequestRequest, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -207,6 +216,7 @@ public class TeamController {
      * @param teamId
      * @return
      */
+    @AuthCheck
     @GetMapping("/{teamId}/join-request")
     public CommonResponse selectJoinRequest(@PathVariable Integer teamId){
         return new CommonResponse<>(teamService.selectJoinRequest(teamId));
@@ -218,6 +228,7 @@ public class TeamController {
      * @param httpServletRequest
      * @return
      */
+    @AuthCheck
     @PostMapping("/accept")
     public CommonResponse acceptJoinRequest(@RequestBody MakeJoinAcceptRequest makeJoinAcceptRequest, HttpServletRequest httpServletRequest){
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -230,6 +241,7 @@ public class TeamController {
      * @param leaveTeamRequest
      * @return
      */
+    @AuthCheck
     @DeleteMapping("/leave")
     public CommonResponse leaveTeam(@RequestBody LeaveTeamRequest leaveTeamRequest, HttpServletRequest httpServletRequest){
 

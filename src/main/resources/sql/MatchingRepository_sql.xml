@@ -85,20 +85,20 @@
     <select id="selectMatchingInfo" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.MatchingInfo">
         SELECT a.id, a.matching_request_id, a.status, DATE_FORMAT(a.accept_timestamp, '%Y%m%d%H%i') as accept_timestamp
         FROM matching_info a
-        WHERE a.id = #{matchingRequestId}
+        WHERE a.matching_request_id = #{matchingRequestId}
     </select>
 
     <update id="updateMatchingInfoToAccept" parameterType="Integer">
         UPDATE matching_info
         SET status = 'S'
            ,accept_timestamp = NOW()
-        WHERE id = #{matchingInfoId}
+        WHERE id = #{id}
     </update>
 
     <update id="updateMatfingRequestMapping" parameterType="Map">
         UPDATE matching_request_mapping
         SET status = #{status}
-        WHERE id = #{id}
+        WHERE (a_team_matching_request_id = #{id} OR b_team_matching_request_id = #{id})
     </update>
 
 </mapper>

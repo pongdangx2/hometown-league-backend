@@ -31,7 +31,7 @@ public interface MatchingRepository {
 
     MatchingInfo selectMatchingInfo(Integer matchingRequestId);
 
-    int updateMatchingInfoToAccept(Integer matchingInfoId);
+    int updateMatchingInfoToAccept(Integer id);
 
     int updateMatfingRequestMapping(Map<String, Object> param);
 }

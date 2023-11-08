@@ -82,13 +82,13 @@
                 , #{jibunAddress}
                 , #{latitude}
                 , #{longitude}
-                , 'W'
+                , 'C'
                 , NOW()
               )
     </insert>
     <insert id="insertMatchingInfo" parameterType="Integer">
         INSERT INTO matching_info(matching_request_id, status)
-        VALUES(#{matchingRequestId}, 'W')
+        VALUES(#{matchingRequestId}, 'C')
     </insert>
 
 </mapper>

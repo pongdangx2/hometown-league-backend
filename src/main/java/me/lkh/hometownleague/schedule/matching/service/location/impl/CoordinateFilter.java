@@ -41,7 +41,8 @@ public class CoordinateFilter implements LocationFilteringStrategy {
                     // 최대 거리차이보다 거리 차이가 작으면 해시맵에 추가
                     double distance = LocationUtil.getDistance(myTeamMatchingLocation.getLatitude(), myTeamMatchingLocation.getLongitude(), teamMatchingLocation.getLatitude(), teamMatchingLocation.getLongitude());
                     if (distanceDiff >= distance) {
-                        countMap.put(myTeamMatchingLocation.getTeamId(), distance);
+//                        countMap.put(myTeamMatchingLocation.getTeamId(), distance);
+                        countMap.put(teamMatchingLocation.getTeamId(), distance);
                     }
                 }
             }

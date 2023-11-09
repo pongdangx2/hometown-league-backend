@@ -101,4 +101,23 @@
         WHERE (a_team_matching_request_id = #{id} OR b_team_matching_request_id = #{id})
     </update>
 
+    <select id="selectOtherTeamRequestId" parameterType="Integer" resultType="Integer">
+        SELECT CASE WHEN a_team_matching_request_id = #{matchingRequestId} THEN b_team_matching_request_id
+                    ELSE a_team_matching_request_id
+                   END AS other_team_request_id
+        FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+            AND status IN ('O', 'C')
+    </select>
+
+    <delete id="deleteMatchingInfo" parameterType="Integer">
+        DELETE FROM matching_info
+        WHERE matching_request_id = #{matchingRequestId}
+    </delete>
+
+    <delete id="deleteMatchingRequestMapping" parameterType="Integer">
+        DELETE FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+    </delete>
+
 </mapper>

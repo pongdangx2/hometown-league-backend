@@ -382,4 +382,56 @@ public class MatchingControllerTest_MockMvc {
                         )
                 ));
     }
+
+    @DisplayName("매칭 거절")
+    @Test
+    void refuseMatchingRequest() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid@gmail.ccom";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        // 세션 관련 End ======================================================================
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("matchingRequestId", 16);
+        String requestContent = objectMapper.writeValueAsString(requestBody);
+        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/matching/refuse")
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestContent)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        doNothing().when(matchingService).refuseMatching(any(), any());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("matching-request-refuse",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestFields(
+                                fieldWithPath("matchingRequestId").type(JsonFieldType.NUMBER).description("거절할 매칭 Request ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
 }

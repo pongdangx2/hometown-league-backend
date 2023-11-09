@@ -1,9 +1,11 @@
 package me.lkh.hometownleague.matching.service;
 
 import me.lkh.hometownleague.common.code.MatchingStatusCode;
+import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.matching.*;
 import me.lkh.hometownleague.common.exception.team.NoSuchTeamIdException;
 import me.lkh.hometownleague.common.exception.team.NotOwnerException;
+import me.lkh.hometownleague.matching.domain.MatchingInfo;
 import me.lkh.hometownleague.matching.domain.MatchingListElement;
 import me.lkh.hometownleague.matching.domain.MatchingQueueElement;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
@@ -173,4 +175,64 @@ public class MatchingService {
                         },
                         () -> { throw new NoSuchMatchingRequestIdException(); });
     }
+
+    @Transactional
+    public void refuseMatching(Integer matchingRequestId, String userId) {
+
+        Optional.ofNullable(matchingRepository.matchingRequestDeleteCheck(matchingRequestId))
+                .ifPresentOrElse(matchingRequestDeleteCheck -> {
+                            // 소유주가 아니면 거절할 수 없음.
+                            Team selectedTeam = teamService.isOwner(userId, matchingRequestDeleteCheck.getTeamId());
+
+                            // 우리팀이 수락대기중일 때만 거절 가능
+                            MatchingInfo ourTeamMatchingInfo = matchingRepository.selectMatchingInfo(matchingRequestId);
+                            if("C".equals(ourTeamMatchingInfo.getStatus())){
+                                Integer otherTeamRequestId = matchingRepository.selectOtherTeamRequestId(matchingRequestId);    // 상대팀 요청ID
+
+                                // 상대팀의 ID를 구해서 데이터를 삭제하고 큐에 최우선 순위 삽입
+                                Optional.ofNullable(matchingRepository.matchingRequestDeleteCheck(otherTeamRequestId))
+                                        .ifPresentOrElse(otherTeamMatchingRequestDeleteCheck -> {
+
+                                            // 우리팀 매칭 요청 정보 삭제
+                                            if(matchingRepository.deleteMatchingRequest(matchingRequestId) <= 0){
+                                                throw new CommonErrorException();
+                                            }
+
+                                            // 상대팀 매칭 요청 정보 삭제
+                                            if(matchingRepository.deleteMatchingRequest(otherTeamRequestId) <= 0){
+                                                throw new CommonErrorException();
+                                            }
+
+                                            // 매칭 요청 매핑정보 삭제
+                                            if(matchingRepository.deleteMatchingRequestMapping(matchingRequestId) <= 0){
+                                                throw new CommonErrorException();
+                                            }
+
+                                            // 우리팀 매칭정보 삭제
+                                            if(matchingRepository.deleteMatchingInfo(matchingRequestId) <= 0){
+                                                throw new CommonErrorException();
+                                            }
+
+                                            // 상대팀 매칭정보 삭제
+                                            if(matchingRepository.deleteMatchingInfo(otherTeamRequestId) <= 0){
+                                                throw new CommonErrorException();
+                                            }
+
+                                            // DB에 요청 정보 저장
+                                            int matchingId = makeMatchingRequestInDb(otherTeamMatchingRequestDeleteCheck.getTeamId());
+                                            // Redis 대기열 맨 앞에 저장
+                                            matchingRedisService.pushLeft(MatchingQueueElement.makeMatchingQueueElementOfNow(matchingId, otherTeamMatchingRequestDeleteCheck.getTeamId()));
+                                        },
+                                        () -> {
+                                            throw new CommonErrorException();
+                                        });
+                            } else {
+                                throw new MatchingIsNotRefusableException();
+                            }
+                        },
+                        () -> {
+                            throw new NoSuchMatchingRequestIdException();
+                        });
+    }
+
 }

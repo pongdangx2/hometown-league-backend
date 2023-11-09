@@ -536,3 +536,22 @@ include::{custom-snippets}/matching-request-accept/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/matching-request-accept/response-body.adoc[]
+
+=== 매칭 거절
+매칭 거절
+include::{snippets}/matching-request-refuse/curl-request.adoc[]
+
+==== Request
+include::{snippets}/matching-request-refuse/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/matching-request-refuse/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-request-refuse/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-request-refuse/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-request-refuse/response-body.adoc[]

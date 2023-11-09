@@ -85,12 +85,27 @@ public class MatchingController {
      */
     @PostMapping("/accept")
     public CommonResponse acceptMatching(@RequestBody Map<String, Integer> param, HttpServletRequest httpServletRequest){
-        logger.debug("test");
         if(!param.containsKey("matchingRequestId")){
             throw new IllegalArgumentException("matchingRequestId는 필수입니다.");
         }
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         matchingService.acceptMatching(param.get("matchingRequestId"), userSession.getUserId());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+    /**
+     * 매칭 거절
+     * @param param
+     * @param httpServletRequest
+     * @return
+     */
+    @PostMapping("/refuse")
+    public CommonResponse refuseMatching(@RequestBody Map<String, Integer> param, HttpServletRequest httpServletRequest) {
+        if(!param.containsKey("matchingRequestId")){
+            throw new IllegalArgumentException("matchingRequestId는 필수입니다.");
+        }
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        matchingService.refuseMatching(param.get("matchingRequestId"), userSession.getUserId());
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 }

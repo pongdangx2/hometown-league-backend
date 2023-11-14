@@ -114,8 +114,16 @@
             , a.rank_score
             , a.kind
         FROM team_info a
-            <if test="legalCode != null">
-            INNER JOIN hometown_info b ON a.id = b.team_id AND b.legal_code = #{legalCode}
+            <if test="addressSi != null or addressGungu != null">
+                INNER JOIN hometown_info b ON a.id = b.team_id
+                                                            <if test="addressSi != null">
+                                                            AND (b.road_address LIKE '%' || #{addressSi} || '%'
+                                                                 OR b.jibun_address LIKE '%' || #{addressSi} || '%')
+                                                            </if>
+                                                            <if test="addressGungu != null">
+                                                                AND (b.road_address LIKE '%' || #{addressGungu} || '%'
+                                                                OR b.jibun_address LIKE '%' || #{addressGungu} || '%')
+                                                            </if>
             </if>
             <if test="dayOfWeek != null or time != null">
             INNER JOIN play_time_info c ON a.id = c.team_id

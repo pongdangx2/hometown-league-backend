@@ -178,7 +178,8 @@ public class TeamController {
 
     /**
      * 팀 목록 조회
-     * @param legalCode
+     * @param addressSi
+     * @param addressGungu
      * @param fromScore
      * @param toScore
      * @param dayOfWeek
@@ -187,15 +188,16 @@ public class TeamController {
      * @return
      */
     @GetMapping
-    public CommonResponse selectTeamList( @RequestParam(name = "legal-code", required = false) Integer legalCode
+    public CommonResponse selectTeamList( @RequestParam(name = "address-si", required = false) String addressSi
+                                         ,@RequestParam(name = "address-gungu", required = false) String addressGungu
                                          ,@RequestParam(name = "from-score", required = false) Integer fromScore
                                          ,@RequestParam(name = "to-score", required = false) Integer toScore
                                          ,@RequestParam(name = "day-of-Week", required = false) Integer dayOfWeek
                                          ,@RequestParam(name = "time", required = false) String time
                                          ,@RequestParam(required = false) String name){
 
-        logger.debug("selectTeamList:" + legalCode + ", " + fromScore + ", " + toScore + ", " + name);
-        return new CommonResponse<>(teamService.selectTeamList(legalCode, fromScore, toScore, dayOfWeek, time, name));
+        logger.debug("selectTeamList:" + addressSi + "," + addressGungu + ", " + fromScore + ", " + toScore + ", " + name);
+        return new CommonResponse<>(teamService.selectTeamList(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name));
     }
 
     /**

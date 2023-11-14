@@ -274,8 +274,9 @@ public class TeamService {
     }
 
     /**
-     * 팀 목록 조회
-     * @param legalCode
+     *
+     * @param addressSi
+     * @param addressGungu
      * @param fromScore
      * @param toScore
      * @param dayOfWeek
@@ -283,8 +284,9 @@ public class TeamService {
      * @param name
      * @return
      */
-    public List<Team> selectTeamList(Integer legalCode, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name){
-        return teamRepository.selectTeamList(HometownLeagueUtil.integerToNullableString(legalCode)
+    public List<Team> selectTeamList(String addressSi, String addressGungu, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name){
+        return teamRepository.selectTeamList(addressSi
+                , addressGungu
                 , HometownLeagueUtil.integerToNullableString(fromScore)
                 , HometownLeagueUtil.integerToNullableString(toScore)
                 , HometownLeagueUtil.integerToNullableString(dayOfWeek)

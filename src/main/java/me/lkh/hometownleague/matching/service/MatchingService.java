@@ -10,7 +10,10 @@ import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailResponse;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam;
 import me.lkh.hometownleague.matching.repository.MatchingRepository;
+import me.lkh.hometownleague.rank.domain.CalculatedScore;
+import me.lkh.hometownleague.rank.service.RankService;
 import me.lkh.hometownleague.team.domain.Team;
+import me.lkh.hometownleague.team.repository.TeamRepository;
 import me.lkh.hometownleague.team.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,16 +27,22 @@ import java.util.stream.Collectors;
 @Service
 public class MatchingService {
 
+    private final TeamRepository teamRepository;
+
     private final MatchingRepository matchingRepository;
 
     private final TeamService teamService;
 
     private final MatchingRedisService matchingRedisService;
 
-    public MatchingService(MatchingRepository matchingRepository, TeamService teamService, MatchingRedisService matchingRedisService) {
+    private final RankService rankService;
+
+    public MatchingService(TeamRepository teamRepository, MatchingRepository matchingRepository, TeamService teamService, MatchingRedisService matchingRedisService, RankService rankService) {
+        this.teamRepository = teamRepository;
         this.matchingRepository = matchingRepository;
         this.teamService = teamService;
         this.matchingRedisService = matchingRedisService;
+        this.rankService = rankService;
     }
 
     @Transactional
@@ -274,8 +283,11 @@ public class MatchingService {
                                                             throw new CommonErrorException("failed to update matching request mapping");
                                                         }
 
-                                                        // @TODO: 각팀 정보 조회해서 점수 계산
-
+                                                        // 점수가 정상처리된 경우에만 랭크 계산
+                                                        if("E".equals(status)) {
+                                                            // 각팀 정보 조회해서 점수 계산
+                                                            calculateAndUpdateScore(matchingResult.getMatchingRequestId(), otherTeamMatchingResultInfo.getMatchingRequestId(), matchingResult.getOurTeamScore(), otherTeamMatchingResultInfo.getOurTeamScore());
+                                                        }
                                                     });
 
                                         });
@@ -283,5 +295,24 @@ public class MatchingService {
                             () -> { throw new CannotFindOtherTeamRequestIdException(); });
                 },
                 () -> { throw new NoSuchMatchingRequestIdException(); });
+    }
+
+    private void calculateAndUpdateScore(int aTeamRequestId, int bTeamRequestId, int aTeamScore, int bTeamScore){
+        Team aTeam = teamRepository.selectTeamByMatchingRequestId(aTeamRequestId);
+        Team bTeam = teamRepository.selectTeamByMatchingRequestId(bTeamRequestId);
+
+        if(aTeam == null || bTeam == null){
+            throw new CommonErrorException("failed to get team info by matching request id.");
+        }
+
+        CalculatedScore calculatedScore = rankService.calculateScore(aTeam, bTeam, aTeamScore, bTeamScore);
+
+        if(1 != teamRepository.updateTeamScore(aTeam.getId(), calculatedScore.getaTeamScore())){
+            throw new CommonErrorException("failed to update team rank socre: " + aTeam.getId());
+        }
+
+        if(1 != teamRepository.updateTeamScore(bTeam.getId(), calculatedScore.getbTeamScore())){
+            throw new CommonErrorException("failed to update team rank socre: " + aTeam.getId());
+        }
     }
 }

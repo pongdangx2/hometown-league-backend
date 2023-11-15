@@ -96,7 +96,7 @@ CREATE TABLE `matching_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='각 팀의 매칭 상세 정보';
 
 CREATE TABLE `matching_result_info` (
-                                        `id` int NOT NULL COMMENT '매칭 결과 ID',
+                                        `id` int NOT NULL AUTO_INCREMENT COMMENT '매칭 결과 ID',
                                         `matching_request_id` int NOT NULL COMMENT '우리팀의 매칭요청ID',
                                         `our_team_score` int NOT NULL COMMENT '우리팀의 점수',
                                         `other_team_score` int NOT NULL COMMENT '상대팀의 점수',

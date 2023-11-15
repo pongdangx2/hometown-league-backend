@@ -555,3 +555,22 @@ include::{custom-snippets}/matching-request-refuse/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/matching-request-refuse/response-body.adoc[]
+
+=== 매칭 결과 등록
+매칭 결과 등록 (양팀이 같은 결과를 입력해야 정상처리됩니다.)
+include::{snippets}/matching-report-result/curl-request.adoc[]
+
+==== Request
+include::{snippets}/matching-report-result/request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/matching-report-result/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-report-result/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-report-result/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-report-result/response-body.adoc[]

@@ -53,4 +53,8 @@ public interface TeamRepository {
     int deleteJoinRequest(Integer joinRequestId);
 
     int leaveTeam(String teamId, String userId);
+
+    Team selectTeamByMatchingRequestId(Integer matchingRequestId);
+
+    int updateTeamScore(Integer teamId, Integer score);
 }

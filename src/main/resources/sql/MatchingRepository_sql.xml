@@ -95,10 +95,18 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateMatfingRequestMapping" parameterType="Map">
-        UPDATE matching_request_mapping
-        SET status = #{status}
-        WHERE (a_team_matching_request_id = #{id} OR b_team_matching_request_id = #{id})
+    <update id="updateMatchingRequestMapping" parameterType="me.lkh.hometownleague.matching.domain.MatchingRequestMappingScoreUpdate">
+        update matching_request_mapping
+        set status = #{status}
+          <if test="status != null and 'E'.toString() eq status">
+          , a_team_score = CASE WHEN a_team_matching_request_id = #{aTeamRequestId} THEN #{aTeamScore}
+                                ELSE #{bTeamScore}
+                           END
+          , b_team_score = CASE WHEN b_team_matching_request_id = #{aTeamRequestId} THEN #{aTeamScore}
+                                ELSE #{bTeamScore}
+                           END
+          </if>
+        where a_team_matching_request_id = #{aTeamRequestId} OR b_team_matching_request_id = #{aTeamRequestId}
     </update>
 
     <select id="selectOtherTeamRequestId" parameterType="Integer" resultType="Integer">

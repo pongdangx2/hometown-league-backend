@@ -4,7 +4,7 @@ import me.lkh.hometownleague.common.code.RoleCode;
 import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.team.*;
 import me.lkh.hometownleague.common.util.HometownLeagueUtil;
-import me.lkh.hometownleague.common.util.RankService;
+import me.lkh.hometownleague.rank.service.RankService;
 import me.lkh.hometownleague.team.domain.*;
 import me.lkh.hometownleague.team.repository.TeamRepository;
 import me.lkh.hometownleague.user.domain.User;

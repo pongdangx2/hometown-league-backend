@@ -204,4 +204,16 @@
           AND team_id = #{teamId}
     </update>
 
+    <select id="selectTeamByMatchingRequestId" parameterType="Integer" resultType="me.lkh.hometownleague.team.domain.Team">
+        SELECT b.id, b.name, b.ci_path, b.description, b.rank_score, b.kind, b.use_yn, b.create_timestamp, b.modified_timestamp
+        FROM matching_request_info a INNER JOIN team_info b ON a.team_id = b.id
+        WHERE a.id = #{matchingRequestId}
+    </select>
+
+    <update id="updateTeamScore" parameterType="Integer">
+        UPDATE team_info
+        SET rank_score = #{score}
+        WHERE id = #{teamId}
+    </update>
+
 </mapper>

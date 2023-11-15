@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
+import me.lkh.hometownleague.matching.domain.MatchingResultReportRequest;
 import me.lkh.hometownleague.matching.service.MatchingService;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
@@ -106,6 +107,13 @@ public class MatchingController {
         }
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         matchingService.refuseMatching(param.get("matchingRequestId"), userSession.getUserId());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+    @PostMapping("/result")
+    public CommonResponse reportResult(@RequestBody MatchingResultReportRequest matchingResult, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        matchingService.reportResult(matchingResult, userSession.getUserId());
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 }

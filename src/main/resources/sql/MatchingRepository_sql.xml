@@ -120,4 +120,41 @@
         WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
     </delete>
 
+    <select id="selectOtherTeamRequestIdForResult" parameterType="Integer" resultType="Integer">
+        SELECT CASE WHEN a_team_matching_request_id = #{matchingRequestId} THEN b_team_matching_request_id
+                    ELSE a_team_matching_request_id
+                   END AS other_team_request_id
+        FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+            AND status = 'S'
+    </select>
+
+    <select id="selectMatchingResultInfo" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.MatchingResultInfo">
+        SELECT id, matching_request_id, our_team_score, other_team_score
+        FROM matching_result_info
+        WHERE matching_request_id = #{matchingRequestId}
+    </select>
+
+    <insert id="insertMatchingResultInfo" parameterType="me.lkh.hometownleague.matching.domain.MatchingResultReportRequest">
+        INSERT INTO matching_result_info(matching_request_id, our_team_score, other_team_score)
+        VALUES(#{matchingRequestId}, #{ourTeamScore}, #{otherTeamScore})
+    </insert>
+
+    <select id="selectMatchingRequestMappingByMatchingRequestId" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.MatchingRequestMapping">
+        SELECT id
+             , a_team_matching_request_id
+             , b_team_matching_request_id
+             , DATE_FORMAT(match_timestamp, '%Y%m%d%H%i') AS match_timestamp
+             , road_address
+             , jibun_address
+             , latitude
+             , longitude
+             , status
+             , a_team_score
+             , b_team_score
+             , DATE_FORMAT(create_timestamp, '%Y%m%d%H%i') AS create_timestamp
+        FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+    </select>
+
 </mapper>

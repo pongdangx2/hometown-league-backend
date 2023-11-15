@@ -5,9 +5,7 @@ import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.matching.*;
 import me.lkh.hometownleague.common.exception.team.NoSuchTeamIdException;
 import me.lkh.hometownleague.common.exception.team.NotOwnerException;
-import me.lkh.hometownleague.matching.domain.MatchingInfo;
-import me.lkh.hometownleague.matching.domain.MatchingListElement;
-import me.lkh.hometownleague.matching.domain.MatchingQueueElement;
+import me.lkh.hometownleague.matching.domain.*;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailResponse;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam;
@@ -235,4 +233,55 @@ public class MatchingService {
                         });
     }
 
+    @Transactional
+    public void reportResult(MatchingResultReportRequest matchingResult, String userId) {
+
+        Optional.ofNullable(matchingRepository.matchingRequestDeleteCheck(matchingResult.getMatchingRequestId()))
+                .ifPresentOrElse(matchingRequestDeleteCheck -> {
+                    // 소유주가 아니면 결과등록할 수 없음.
+                    Team selectedTeam = teamService.isOwner(userId, matchingRequestDeleteCheck.getTeamId());
+
+                    // 상대팀의 매칭요청ID 조회
+                    Optional.ofNullable(matchingRepository.selectOtherTeamRequestIdForResult(matchingResult.getMatchingRequestId()))
+                            .ifPresentOrElse(otherTeamMatchingRequestId -> {
+                                // 매칭 결과 조회
+                                Optional.ofNullable(matchingRepository.selectMatchingResultInfo(matchingResult.getMatchingRequestId()))
+                                        .ifPresentOrElse(matchingResultInfo -> {
+                                            //이미 결과가 등록된 경우
+                                            throw new MatchingResultAlreadyExistException();
+                                        },
+                                        () -> {
+
+                                            // 매칭 결과 삽입
+                                            if(1 != matchingRepository.insertMatchingResultInfo(matchingResult)) {
+                                                throw new CommonErrorException("failed to insert matching result info");
+                                            }
+
+                                            // 상대팀이 이미 결과를 입력한 상태라면, 매칭상태 변경
+                                            Optional.ofNullable(matchingRepository.selectMatchingResultInfo(otherTeamMatchingRequestId))
+                                                    .ifPresent(otherTeamMatchingResultInfo -> {
+
+                                                        String status = null;
+                                                        if(matchingResult.getOurTeamScore() == otherTeamMatchingResultInfo.getOtherTeamScore()
+                                                            && matchingResult.getOtherTeamScore() == otherTeamMatchingResultInfo.getOurTeamScore()) {
+                                                            status = "E";   // 상대방이 입력한 점수와 우리팀이 입력한 점수가 같다면 : 경기종료 상태
+                                                        } else {
+                                                            status = "F";   // 결과입력 실패 상태
+                                                        }
+
+                                                        // 매칭 요청에 점수등록 및 매칭 상태 변경
+                                                        if(1 != matchingRepository.updateMatchingRequestMapping(new MatchingRequestMappingScoreUpdate(status, matchingResult.getMatchingRequestId(), otherTeamMatchingResultInfo.getMatchingRequestId(), matchingResult.getOurTeamScore(), otherTeamMatchingResultInfo.getOurTeamScore()))){
+                                                            throw new CommonErrorException("failed to update matching request mapping");
+                                                        }
+
+                                                        // @TODO: 각팀 정보 조회해서 점수 계산
+
+                                                    });
+
+                                        });
+                            },
+                            () -> { throw new CannotFindOtherTeamRequestIdException(); });
+                },
+                () -> { throw new NoSuchMatchingRequestIdException(); });
+    }
 }

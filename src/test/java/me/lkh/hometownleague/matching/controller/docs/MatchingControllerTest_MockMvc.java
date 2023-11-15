@@ -7,6 +7,7 @@ import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.matching.controller.MatchingController;
 import me.lkh.hometownleague.matching.domain.MatchingListElement;
+import me.lkh.hometownleague.matching.domain.MatchingResultReportRequest;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailResponse;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam;
@@ -38,6 +39,7 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -140,7 +142,7 @@ public class MatchingControllerTest_MockMvc {
         // 세션 관련 End ======================================================================
 
         List<MatchingListElement> responseList = new ArrayList<>();
-        responseList.add(new MatchingListElement(2, 1, "test team", 1500, 1, "test description", "W", "대기", "202310182033"));
+        responseList.add(new MatchingListElement(2, 1, "N","test team",1500, 1, "test description", "W", "대기", "202310182033"));
 
         given(matchingService.selectMatching(any())).willReturn(responseList);
 
@@ -322,6 +324,162 @@ public class MatchingControllerTest_MockMvc {
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         pathParameters(
                                 parameterWithName("matchingRequestId").description("취소할 매칭 요청 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("매칭 수락")
+    @Test
+    void acceptMatchingRequest() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid@gmail.ccom";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        // 세션 관련 End ======================================================================
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("matchingRequestId", 16);
+        String requestContent = objectMapper.writeValueAsString(requestBody);
+        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/matching/accept")
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestContent)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        doNothing().when(matchingService).acceptMatching(any(), any());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("matching-request-accept",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestFields(
+                                fieldWithPath("matchingRequestId").type(JsonFieldType.NUMBER).description("수락할 매칭 Request ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("매칭 거절")
+    @Test
+    void refuseMatchingRequest() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid@gmail.ccom";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        // 세션 관련 End ======================================================================
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("matchingRequestId", 16);
+        String requestContent = objectMapper.writeValueAsString(requestBody);
+        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/matching/refuse")
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestContent)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        doNothing().when(matchingService).refuseMatching(any(), any());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("matching-request-refuse",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestFields(
+                                fieldWithPath("matchingRequestId").type(JsonFieldType.NUMBER).description("거절할 매칭 Request ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("매칭 결과등록")
+    @Test
+    void reportMatchingResult() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid@gmail.ccom";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        // 세션 관련 End ======================================================================
+        MatchingResultReportRequest request = new MatchingResultReportRequest(15, 2, 0);
+        String requestContent = objectMapper.writeValueAsString(request);
+        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/matching/result")
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestContent)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        doNothing().when(matchingService).reportResult(any(), any());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("matching-report-result",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        requestFields(
+                                fieldWithPath("matchingRequestId").type(JsonFieldType.NUMBER).description("결과를 등록할 매칭 Request ID"),
+                                fieldWithPath("ourTeamScore").type(JsonFieldType.NUMBER).description("우리팀의 점수"),
+                                fieldWithPath("otherTeamScore").type(JsonFieldType.NUMBER).description("상대팀의 점수")
                         ),
                         responseFields(
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),

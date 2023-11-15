@@ -38,7 +38,7 @@ public interface TeamRepository {
 
     int updatePlayerRole(String userId, String teamId, String role);
 
-    List<Team> selectTeamList(String legalCode, String fromScore, String toScore, String dayOfWeek, String time, String name);
+    List<Team> selectTeamList(String addressSi, String addressGungu, String fromScore, String toScore, String dayOfWeek, String time, String name);
 
     Integer selectJoinedTeam(String userId, String teamId);
 
@@ -53,4 +53,8 @@ public interface TeamRepository {
     int deleteJoinRequest(Integer joinRequestId);
 
     int leaveTeam(String teamId, String userId);
+
+    Team selectTeamByMatchingRequestId(Integer matchingRequestId);
+
+    int updateTeamScore(Integer teamId, Integer score);
 }

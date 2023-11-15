@@ -81,6 +81,8 @@ CREATE TABLE `matching_request_mapping` (
                                             `latitude` double NOT NULL COMMENT '경기장소 위도',
                                             `longitude` double NOT NULL COMMENT '경기장소 경도',
                                             `status` varchar(1) NOT NULL COMMENT '매칭 진행 상태',
+                                            `a_team_score` int NULL COMMENT 'a팀의 점수',
+                                            `b_team_score` int NULL COMMENT 'b팀의 점수',
                                             `create_timestamp` timestamp NOT NULL COMMENT '매칭 시간',
                                             PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='매칭 매핑 정보';
@@ -94,10 +96,11 @@ CREATE TABLE `matching_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='각 팀의 매칭 상세 정보';
 
 CREATE TABLE `matching_result_info` (
-                                        `matching_id` int NOT NULL COMMENT '매칭 ID',
-                                        `team_a_score` int NOT NULL COMMENT 'A팀의 점수',
-                                        `team_b_score` int NOT NULL COMMENT 'B팀의 점수',
-                                        PRIMARY KEY (`matching_id`)
+                                        `id` int NOT NULL AUTO_INCREMENT COMMENT '매칭 결과 ID',
+                                        `matching_request_id` int NOT NULL COMMENT '우리팀의 매칭요청ID',
+                                        `our_team_score` int NOT NULL COMMENT '우리팀의 점수',
+                                        `other_team_score` int NOT NULL COMMENT '상대팀의 점수',
+                                        PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='경기 결과 정보';
 
 CREATE TABLE `common_code` (

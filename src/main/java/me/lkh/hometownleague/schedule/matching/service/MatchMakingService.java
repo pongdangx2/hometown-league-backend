@@ -65,7 +65,7 @@ public class MatchMakingService {
                     if(matchingStep(matchingRequestInfo, times)){
                         return ;
                     }
-
+                    times++;
                 }
 
                 // 3. 최대횟수 안에 매칭이 실패하면 최우선순위로 다시 넣고 종료
@@ -234,14 +234,4 @@ public class MatchMakingService {
         return null;
     }
 
-    @Override
-    public String toString() {
-        return "MatchMakingService{" +
-                "matchingRedisService=" + matchingRedisService +
-                ", matchMakingRepository=" + matchMakingRepository +
-                ", locationFilteringStrategy=" + locationFilteringStrategy +
-                ", maxNumber=" + maxNumber +
-                ", maxDistance=" + maxDistance +
-                '}';
-    }
 }

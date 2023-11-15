@@ -673,7 +673,7 @@ public class TeamControllerTest_MockMvc {
         responseList.add(team);
 
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
-        given(teamService.selectTeamList(any(), any(), any(), any(), any(), any())).willReturn(responseList);
+        given(teamService.selectTeamList(any(), any(), any(), any(), any(), any(), any())).willReturn(responseList);
 
 
         ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team?name=Sunny")
@@ -692,7 +692,8 @@ public class TeamControllerTest_MockMvc {
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         queryParameters(
-                                parameterWithName("legal-code").description("(Optional)운동하는 지역의 지역코드").optional(),
+                                parameterWithName("address-si").description("(Optional)운동하는 지역의 시").optional(),
+                                parameterWithName("address-gungu").description("(Optional)운동하는 지역의 군/구").optional(),
                                 parameterWithName("from-score").description("(Optional)팀의 점수 조건 (최소)").optional(),
                                 parameterWithName("to-score").description("(Optional)팀의 점수 조건 (최대)").optional(),
                                 parameterWithName("day-of-Week").description("(Optional)요일 조건 (1~7)").optional(),

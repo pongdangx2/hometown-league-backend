@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
+import me.lkh.hometownleague.matching.domain.MatchingResultReportRequest;
 import me.lkh.hometownleague.matching.service.MatchingService;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
@@ -77,10 +78,42 @@ public class MatchingController {
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 
-    @PostMapping("/accept/{matchingRequestId}")
-    public CommonResponse acceptMatching(@PathVariable("matchingRequestId") Integer matchingRequestId, HttpServletRequest httpServletRequest){
+    /**
+     * 매칭 수락
+     * @param param
+     * @param httpServletRequest
+     * @return
+     */
+    @PostMapping("/accept")
+    public CommonResponse acceptMatching(@RequestBody Map<String, Integer> param, HttpServletRequest httpServletRequest){
+        if(!param.containsKey("matchingRequestId")){
+            throw new IllegalArgumentException("matchingRequestId는 필수입니다.");
+        }
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        matchingService.acceptMatching(param.get("matchingRequestId"), userSession.getUserId());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
 
+    /**
+     * 매칭 거절
+     * @param param
+     * @param httpServletRequest
+     * @return
+     */
+    @PostMapping("/refuse")
+    public CommonResponse refuseMatching(@RequestBody Map<String, Integer> param, HttpServletRequest httpServletRequest) {
+        if(!param.containsKey("matchingRequestId")){
+            throw new IllegalArgumentException("matchingRequestId는 필수입니다.");
+        }
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        matchingService.refuseMatching(param.get("matchingRequestId"), userSession.getUserId());
+        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+    }
+
+    @PostMapping("/result")
+    public CommonResponse reportResult(@RequestBody MatchingResultReportRequest matchingResult, HttpServletRequest httpServletRequest){
+        UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
+        matchingService.reportResult(matchingResult, userSession.getUserId());
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 }

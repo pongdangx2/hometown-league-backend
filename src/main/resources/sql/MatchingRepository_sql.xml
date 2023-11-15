@@ -25,7 +25,7 @@
     </insert>
 
     <select id="selectMatching" parameterType="String" resultType="me.lkh.hometownleague.matching.domain.MatchingListElement">
-        SELECT a.team_id, b.id, c.name, c.rank_score, c.kind, c.description,
+        SELECT a.team_id, b.id, b.process_yn, c.name, c.rank_score, c.kind, c.description,
                CASE WHEN d.id IS NULL THEN 'W' -- 대기
                     ELSE d.status
                    END AS status,
@@ -33,7 +33,7 @@
                     ELSE (SELECT code_name FROM common_code WHERE use_yn='Y' AND group_id='0011' AND code=d.status)
                    END AS status_name,
                DATE_FORMAT(d.match_timestamp, '%Y%m%d%H%i') AS match_timestamp
-        FROM team_user_mapping a INNER JOIN matching_request_info b ON a.team_id = b.team_id AND b.process_yn='N'
+        FROM team_user_mapping a INNER JOIN matching_request_info b ON a.team_id = b.team_id
                                  INNER JOIN team_info c ON a.team_id = c.id AND c.use_yn = 'Y'
                                  LEFT OUTER JOIN matching_request_mapping d ON (b.id = d.b_team_matching_request_id OR b.id = d.a_team_matching_request_id)
         WHERE a.user_id = #{userId}
@@ -72,7 +72,7 @@
     </select>
 
     <select id="matchingRequestDeleteCheck" parameterType="Integer" resultType="me.lkh.hometownleague.schedule.matching.domain.MatchingRequestDeleteCheck">
-        SELECT a.id, a.team_id, a.process_yn, b.status
+        SELECT a.id, a.team_id, a.process_yn, b.status, b.id
         FROM matching_request_info a LEFT OUTER JOIN matching_request_mapping b ON(a.id = b.a_team_matching_request_id OR a.id = b.b_team_matching_request_id)
         WHERE a.id = #{matchingRequestId}
     </select>
@@ -81,5 +81,88 @@
         DELETE FROM matching_request_info
         WHERE id = #{matchingRequestId}
     </delete>
+
+    <select id="selectMatchingInfo" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.MatchingInfo">
+        SELECT a.id, a.matching_request_id, a.status, DATE_FORMAT(a.accept_timestamp, '%Y%m%d%H%i') as accept_timestamp
+        FROM matching_info a
+        WHERE a.matching_request_id = #{matchingRequestId}
+    </select>
+
+    <update id="updateMatchingInfoToAccept" parameterType="Integer">
+        UPDATE matching_info
+        SET status = 'S'
+           ,accept_timestamp = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateMatchingRequestMapping" parameterType="me.lkh.hometownleague.matching.domain.MatchingRequestMappingScoreUpdate">
+        update matching_request_mapping
+        set status = #{status}
+          <if test="status != null and 'E'.toString() eq status">
+          , a_team_score = CASE WHEN a_team_matching_request_id = #{aTeamRequestId} THEN #{aTeamScore}
+                                ELSE #{bTeamScore}
+                           END
+          , b_team_score = CASE WHEN b_team_matching_request_id = #{aTeamRequestId} THEN #{aTeamScore}
+                                ELSE #{bTeamScore}
+                           END
+          </if>
+        where a_team_matching_request_id = #{aTeamRequestId} OR b_team_matching_request_id = #{aTeamRequestId}
+    </update>
+
+    <select id="selectOtherTeamRequestId" parameterType="Integer" resultType="Integer">
+        SELECT CASE WHEN a_team_matching_request_id = #{matchingRequestId} THEN b_team_matching_request_id
+                    ELSE a_team_matching_request_id
+                   END AS other_team_request_id
+        FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+            AND status IN ('O', 'C')
+    </select>
+
+    <delete id="deleteMatchingInfo" parameterType="Integer">
+        DELETE FROM matching_info
+        WHERE matching_request_id = #{matchingRequestId}
+    </delete>
+
+    <delete id="deleteMatchingRequestMapping" parameterType="Integer">
+        DELETE FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+    </delete>
+
+    <select id="selectOtherTeamRequestIdForResult" parameterType="Integer" resultType="Integer">
+        SELECT CASE WHEN a_team_matching_request_id = #{matchingRequestId} THEN b_team_matching_request_id
+                    ELSE a_team_matching_request_id
+                   END AS other_team_request_id
+        FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+            AND status = 'S'
+    </select>
+
+    <select id="selectMatchingResultInfo" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.MatchingResultInfo">
+        SELECT id, matching_request_id, our_team_score, other_team_score
+        FROM matching_result_info
+        WHERE matching_request_id = #{matchingRequestId}
+    </select>
+
+    <insert id="insertMatchingResultInfo" parameterType="me.lkh.hometownleague.matching.domain.MatchingResultReportRequest">
+        INSERT INTO matching_result_info(matching_request_id, our_team_score, other_team_score)
+        VALUES(#{matchingRequestId}, #{ourTeamScore}, #{otherTeamScore})
+    </insert>
+
+    <select id="selectMatchingRequestMappingByMatchingRequestId" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.MatchingRequestMapping">
+        SELECT id
+             , a_team_matching_request_id
+             , b_team_matching_request_id
+             , DATE_FORMAT(match_timestamp, '%Y%m%d%H%i') AS match_timestamp
+             , road_address
+             , jibun_address
+             , latitude
+             , longitude
+             , status
+             , a_team_score
+             , b_team_score
+             , DATE_FORMAT(create_timestamp, '%Y%m%d%H%i') AS create_timestamp
+        FROM matching_request_mapping
+        WHERE a_team_matching_request_id = #{matchingRequestId} OR b_team_matching_request_id = #{matchingRequestId}
+    </select>
 
 </mapper>

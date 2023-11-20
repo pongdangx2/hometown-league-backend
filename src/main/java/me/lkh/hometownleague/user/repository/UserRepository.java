@@ -22,4 +22,6 @@ public interface UserRepository {
     int updateUser(User user);
 
     List<UserTeam> selectTeamOfUser(String userId);
+
+    int updateUserCiPath(String userId, String ciPath);
 }

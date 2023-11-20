@@ -35,6 +35,8 @@ public enum ErrorCode {
     ,MATCHING_IS_NOT_REFUSABLE("3008", "매칭을 거절할 수 없는 상태입니다.")
     ,CANNOT_FIND_OTHER_TEAM_REQUEST_ID("3009", "상대팀의 매칭 요청 ID를 찾을 수 없습니다.")
     ,MATCHING_RESULT_ALREADY_EXIST("3010", "매칭결과가 이미 등록되었습니다.")
+    // 4000 : File Error
+    ,CANNOT_SAVE_FILE("4000", "파일 저장에 실패했습니다.")
     // 9000 : Common Error
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
     ;

@@ -216,4 +216,10 @@
         WHERE id = #{teamId}
     </update>
 
+    <update id="updateTeamCiPath" parameterType="String">
+        UPDATE team_info
+        SET ci_path = #{ciPath}
+        WHERE id = #{teamId}
+    </update>
+
 </mapper>

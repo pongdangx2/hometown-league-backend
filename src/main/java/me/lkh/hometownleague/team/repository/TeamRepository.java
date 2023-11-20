@@ -57,4 +57,6 @@ public interface TeamRepository {
     Team selectTeamByMatchingRequestId(Integer matchingRequestId);
 
     int updateTeamScore(Integer teamId, Integer score);
+
+    int updateTeamCiPath(String teamId, String ciPath);
 }

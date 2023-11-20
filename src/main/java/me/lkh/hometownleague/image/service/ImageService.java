@@ -53,12 +53,14 @@ public class ImageService {
         try {
             ciPath = saveFile(multipartFile, imageTeamPath, String.valueOf(teamId));
         } catch(Exception exception){
+            logger.error("디스크 파일저장 실패");
             exception.printStackTrace();
             throw new CannotSaveFileException("failed to write file on disk.");
         }
 
         // 2. DB에 파일명 업데이트
         if(1 != teamRepository.updateTeamCiPath(String.valueOf(teamId), ciPath)){
+            logger.error("DB 업데이트 실패");
             throw new CannotSaveFileException("failed to update team_info table");
         }
     }

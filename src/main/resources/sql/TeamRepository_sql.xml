@@ -118,9 +118,9 @@
                 INNER JOIN hometown_info b ON a.id = b.team_id
                                                             <if test="addressSi != null">
                                                             AND ((b.road_address LIKE CONCAT('%',#{addressSi},'%')
-                                                                    AND b.road_address LIKE CONCAT('%',#{addressGungu},'%')
+                                                                    AND b.road_address LIKE CONCAT('%',#{addressGungu},'%'))
                                                                  OR (b.jibun_address LIKE CONCAT('%',#{addressSi},'%')
-                                                                AND b.jibun_address LIKE CONCAT('%',#{addressGungu},'%')
+                                                                AND b.jibun_address LIKE CONCAT('%',#{addressGungu},'%')))
                                                             </if>
             </if>
             <if test="dayOfWeek != null or time != null">

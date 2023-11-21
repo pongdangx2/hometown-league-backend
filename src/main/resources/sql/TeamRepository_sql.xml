@@ -117,12 +117,10 @@
             <if test="addressSi != null or addressGungu != null">
                 INNER JOIN hometown_info b ON a.id = b.team_id
                                                             <if test="addressSi != null">
-                                                            AND (b.road_address LIKE '%' || #{addressSi} || '%'
-                                                                 OR b.jibun_address LIKE '%' || #{addressSi} || '%')
-                                                            </if>
-                                                            <if test="addressGungu != null">
-                                                                AND (b.road_address LIKE '%' || #{addressGungu} || '%'
-                                                                OR b.jibun_address LIKE '%' || #{addressGungu} || '%')
+                                                            AND ((b.road_address LIKE CONCAT('%',#{addressSi},'%')
+                                                                    AND b.road_address LIKE CONCAT('%',#{addressGungu},'%')
+                                                                 OR (b.jibun_address LIKE CONCAT('%',#{addressSi},'%')
+                                                                AND b.jibun_address LIKE CONCAT('%',#{addressGungu},'%')
                                                             </if>
             </if>
             <if test="dayOfWeek != null or time != null">
@@ -142,7 +140,7 @@
         AND rank_score <![CDATA[ <= ]]> #{toScore}
         </if>
         <if test="name != null">
-        AND name like '%'|| #{name} || '%'
+        AND name like CONCAT('%',#{name},'%')
         </if>
     </select>
 

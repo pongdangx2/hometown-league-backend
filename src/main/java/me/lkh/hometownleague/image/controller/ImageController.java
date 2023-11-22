@@ -5,6 +5,7 @@ import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.image.service.ImageService;
+import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,8 @@ public class ImageController {
         this.sessionService = sessionService;
     }
 
-    @PostMapping("/team")
+    @PatchMapping ("/team")
+    @AuthCheck
     public CommonResponse uploadTeamCi(@RequestParam("imageFile")MultipartFile multipartFile, @RequestParam("id") int teamId, HttpServletRequest httpServletRequest) {
 
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
@@ -50,7 +52,8 @@ public class ImageController {
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
 
-    @PostMapping("/user")
+    @PatchMapping("/user")
+    @AuthCheck
     public CommonResponse uploadUserCi(@RequestParam("imageFile")MultipartFile multipartFile, HttpServletRequest httpServletRequest) {
 
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());

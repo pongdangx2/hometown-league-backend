@@ -116,4 +116,9 @@ public class MatchingController {
         matchingService.reportResult(matchingResult, userSession.getUserId());
         return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
     }
+
+    @GetMapping("/history/{teamId}")
+    public CommonResponse selectMatchHistory(@PathVariable("teamId")Integer teamId){
+        return new CommonResponse(matchingService.selectMatchHistory(teamId));
+    }
 }

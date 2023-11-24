@@ -8,9 +8,7 @@ import me.lkh.hometownleague.common.util.SessionUtil;
 import me.lkh.hometownleague.matching.controller.MatchingController;
 import me.lkh.hometownleague.matching.domain.MatchingListElement;
 import me.lkh.hometownleague.matching.domain.MatchingResultReportRequest;
-import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
-import me.lkh.hometownleague.matching.domain.response.MatchingDetailResponse;
-import me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam;
+import me.lkh.hometownleague.matching.domain.response.*;
 import me.lkh.hometownleague.matching.service.MatchingService;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
@@ -482,6 +480,83 @@ public class MatchingControllerTest_MockMvc {
                                 fieldWithPath("otherTeamScore").type(JsonFieldType.NUMBER).description("상대팀의 점수")
                         ),
                         responseFields(
+                                fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
+                        )
+                ));
+    }
+
+    @DisplayName("매칭 히스토리 조회")
+    @Test
+    void selectMatchingHistory() throws Exception {
+
+        // 세션 관련 Start ======================================================================
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+
+        String id = "testid@gmail.ccom";
+        String name = "testname";
+        String password = "testPassword";
+        User user = new User(id, name, password);
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+                , user.getId()
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
+        given(sessionService.getUserSession(any())).willReturn(userSession);
+        given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        // 세션 관련 End ======================================================================
+
+        List<MatchingHistoryBase> responseList = new ArrayList<>();
+        int ourTeamId = 1;
+        int otherTeamId = 2;
+        MatchingHistoryTeam ourTeam = new MatchingHistoryTeam(ourTeamId, "sunny eleven", "test.png", 2);
+        MatchingHistoryTeam otherTeam = new MatchingHistoryTeam(otherTeamId, "test other team", "other.png", 0);
+        MatchingHistoryBase res = new MatchingHistoryBase(1, ourTeamId, otherTeamId, "202311271000", "서울특별시 노원구 공릉로 232", "서울특별시 노원구 공릉동 172",
+                37.6317692339419,127.0803445512275,"E", "경기종료", 2, 0, "202311251000", ourTeam, otherTeam
+                );
+        responseList.add(res);
+        given(matchingService.selectMatchHistory(any())).willReturn(responseList);
+
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
+
+        ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.get("/matching/history/{teamId}", 1)
+                .header("cookie", "SESSION=" + userSession.getSessionId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.responseCode").exists())
+                .andExpect(jsonPath("$.responseCode.code").exists())
+                .andExpect(jsonPath("$.responseCode.message").exists())
+                .andExpect((content().json(responseContent)))
+                .andDo(document("matching-select-history",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        pathParameters(
+                                parameterWithName("teamId").description("경기 결과 히스토리를 조회할 팀 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("경기 결과 목록"),
+                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("매칭 매핑 ID"),
+                                fieldWithPath("data[].matchTimestamp").type(JsonFieldType.STRING).description("(Optional) 매칭의 경기시간(YYYYMMDDHH24MI 형태. ex-202310182058)"),
+                                fieldWithPath("data[].roadAddress").type(JsonFieldType.STRING).description("매칭 장소(도로명주소)"),
+                                fieldWithPath("data[].jibunAddress").type(JsonFieldType.STRING).description("매칭 장소(지번주소)"),
+                                fieldWithPath("data[].latitude").type(JsonFieldType.NUMBER).description("매칭 장소(위도)"),
+                                fieldWithPath("data[].longitude").type(JsonFieldType.NUMBER).description("매칭 장소(경도)"),
+                                fieldWithPath("data[].status").type(JsonFieldType.STRING).description("매칭 요청 상태코드"),
+                                fieldWithPath("data[].statusName").type(JsonFieldType.STRING).description("매칭 요청 상태명"),
+                                fieldWithPath("data[].ourTeam").type(JsonFieldType.OBJECT).description("우리팀 정보"),
+                                fieldWithPath("data[].ourTeam.id").type(JsonFieldType.NUMBER).description("팀ID"),
+                                fieldWithPath("data[].ourTeam.name").type(JsonFieldType.STRING).description("팀명"),
+                                fieldWithPath("data[].ourTeam.ciPath").type(JsonFieldType.STRING).description("팀로고명"),
+                                fieldWithPath("data[].ourTeam.score").type(JsonFieldType.NUMBER).description("우리팀 점수(Optional)"),
+                                fieldWithPath("data[].otherTeam").type(JsonFieldType.OBJECT).description("상대팀 정보"),
+                                fieldWithPath("data[].otherTeam.id").type(JsonFieldType.NUMBER).description("팀ID"),
+                                fieldWithPath("data[].otherTeam.name").type(JsonFieldType.STRING).description("팀명"),
+                                fieldWithPath("data[].otherTeam.ciPath").type(JsonFieldType.STRING).description("팀로고명"),
+                                fieldWithPath("data[].otherTeam.score").type(JsonFieldType.NUMBER).description("우리팀 점수(Optional)"),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )

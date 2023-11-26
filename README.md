@@ -39,7 +39,7 @@ Nginx, Tomcat, MySQL, Redis
 ## 주요 사항
 ### Session Clustering
 - 분산 환경에서 `Session 정합성`을 유지하고 `Scale Out`에 유리하게 하기 위해 `Redis`에 `Session 정보`를 관리했습니다.
-- `Spring Boot`에서 간단히 적용할 수 있는 `Spring Session Data Redis`를 이용하는 대신 직접 개발하는 방법을 택했습니다.
+- Redis를 활용해 간단히 세션을 관리할 수 있는 `Spring Session Data Redis` 대신 `Interceptor`와 `Custom Annotation`을 활용해 직접 개발하는 방법을 택했습니다.
 
 #### Session 생성 및 파기
 - 로그인 시 `사용자 ID`와 `타임스탬프`의 해시값을 `Key`로 세션 정보를 `Redis`에 저장했습니다.

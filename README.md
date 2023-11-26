@@ -46,7 +46,7 @@ Java 17, Spring Boot, Maven, Mybatis, Spring Rest Docs, React, Thymeleaf
 Nginx, Tomcat, MySQL, Redis
 
 ### 구조도
-<img src="./README-resource/SystemStructure.png" title="System 구조도"/>
+<img src="./README-resource/SystemStructure1.png" title="System 구조도"/>
 
 ## 주요 사항
 ### Session Clustering

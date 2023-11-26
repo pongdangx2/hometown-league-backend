@@ -10,7 +10,7 @@
 스포츠 동호회에 랭크를 도입하여 더 몰입도 있게 즐길 수 있도록 하고자 합니다.
 
 ## 팀원
-|이름|역할|
-|---|---|
-|전영주|Front-End 개발|
-|이경훈|Back-End 개발|
+|이름|역할| github|
+|---|---|---|
+|전영주|Front-End 개발| <a href="https://github.com/Jeon-YJ1004"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a> |
+|이경훈|Back-End 개발| <a href="https://github.com/pongdangx2"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a> |

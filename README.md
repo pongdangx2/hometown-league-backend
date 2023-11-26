@@ -21,6 +21,7 @@
 <br>
 스포츠 동호회에 랭크를 도입하여 더 몰입도 있게 즐길 수 있도록 하고자 합니다.
 <br>
+<br>
 자세한 `Business Rule` 및 `고민`은 [WIKI](https://github.com/HometownLeague/hometown-league-be/wiki) 에서 확인할 수 있습니다.
 
 ## 링크

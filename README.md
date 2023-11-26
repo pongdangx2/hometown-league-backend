@@ -34,8 +34,27 @@ Java 17, Spring Boot, Maven, Mybatis, Spring Rest Docs, React, Thymeleaf
 Nginx, Tomcat, MySQL, Redis
 
 ### 구조도
-
 <img src="./README-resource/SystemStructure.png" title="System 구조도"/>
+
+## 주요 사항
+### Session Clustering
+- 분산 환경에서 `Session 정합성`을 유지하고 `Scale Out`에 유리하게 하기 위해 `Redis`에 `Session 정보`를 관리했습니다.
+- `Spring Boot`에서 간단히 적용할 수 있는 `Spring Session Data Redis`를 이용하는 대신 직접 개발하는 방법을 택했습니다.
+
+#### Session 생성 및 파기
+- 로그인 시 `사용자 ID`와 `타임스탬프`의 해시값을 `Key`로 세션 정보를 `Redis`에 저장했습니다.
+- 세션은 로그아웃 시 혹은 30분동안 갱신되지 않았을 시 파기됩니다.
+
+#### Session Interceptor
+- Sesison 처리가 필요한 API 호출 시 Session을 확인하는 `Interceptor`를 만들었습니다.
+- `AuthCheck`라는 이름의 `Custom Annotation`을 만들어 이 애노테이션이 붙어있는 Method/Controller 호출 시 Session Interceptor에서 세션을 확인합니다.
+
+### 매칭 서비스
+- 팀의 주장이 매칭을 요청하면 `Redis`에 있는 매칭 대기열에 매칭 요청 데이터를 생성하고, RDB에도 저장합니다. 
+- `@Scheduled`애노테이션을 활용해 대기열에 있는 매칭 요청들 중 시간, 장소, 랭크가 비슷한 요청들을 매칭시켰습니다.
+
+### 랭크 서비스
+- 랭크 계산은 [ELO Rating](https://ko.wikipedia.org/wiki/%EC%97%98%EB%A1%9C_%ED%8F%89%EC%A0%90_%EC%8B%9C%EC%8A%A4%ED%85%9C) 을 사용했습니다.
 
 ## 화면설계서
 - [화면설계](https://www.figma.com/file/bjqo9hgQBbuflPYZ72ybpo/HomeTownLeague-%EA%B0%84%EB%8B%A8-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=0%3A1&mode=design&t=FnWuJ4wK3mXiBTHG-1) 는 Figma를 사용했습니다.

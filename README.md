@@ -24,8 +24,6 @@
 | 전영주 | Front-End 개발 | <a href="https://github.com/Jeon-YJ1004"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a> |
 | 이경훈 | Back-End 개발  | <a href="https://github.com/pongdangx2"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a>  |
 
-## 주요 기능
-
 ## 시스템 구조 및 기술 스택
 ### 사용 기술
 Java 17, Spring Boot, Maven, Mybatis, Spring Rest Docs, React, Thymeleaf
@@ -47,7 +45,12 @@ Nginx, Tomcat, MySQL, Redis
 
 #### Session Interceptor
 - Sesison 처리가 필요한 API 호출 시 Session을 확인하는 `Interceptor`를 만들었습니다.
-- `AuthCheck`라는 이름의 `Custom Annotation`을 만들어 이 애노테이션이 붙어있는 Method/Controller 호출 시 Session Interceptor에서 세션을 확인합니다.
+- 다음과 같이 `AuthCheck`라는 이름의 `Custom Annotation`을 만들어 이 애노테이션이 붙어있는 Method/Controller 호출 시 Session Interceptor에서 세션을 확인합니다.
+> `class`에 세션 체크 적용
+> <img src="./README-resource/authcheck_class.png" title="System 구조도"/>
+
+> `Method`에 세션 체크 적용
+> <img src="./README-resource/authcheck_method.png" title="System 구조도"/>
 
 ### 매칭 서비스
 - 팀의 주장이 매칭을 요청하면 `Redis`에 있는 매칭 대기열에 매칭 요청 데이터를 생성하고, RDB에도 저장합니다. 

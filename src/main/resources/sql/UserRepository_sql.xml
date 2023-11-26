@@ -63,4 +63,10 @@
           AND b.use_yn = 'Y'
     </select>
 
+    <update id="updateUserCiPath" parameterType="String">
+        UPDATE user_info
+        SET ci_path = #{ciPath}
+        WHERE id = #{userId}
+    </update>
+
 </mapper>

@@ -574,3 +574,26 @@ include::{custom-snippets}/matching-report-result/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/matching-report-result/response-body.adoc[]
+
+
+=== 팀의 경기 결과 히스토리 조회
+팀의 경기 결과 히스토리 조회
+include::{snippets}/matching-select-history/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/matching-select-history/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/matching-select-history/http-request.adoc[]
+
+==== Response
+include::{snippets}/matching-select-history/response-fields.adoc[]
+
+===== status
+include::{custom-snippets}/matching-select-history/response-status.adoc[]
+
+===== responseCode
+include::{custom-snippets}/matching-select-history/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/matching-select-history/response-body.adoc[]

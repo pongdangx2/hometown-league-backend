@@ -6,9 +6,7 @@ import me.lkh.hometownleague.common.exception.matching.*;
 import me.lkh.hometownleague.common.exception.team.NoSuchTeamIdException;
 import me.lkh.hometownleague.common.exception.team.NotOwnerException;
 import me.lkh.hometownleague.matching.domain.*;
-import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
-import me.lkh.hometownleague.matching.domain.response.MatchingDetailResponse;
-import me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam;
+import me.lkh.hometownleague.matching.domain.response.*;
 import me.lkh.hometownleague.matching.repository.MatchingRepository;
 import me.lkh.hometownleague.rank.domain.CalculatedScore;
 import me.lkh.hometownleague.rank.service.RankService;
@@ -18,10 +16,7 @@ import me.lkh.hometownleague.team.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -315,4 +310,51 @@ public class MatchingService {
             throw new CommonErrorException("failed to update team rank socre: " + aTeam.getId());
         }
     }
+
+    public List<MatchingHistoryBase> selectMatchHistory(Integer teamId){
+        List<MatchingHistoryBase> result = new ArrayList<>();
+
+        // 1. 팀의 모든 경기 기본정보 조회
+        List<MatchingHistoryBase> matchingHistoryBaseList = matchingRepository.selectMatchingHistoryBaseListByTeamId(teamId);
+
+        // 2. 우리팀 + 모든 상대팀의 ID 추리기
+        Set<Integer> teamIdSet = new HashSet<>();
+        matchingHistoryBaseList.forEach(matchingHistoryBase -> {
+            teamIdSet.add(matchingHistoryBase.getaTeamId());
+            teamIdSet.add(matchingHistoryBase.getbTeamId());
+        });
+
+        // 3. 연관된 모든 팀 맵 생성
+        List<MatchingHistoryTeam> teamList = matchingRepository.selectAllTeamInfo(teamIdSet);
+        Map<Integer, MatchingHistoryTeam> teamMap = new HashMap<>();
+        teamList.forEach(team -> {
+            if(!teamMap.containsKey(team.getId())){
+                teamMap.put(team.getId(), team);
+            }
+        });
+
+        // 4. 맵을 이용해 결과 생성
+        matchingHistoryBaseList.forEach(base -> {
+            Integer ourTeamId, ourTeamScore;
+            Integer otherTeamId, otherTeamScore;
+            if(Objects.equals(base.getaTeamId(), teamId)){
+                ourTeamId = base.getaTeamId();
+                otherTeamId = base.getbTeamId();
+                ourTeamScore = base.getaTeamScore();
+                otherTeamScore = base.getbTeamScore();
+            } else {
+                ourTeamId = base.getbTeamId();
+                otherTeamId = base.getaTeamId();
+                ourTeamScore = base.getbTeamScore();
+                otherTeamScore = base.getaTeamScore();
+            }
+            MatchingHistoryTeam ourTeam = teamMap.get(ourTeamId);
+            MatchingHistoryTeam otherTeam = teamMap.get(otherTeamId);
+            result.add(base.addOurTeam(ourTeam.addScore(ourTeamScore))
+                    .addOtherTeam(otherTeam.addScore(otherTeamScore)));
+        });
+
+        return result;
+    }
+
 }

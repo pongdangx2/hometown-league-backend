@@ -3,11 +3,14 @@ package me.lkh.hometownleague.matching.repository;
 import me.lkh.hometownleague.matching.domain.*;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailBase;
 import me.lkh.hometownleague.matching.domain.response.MatchingDetailTeam;
+import me.lkh.hometownleague.matching.domain.response.MatchingHistoryBase;
+import me.lkh.hometownleague.matching.domain.response.MatchingHistoryTeam;
 import me.lkh.hometownleague.schedule.matching.domain.MatchingRequestDeleteCheck;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Mapper
 public interface MatchingRepository {
@@ -50,4 +53,7 @@ public interface MatchingRepository {
 
     int updateMatchingRequestMapping(MatchingRequestMappingScoreUpdate matchingRequestMappingScoreUpdate);
 
+    List<MatchingHistoryBase> selectMatchingHistoryBaseListByTeamId(Integer teamId);
+
+    List<MatchingHistoryTeam> selectAllTeamInfo(Set<Integer> teamIdSet);
 }

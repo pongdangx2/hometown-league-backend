@@ -72,6 +72,7 @@ Nginx, Tomcat, MySQL, Redis
 
 ### 랭크 서비스
 - 랭크 계산은 [ELO Rating](https://ko.wikipedia.org/wiki/%EC%97%98%EB%A1%9C_%ED%8F%89%EC%A0%90_%EC%8B%9C%EC%8A%A4%ED%85%9C) 을 사용했습니다.
+- 단 승리 시 점수가 너무 조금 올랐을 때의 허무함을 방지하기 위해 점수가 오를 땐 최소 5점 이상 오르도록 했습니다.
 
 ## 화면설계서
 - [화면설계](https://www.figma.com/file/bjqo9hgQBbuflPYZ72ybpo/HomeTownLeague-%EA%B0%84%EB%8B%A8-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=0%3A1&mode=design&t=FnWuJ4wK3mXiBTHG-1) 는 Figma를 사용했습니다.

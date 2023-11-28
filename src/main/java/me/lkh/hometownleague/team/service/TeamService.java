@@ -40,7 +40,7 @@ public class TeamService {
      * @param teamPlayTimes
      */
     @Transactional
-    public void makeTeam(Team team, List<TeamPlayTime> teamPlayTimes, List<TeamPlayLocation> teamPlayLocations){
+    public Team makeTeam(Team team, List<TeamPlayTime> teamPlayTimes, List<TeamPlayLocation> teamPlayLocations){
         // 팀명이 이미 존재하는 경우
         if(isDuplicate(team.getName()))
             throw new DuplicateTeamNameException();
@@ -48,7 +48,8 @@ public class TeamService {
         // 1. 팀생성
         teamRepository.insertTeam(team);
 
-        Optional.ofNullable(teamRepository.selectTeamByName(team.getName())).ifPresentOrElse(selectedTeam -> {
+        Optional<Team> optionalTeam = Optional.ofNullable(teamRepository.selectTeamByName(team.getName()));
+        optionalTeam.ifPresentOrElse(selectedTeam -> {
 
                     // 2. 소유주 등록
                     joinTeam(team.getOwnerId(), selectedTeam.getId());
@@ -58,10 +59,13 @@ public class TeamService {
 
                     // 4. 운동지역 생성
                     insertPlayLocation(selectedTeam.getId(), teamPlayLocations);
+
                 }
                 ,()-> {
                     throw new CommonErrorException();
                 });
+
+        return optionalTeam.get();
     }
 
     /**

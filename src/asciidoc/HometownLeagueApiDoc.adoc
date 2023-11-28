@@ -597,3 +597,24 @@ include::{custom-snippets}/matching-select-history/response-code.adoc[]
 
 ==== Response Example
 include::{snippets}/matching-select-history/response-body.adoc[]
+
+== 4. Ranking
+
+=== 랭킹 조회
+상위 랭킹에 위치한 팀 목록 조회
+include::{snippets}/rank-select-top-ranking/curl-request.adoc[]
+
+==== Request (Path Variable)
+include::{snippets}/rank-select-top-ranking/path-parameters.adoc[]
+
+==== Request Example
+include::{snippets}/rank-select-top-ranking/http-request.adoc[]
+
+==== Response
+include::{snippets}/rank-select-top-ranking/response-fields.adoc[]
+
+===== responseCode
+include::{custom-snippets}/rank-select-top-ranking/response-code.adoc[]
+
+==== Response Example
+include::{snippets}/rank-select-top-ranking/response-body.adoc[]

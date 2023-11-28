@@ -13,6 +13,7 @@ import me.lkh.hometownleague.rank.service.RankService;
 import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.team.repository.TeamRepository;
 import me.lkh.hometownleague.team.service.TeamService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,10 @@ public class MatchingService {
     private final MatchingRedisService matchingRedisService;
 
     private final RankService rankService;
+
+    // 히스토리 조회 시 한패이지당 몇개씩 들어갈지 개수
+    @Value("${matching.history-page-count}")
+    private Integer historyPageCount;
 
     public MatchingService(TeamRepository teamRepository, MatchingRepository matchingRepository, TeamService teamService, MatchingRedisService matchingRedisService, RankService rankService) {
         this.teamRepository = teamRepository;
@@ -311,11 +316,11 @@ public class MatchingService {
         }
     }
 
-    public List<MatchingHistoryBase> selectMatchHistory(Integer teamId){
+    public List<MatchingHistoryBase> selectMatchHistory(Integer teamId, Integer page){
         List<MatchingHistoryBase> result = new ArrayList<>();
 
         // 1. 팀의 모든 경기 기본정보 조회
-        List<MatchingHistoryBase> matchingHistoryBaseList = matchingRepository.selectMatchingHistoryBaseListByTeamId(teamId);
+        List<MatchingHistoryBase> matchingHistoryBaseList = matchingRepository.selectMatchingHistoryBaseListByTeamId(teamId, historyPageCount * (page-1) ,historyPageCount);
 
         // 2. 우리팀 + 모든 상대팀의 ID 추리기
         Set<Integer> teamIdSet = new HashSet<>();

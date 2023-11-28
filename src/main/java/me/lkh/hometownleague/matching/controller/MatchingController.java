@@ -118,7 +118,7 @@ public class MatchingController {
     }
 
     @GetMapping("/history/{teamId}")
-    public CommonResponse selectMatchHistory(@PathVariable("teamId")Integer teamId){
-        return new CommonResponse(matchingService.selectMatchHistory(teamId));
+    public CommonResponse selectMatchHistory(@PathVariable("teamId")Integer teamId, @RequestParam Integer page){
+        return new CommonResponse(matchingService.selectMatchHistory(teamId, page));
     }
 }

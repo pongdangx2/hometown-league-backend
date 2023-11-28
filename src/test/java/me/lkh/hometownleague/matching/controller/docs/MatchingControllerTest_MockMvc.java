@@ -41,8 +41,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureRestDocs(uriHost="218.232.175.4", uriPort = 49156)
@@ -514,12 +513,13 @@ public class MatchingControllerTest_MockMvc {
                 37.6317692339419,127.0803445512275,"E", "경기종료", 2, 0, "202311251000", ourTeam, otherTeam
                 );
         responseList.add(res);
-        given(matchingService.selectMatchHistory(any())).willReturn(responseList);
+        given(matchingService.selectMatchHistory(any(), any())).willReturn(responseList);
 
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
 
         ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.get("/matching/history/{teamId}", 1)
                 .header("cookie", "SESSION=" + userSession.getSessionId())
+                .param("page", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         );
@@ -534,6 +534,9 @@ public class MatchingControllerTest_MockMvc {
                 .andDo(document("matching-select-history",
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        queryParameters(
+                                parameterWithName("page").description("조회할 페이지")
+                        ),
                         pathParameters(
                                 parameterWithName("teamId").description("경기 결과 히스토리를 조회할 팀 ID")
                         ),

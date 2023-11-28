@@ -583,6 +583,9 @@ include::{snippets}/matching-select-history/curl-request.adoc[]
 ==== Request (Path Variable)
 include::{snippets}/matching-select-history/path-parameters.adoc[]
 
+==== Request (Query Parameters)
+include::{snippets}/matching-select-history/query-parameters.adoc[]
+
 ==== Request Example
 include::{snippets}/matching-select-history/http-request.adoc[]
 

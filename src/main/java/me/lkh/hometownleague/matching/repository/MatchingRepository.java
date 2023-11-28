@@ -53,7 +53,8 @@ public interface MatchingRepository {
 
     int updateMatchingRequestMapping(MatchingRequestMappingScoreUpdate matchingRequestMappingScoreUpdate);
 
-    List<MatchingHistoryBase> selectMatchingHistoryBaseListByTeamId(Integer teamId);
+    List<MatchingHistoryBase> selectMatchingHistoryBaseListByTeamId(Integer teamId, Integer offset, Integer count);
 
     List<MatchingHistoryTeam> selectAllTeamInfo(Set<Integer> teamIdSet);
+
 }

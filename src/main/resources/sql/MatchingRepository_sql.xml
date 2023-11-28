@@ -183,6 +183,7 @@
                                                                              AND b.status IN ('E', 'F')
         WHERE a.process_yn = 'Y'
           AND a.team_id = #{teamId}
+        LIMIT #{offset}, #{count}
     </select>
 
     <select id="selectAllTeamInfo" parameterType="Integer" resultType="me.lkh.hometownleague.matching.domain.response.MatchingHistoryTeam">

@@ -1,3 +1,5 @@
+create index idx_team_score on team_info (use_yn, rank_score desc);
+
 CREATE TABLE `user_info` (
                              `id` varchar(100) NOT NULL COMMENT '유저ID(email)',
                              `nickname` varchar(40) NOT NULL COMMENT '유저닉네임',

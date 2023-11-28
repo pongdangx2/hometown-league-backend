@@ -179,7 +179,8 @@
                       , b.a_team_score
                       , b.b_team_score
                       , DATE_FORMAT(b.create_timestamp, '%Y%m%d%H%i') AS create_timestamp
-        FROM matching_request_info a LEFT OUTER JOIN matching_request_mapping b ON (a.id = b.a_team_matching_request_id OR a.id = b.b_team_matching_request_id)
+        FROM matching_request_info a INNER JOIN matching_request_mapping b ON (a.id = b.a_team_matching_request_id OR a.id = b.b_team_matching_request_id)
+                                                                             AND b.status IN ('E', 'F')
         WHERE a.process_yn = 'Y'
           AND a.team_id = #{teamId}
     </select>

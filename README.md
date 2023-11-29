@@ -80,6 +80,17 @@ Nginx, Tomcat, MySQL, Redis
 ```sql
 create index idx_team_score on team_info (use_yn, rank_score desc);
 ```
+- 그 결과 테스트 데이터 `약 10804개의 팀` 중 상위 `30개`의 팀을 조회했을 때, 소요시간이 `114ms` 에서 `86ms` 로 `약 25%` 줄었습니다.
+- 실행계획은 다음과 같습니다.
+
+| 구분        | 소요시간   | id  |select_type|table| partitions |type| possible_keys  | key            | key_len | ref   |rows|filtered| Extra                       |
+|-----------|--------|-----|---|---|------------|---|----------------|----------------|---------|-------|---|---|-----------------------------|
+| Index생성 전 | 144ms| 1   | SIMPLE |team_info|            |ALL|                |                |         |       |10804|10| Using where; Using filesort |
+|Index생성 후|86ms|1|SIMPLE|team_info|            | ref        | idx_team_score | idx_team_score | 6       | const |5402|100|                             |
+
+- Index를 생성하기 전에는 약 10000개의 전체 데이터를 가져온 뒤에 where조건으로 범위를 축소했습니다.
+- 또, Filesort로 정렬을 처리했음을 알 수 있습니다.
+- Index적용 후에는 처음 가져오는 행의 수가 절반으로 줄은 모습을 볼 수있었습니다.
 
 ## 화면설계서
 - [화면설계](https://www.figma.com/file/bjqo9hgQBbuflPYZ72ybpo/HomeTownLeague-%EA%B0%84%EB%8B%A8-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=0%3A1&mode=design&t=FnWuJ4wK3mXiBTHG-1) 는 Figma를 사용했습니다.

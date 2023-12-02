@@ -194,11 +194,12 @@ public class TeamController {
                                          ,@RequestParam(name = "from-score", required = false) Integer fromScore
                                          ,@RequestParam(name = "to-score", required = false) Integer toScore
                                          ,@RequestParam(name = "day-of-Week", required = false) Integer dayOfWeek
-                                         ,@RequestParam(name = "time", required = false) String time
-                                         ,@RequestParam(required = false) String name){
+                                         ,@RequestParam(required = false) String time
+                                         ,@RequestParam(required = false) String name
+                                         ,@RequestParam Integer page){
 
-        logger.debug("selectTeamList:" + addressSi + "," + addressGungu + ", " + fromScore + ", " + toScore + ", " + name);
-        return new CommonResponse<>(teamService.selectTeamList(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name));
+        logger.debug("selectTeamList:" + addressSi + "," + addressGungu + ", " + fromScore + ", " + toScore + ", " + name + ", " + page);
+        return new CommonResponse<>(teamService.selectTeamList(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name, page));
     }
 
     /**

@@ -112,8 +112,14 @@ public class TeamControllerTest_MockMvc {
         location.add(new TeamPlayLocation(null, "서울과기대",null, 37.6317692339419, 127.0803445512275, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", "11350103"));
 
         String teamName = "testTeamName";
-        String requestContent = objectMapper.writeValueAsString(new MakeTeamRequest(teamName, null, "tempPath", "테스트로 만든 팀입니다.", 0, 3, time, location));
-        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+        String ciPath = "";
+        String description = "테스트로 만든 팀입니다.";
+        int score = 1500;
+        int kind = 1;
+        String requestContent = objectMapper.writeValueAsString(new MakeTeamRequest(teamName, null, ciPath, description, score, kind, time, location));
+
+        Team team = new Team(15, teamName ,ciPath, description, score, kind);
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(team));
 
         String id = "testid";
         String name = "testname";
@@ -126,6 +132,7 @@ public class TeamControllerTest_MockMvc {
         given(sessionService.getUserSession(any())).willReturn(userSession);
 
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
+        given(teamService.makeTeam(any(), any(), any())).willReturn(team);
 
         ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/team")
                 .header("cookie", "SESSION=" + userSession.getSessionId())
@@ -160,6 +167,13 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("location[].roadAddress").type(JsonFieldType.STRING).description("(Optional)도로명주소").optional()
                         ),
                         responseFields(
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("생성된 팀"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("팀 ID"),
+                                fieldWithPath("data.name").type(JsonFieldType.STRING).description("팀명"),
+                                fieldWithPath("data.ciPath").type(JsonFieldType.STRING).description("팀 로고 파일명"),
+                                fieldWithPath("data.description").type(JsonFieldType.STRING).description("팀 소개글"),
+                                fieldWithPath("data.rankScore").type(JsonFieldType.NUMBER).description("팀 랭크 점수"),
+                                fieldWithPath("data.kind").type(JsonFieldType.NUMBER).description("팀 종목"),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )

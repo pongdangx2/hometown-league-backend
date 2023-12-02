@@ -2,9 +2,14 @@ package me.lkh.hometownleague.rank.service;
 
 import me.lkh.hometownleague.rank.WinResult;
 import me.lkh.hometownleague.rank.domain.CalculatedScore;
+import me.lkh.hometownleague.rank.domain.MemberCount;
+import me.lkh.hometownleague.rank.domain.Ranking;
+import me.lkh.hometownleague.rank.repository.RankRepository;
 import me.lkh.hometownleague.team.domain.Team;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 랭크를 어떻게 정할지에 대한 로직을 가진 클래스.
@@ -19,6 +24,12 @@ public class RankService {
     // 랭크 점수 계산 시 최소 변화량
     @Value("${rank.min.value}")
     private int rankMinValue;
+
+    private final RankRepository rankRepository;
+
+    public RankService(RankRepository rankRepository) {
+        this.rankRepository = rankRepository;
+    }
 
     public String getRankName(int rankScore){
         return "UNRANKED";
@@ -85,5 +96,36 @@ public class RankService {
      */
     private double getWinProbability(int ourTeamRank, int otherTeamRank){
         return 1.0 / (1 + Math.pow(10, otherTeamRank - ourTeamRank)/400);
+    }
+
+    /**
+     * 점수가 높은 상위 랭크 팀 목록을 조회
+     * @param numOfTeam 조회할 팀의 수
+     * @return
+     */
+    public List<Ranking> selectRankingList(Integer numOfTeam){
+
+        List<Ranking> rankingList = rankRepository.selectRankingList(numOfTeam);
+
+        if(!rankingList.isEmpty()) {
+            // 포함된 팀들의 ID를 조회
+            Set<Integer> teamIdSet = new HashSet<>();
+            rankingList.forEach(ranking -> teamIdSet.add(ranking.getId()));
+
+            // 각 팀의 팀원 개수를 확인
+            Map<Integer, Integer> memberCountMap = new HashMap<>();
+            rankRepository.selectMemberCount(teamIdSet).forEach(memberCount -> memberCountMap.put(memberCount.getTeamId(), memberCount.getCount()));
+
+            // 결과 생성
+            List<Ranking> result = new ArrayList<>();
+            rankingList.forEach(ranking -> {
+                Integer teamId = ranking.getId();
+                result.add(new Ranking(ranking.getRank(), teamId, ranking.getCiPath(), ranking.getName(), ranking.getRankScore(), memberCountMap.get(teamId)));
+            });
+            return result;
+
+        } else {
+            return rankingList;
+        }
     }
 }

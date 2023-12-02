@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.lkh.hometownleague.rank.repository.RankRepository">
+
+    <select id="selectRankingList" parameterType="Integer" resultType="me.lkh.hometownleague.rank.domain.Ranking">
+        SELECT ROW_NUMBER() OVER ()
+             , id
+             , ci_path
+             , name
+             , rank_score
+        FROM team_info
+        WHERE use_yn = 'Y'
+        ORDER BY rank_score DESC LIMIT #{numOfTeam}
+    </select>
+
+    <select id="selectMemberCount" parameterType="Integer" resultType="me.lkh.hometownleague.rank.domain.MemberCount">
+        SELECT team_id, COUNT(*)
+        FROM team_user_mapping
+        WHERE use_yn = 'Y'
+        AND team_id IN
+                <foreach collection='teamIdSet' item='item' open='(' close=')' separator=','>
+                    #{item}
+                </foreach>
+        GROUP BY team_id
+    </select>
+
+</mapper>

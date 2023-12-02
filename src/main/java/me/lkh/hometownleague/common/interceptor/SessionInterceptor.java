@@ -10,6 +10,7 @@ import me.lkh.hometownleague.session.service.SessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.reactive.PreFlightRequestHandler;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
@@ -34,6 +35,14 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
+        logger.debug("##########################################################################");
+        logger.debug("requestURL: " + request.getRequestURL());
+        logger.debug("method: " + request.getMethod());
+        logger.debug("cookie:" + request.getHeader("cookie"));
+        // 2023.11.26 이경훈: preflight인 경우 세션체크 하지않도록 하기 위함.
+//        logger.debug("lkh:::::http method:" + request.getMethod());
+       if("OPTIONS".equals(request.getMethod()))
+           return true;
         // AuthCheck 애노테이션이 없는 경우 true 리턴
         if(!isAuthCheckTarget(handler))
             return true;
@@ -42,9 +51,11 @@ public class SessionInterceptor implements HandlerInterceptor {
         // session 조회
         Optional<String> optionalSession = SessionUtil.getSessionIdFromRequest(request);
         optionalSession.ifPresentOrElse(sessionId -> {
+            logger.debug("sessionID: " + sessionId);
             // 세션이 없는 경우
-            if(!sessionService.isExistSession(sessionId))
+            if(!sessionService.isExistSession(sessionId)) {
                 throw new InvalidSessionException();
+            }
 
             // 세션이 있는 경우 최근 접근 시간 업데이트 및 만료시간 재설정
             sessionService.updateLastAccessedTime(sessionService.getUserSession(sessionId));
@@ -66,7 +77,6 @@ public class SessionInterceptor implements HandlerInterceptor {
                                  -> HandlerAdaptor [Controller의 비즈니스로직 수행 위임]
      */
     private boolean isAuthCheckTarget(Object handler) {
-
         if(handler instanceof ResourceHttpRequestHandler)
             return false;
 

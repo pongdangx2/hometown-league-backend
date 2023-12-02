@@ -53,8 +53,9 @@ public class TeamController {
 
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
         Team team = Team.forCreatingTeam(makeTeamRequest.getName(), userSession.getUserId(), "", makeTeamRequest.getDescription(), makeTeamRequest.getKind());
-        teamService.makeTeam(team, makeTeamRequest.getTime(), makeTeamRequest.getLocation());
-        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+        Team makedTeam = teamService.makeTeam(team, makeTeamRequest.getTime(), makeTeamRequest.getLocation());
+//        return CommonResponse.withEmptyData(ErrorCode.SUCCESS);
+        return new CommonResponse<>(makedTeam);
     }
 
     /**

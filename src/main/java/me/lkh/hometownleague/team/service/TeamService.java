@@ -10,6 +10,7 @@ import me.lkh.hometownleague.team.repository.TeamRepository;
 import me.lkh.hometownleague.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,10 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
     private final RankService rankService;
+
+    // 팀목록 조회 시 한페이지에 들어가는 개수는 일단 히스토리 조회 시와 같게 설정
+    @Value("${matching.history-page-count}")
+    private Integer teamPageCount;
 
     public TeamService(TeamRepository teamRepository, RankService rankService) {
         this.teamRepository = teamRepository;
@@ -288,14 +293,16 @@ public class TeamService {
      * @param name
      * @return
      */
-    public List<Team> selectTeamList(String addressSi, String addressGungu, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name){
+    public List<Team> selectTeamList(String addressSi, String addressGungu, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name, Integer page){
         return teamRepository.selectTeamList(addressSi
                 , addressGungu
                 , HometownLeagueUtil.integerToNullableString(fromScore)
                 , HometownLeagueUtil.integerToNullableString(toScore)
                 , HometownLeagueUtil.integerToNullableString(dayOfWeek)
                 , time
-                , name);
+                , name
+                , String.valueOf(teamPageCount * (page-1))
+                , String.valueOf(teamPageCount));
     }
 
     /**

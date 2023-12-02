@@ -142,6 +142,7 @@
         <if test="name != null">
         AND name like CONCAT('%',#{name},'%')
         </if>
+        LIMIT #{offset}, #{count}
     </select>
 
     <select id="selectJoinedTeam" parameterType="String" resultType="Integer">

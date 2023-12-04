@@ -40,7 +40,7 @@
 
 ## 시스템 구조 및 기술 스택
 ### 사용 기술
-Java 17, Spring Boot, Maven, Mybatis, Spring Rest Docs, React, Thymeleaf
+Java, Spring Boot, Maven, Mybatis, Spring Rest Docs, React, Thymeleaf
 
 ### 환경 및 미들웨어
 Nginx, Tomcat, MySQL, Redis

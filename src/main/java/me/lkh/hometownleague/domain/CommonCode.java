@@ -28,4 +28,13 @@ public class CommonCode {
     public String getCodeName() {
         return codeName;
     }
+
+    @Override
+    public String toString() {
+        return "CommonCode{" +
+                "groupId='" + groupId + '\'' +
+                ", code='" + code + '\'' +
+                ", codeName='" + codeName + '\'' +
+                '}';
+    }
 }

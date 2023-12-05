@@ -16,4 +16,12 @@ public class CommonCodeKey {
     public String getCode() {
         return code;
     }
+
+    @Override
+    public String toString() {
+        return "CommonCodeKey{" +
+                "groupId='" + groupId + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }

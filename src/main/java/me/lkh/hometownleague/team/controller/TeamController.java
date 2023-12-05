@@ -54,7 +54,7 @@ public class TeamController {
     @AuthCheck
     @PostMapping
     public CommonResponse makeTeam(@RequestBody MakeTeamRequest makeTeamRequest
-                                   , @RequestParam("imageFile") MultipartFile multipartFile
+                                   , @RequestParam(value = "imageFile", required = false) MultipartFile multipartFile
                                     , HttpServletRequest httpServletRequest){
 
         // 1. 팀생성

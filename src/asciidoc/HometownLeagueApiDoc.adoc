@@ -195,6 +195,9 @@ include::{snippets}/team-create/curl-request.adoc[]
 ==== Request
 include::{snippets}/team-create/request-fields.adoc[]
 
+==== Request parts
+include::{snippets}/team-create/request-parts.adoc[]
+
 ==== Request Example
 include::{snippets}/team-create/http-request.adoc[]
 

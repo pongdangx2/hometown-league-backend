@@ -708,9 +708,9 @@ public class TeamControllerTest_MockMvc {
         Team team = new Team(16, "Sunny eleven", null, "테스트 소개글입니다.", 1500, 1);
         responseList.add(team);
 
-        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList, responseList.size()));
         given(teamService.selectTeamList(any(), any(), any(), any(), any(), any(), any(), any())).willReturn(responseList);
-
+        given(teamService.selectTeamListCount(any(), any(), any(), any(), any(), any(), any())).willReturn(1);
 
         ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team?name=Sunny&page=1")
                 .header("cookie", "SESSION=" + userSession.getSessionId())
@@ -746,6 +746,7 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("data[].rankScore").type(JsonFieldType.NUMBER).description("팀 점수"),
                                 fieldWithPath("data[].kind").type(JsonFieldType.NUMBER).description("팀 종목"),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.count").type(JsonFieldType.NUMBER).description("응답결과 데이터의 개수"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )
                 ));

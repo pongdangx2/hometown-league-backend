@@ -208,7 +208,8 @@ public class TeamController {
                                          ,@RequestParam Integer page){
 
         logger.debug("selectTeamList:" + addressSi + "," + addressGungu + ", " + fromScore + ", " + toScore + ", " + name + ", " + page);
-        return new CommonResponse<>(teamService.selectTeamList(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name, page));
+        return new CommonResponse<>(teamService.selectTeamList(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name, page)
+                                    , teamService.selectTeamListCount(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name));
     }
 
     /**

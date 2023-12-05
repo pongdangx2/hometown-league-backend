@@ -106,6 +106,7 @@
           AND use_yn = 'Y'
     </update>
 
+    <!-- 쿼리 수정시 selectTeamListCount 쿼리도 함께 수정 -->
     <select id="selectTeamList" parameterType="me.lkh.hometownleague.team.domain.TeamSearchParam" resultType="me.lkh.hometownleague.team.domain.Team">
         SELECT a.id
             , a.name
@@ -143,6 +144,40 @@
         AND name like CONCAT('%',#{name},'%')
         </if>
         LIMIT #{offset}, #{count}
+    </select>
+
+    <!-- 쿼리 수정시 selectTeamList 쿼리도 함께 수정 -->
+    <select id="selectTeamListCount" parameterType="me.lkh.hometownleague.team.domain.TeamSearchParam" resultType="Integer">
+        SELECT count(*)
+        FROM team_info a
+        <if test="addressSi != null or addressGungu != null">
+            INNER JOIN hometown_info b ON a.id = b.team_id
+            <if test="addressSi != null">
+                AND ((b.road_address LIKE CONCAT('%',#{addressSi},'%')
+                AND b.road_address LIKE CONCAT('%',#{addressGungu},'%'))
+                OR (b.jibun_address LIKE CONCAT('%',#{addressSi},'%')
+                AND b.jibun_address LIKE CONCAT('%',#{addressGungu},'%')))
+            </if>
+        </if>
+        <if test="dayOfWeek != null or time != null">
+            INNER JOIN play_time_info c ON a.id = c.team_id
+            <if test="dayOfWeek != null">
+                AND c.day_of_week = #{dayOfWeek}
+            </if>
+            <if test="time != null">
+                AND #{time} BETWEEN c.from_time AND c.to_time
+            </if>
+        </if>
+        WHERE a.use_yn = 'Y'
+        <if test="fromScore != null">
+            AND rank_score <![CDATA[ >= ]]> #{fromScore}
+        </if>
+        <if test="toScore != null">
+            AND rank_score <![CDATA[ <= ]]> #{toScore}
+        </if>
+        <if test="name != null">
+            AND name like CONCAT('%',#{name},'%')
+        </if>
     </select>
 
     <select id="selectJoinedTeam" parameterType="String" resultType="Integer">

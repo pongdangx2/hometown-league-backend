@@ -27,6 +27,11 @@ public class CommonResponse <T> {
         this.responseCode = new ResponseCode(ErrorCode.SUCCESS);
     }
 
+    public CommonResponse(T data, int cnt){
+        this.data = data;
+        this.responseCode = new ResponseCode(ErrorCode.SUCCESS, cnt);
+    }
+
     public T getData(){
         return this.data;
     }

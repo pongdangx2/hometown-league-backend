@@ -294,6 +294,8 @@ public class TeamService {
      * @return
      */
     public List<Team> selectTeamList(String addressSi, String addressGungu, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name, Integer page){
+        return teamRepository.selectTeamList(new TeamSearchParam(addressSi, addressGungu, dayOfWeek, time, fromScore,toScore, name, teamPageCount * (page-1), teamPageCount));
+        /*
         return teamRepository.selectTeamList(addressSi
                 , addressGungu
                 , HometownLeagueUtil.integerToNullableString(fromScore)
@@ -303,6 +305,7 @@ public class TeamService {
                 , name
                 , String.valueOf(teamPageCount * (page-1))
                 , String.valueOf(teamPageCount));
+         */
     }
 
     /**

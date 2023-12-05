@@ -106,7 +106,7 @@
           AND use_yn = 'Y'
     </update>
 
-    <select id="selectTeamList" parameterType="String" resultType="me.lkh.hometownleague.team.domain.Team">
+    <select id="selectTeamList" parameterType="me.lkh.hometownleague.team.domain.TeamSearchParam" resultType="me.lkh.hometownleague.team.domain.Team">
         SELECT a.id
             , a.name
             , a.ci_path

@@ -55,6 +55,8 @@ public interface MatchingRepository {
 
     List<MatchingHistoryBase> selectMatchingHistoryBaseListByTeamId(Integer teamId, Integer offset, Integer count);
 
+    int selectMatchingHistoryBaseListByTeamIdCount(Integer teamId);
+
     List<MatchingHistoryTeam> selectAllTeamInfo(Set<Integer> teamIdSet);
 
 }

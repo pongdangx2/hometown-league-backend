@@ -710,7 +710,7 @@ public class TeamControllerTest_MockMvc {
 
         String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList, responseList.size()));
         given(teamService.selectTeamList(any(), any(), any(), any(), any(), any(), any(), any())).willReturn(responseList);
-        given(teamService.selectTeamListCount(any(), any(), any(), any(), any(), any(), any())).willReturn(1);
+        given(teamService.selectTeamListCount(any(), any(), any(), any(), any(), any(), any())).willReturn(responseList.size());
 
         ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team?name=Sunny&page=1")
                 .header("cookie", "SESSION=" + userSession.getSessionId())

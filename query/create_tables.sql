@@ -15,7 +15,7 @@ CREATE TABLE `user_info` (
 CREATE TABLE `team_info` (
                              `id` int NOT NULL AUTO_INCREMENT COMMENT '팀ID',
                              `name` varchar(40) NOT NULL COMMENT '팀명',
-                             `ci_path` varchar(50) NOT NULL COMMENT '팀 로고 경로',
+                             `ci_path` varchar(50) NULL COMMENT '팀 로고 경로',
                              `description` varchar(2000) NOT NULL COMMENT '팀 소개글',
                              `rank_score` int NOT NULL COMMENT '경쟁 점수',
                              `kind` int NOT NULL COMMENT '종목', -- 공통코드

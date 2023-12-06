@@ -1845,11 +1845,9 @@ Host: 218.232.175.4:49156</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team?imageFile=test' -i -X POST \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
-    -F 'imageFile=test' \
-    -F 'imageFile=@test.png;type=image/png' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -d '{
   "name" : "testTeamName",
   "description" : "테스트로 만든 팀입니다.",
@@ -1964,33 +1962,12 @@ Host: 218.232.175.4:49156</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_request_parts"><a class="link" href="#_request_parts">Request parts</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Part</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageFile</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(Optional) 설정할 팀 로고</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
 <h4 id="_request_example_10"><a class="link" href="#_request_example_10">Request Example</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /team?imageFile=test HTTP/1.1
-Content-Type: application/json;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /team HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Content-Length: 565
 Host: 218.232.175.4:49156
 
@@ -2165,7 +2142,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/16' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -2197,7 +2174,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /team/16 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Host: 218.232.175.4:49156</code></pre>
 </div>
@@ -2299,7 +2276,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/16' -i -X GET \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -2330,7 +2307,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /team/16 HTTP/1.1
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Host: 218.232.175.4:49156</code></pre>
 </div>
@@ -2555,7 +2532,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json' \
     -d '{
   "id" : 16,
@@ -2604,7 +2581,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /team HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Content-Length: 97
 Host: 218.232.175.4:49156
@@ -2848,7 +2825,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/play-time' -i -X PUT \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json' \
     -d '{
   "teamId" : 16,
@@ -2921,7 +2898,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /team/play-time HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Content-Length: 228
 Host: 218.232.175.4:49156
@@ -3180,7 +3157,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/play-location' -i -X PUT \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json' \
     -d '{
   "teamId" : 16,
@@ -3266,7 +3243,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /team/play-location HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Content-Length: 319
 Host: 218.232.175.4:49156
@@ -3528,7 +3505,7 @@ Host: 218.232.175.4:49156
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/16/players' -i -X GET \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -3559,7 +3536,7 @@ Host: 218.232.175.4:49156
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /team/16/players HTTP/1.1
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Host: 218.232.175.4:49156</code></pre>
 </div>
@@ -3697,7 +3674,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/16/owner' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json' \
     -d '{
   "userId" : "testId@gmail.com"
@@ -3756,7 +3733,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /team/16/owner HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Content-Length: 35
 Host: 218.232.175.4:49156
@@ -3869,7 +3846,7 @@ Host: 218.232.175.4:49156
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team?name=Sunny&amp;page=1' -i -X GET \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -3927,7 +3904,7 @@ Host: 218.232.175.4:49156
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /team?name=Sunny&amp;page=1 HTTP/1.1
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Host: 218.232.175.4:49156</code></pre>
 </div>
@@ -4066,7 +4043,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/join-request' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json' \
     -d '{
   "teamId" : 16
@@ -4108,7 +4085,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /team/join-request HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Content-Length: 19
 Host: 218.232.175.4:49156
@@ -4227,7 +4204,7 @@ Host: 218.232.175.4:49156
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/16/join-request' -i -X GET \
-    -H 'cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
@@ -4258,7 +4235,7 @@ Host: 218.232.175.4:49156
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /team/16/join-request HTTP/1.1
-cookie: SESSION=spring-session342e2f06dd68a43b9d6250dc8332326d71db3a3fea63eefcc27426bdd1c8af8d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Host: 218.232.175.4:49156</code></pre>
 </div>
@@ -4404,7 +4381,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/accept' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session157a3c19eec0e857f8243849967b877e58a1e34d2e15f3bf256e90f19945e10d' \
+    -H 'cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017' \
     -H 'Accept: application/json' \
     -d '{
   "teamId" : 16,
@@ -4447,7 +4424,7 @@ Host: 218.232.175.4:49156</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /team/accept HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session157a3c19eec0e857f8243849967b877e58a1e34d2e15f3bf256e90f19945e10d
+cookie: SESSION=spring-session531d1fec26007561de8920c65186c8f693524c9b0f2e757403e7b8458a266017
 Accept: application/json
 Content-Length: 42
 Host: 218.232.175.4:49156
@@ -4562,7 +4539,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://218.232.175.4:49156/team/leave' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'cookie: SESSION=spring-session108b5038b45eae28d866090264072407ade408eed5e50fc80af2b9db7b6e8237' \
+    -H 'cookie: SESSION=spring-sessiondf85d7aca273ba9338c94aff2ed20a422d4501fa0597a8dfe82eab292098178a' \
     -H 'Accept: application/json' \
     -d '{
   "userId" : "testid@gmail.com",
@@ -4605,7 +4582,7 @@ Host: 218.232.175.4:49156
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /team/leave HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-cookie: SESSION=spring-session108b5038b45eae28d866090264072407ade408eed5e50fc80af2b9db7b6e8237
+cookie: SESSION=spring-sessiondf85d7aca273ba9338c94aff2ed20a422d4501fa0597a8dfe82eab292098178a
 Accept: application/json
 Content-Length: 51
 Host: 218.232.175.4:49156
@@ -6563,7 +6540,7 @@ Host: 218.232.175.4:49156</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-12-05 14:53:13 +0900
+Last updated 2023-12-05 22:39:21 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

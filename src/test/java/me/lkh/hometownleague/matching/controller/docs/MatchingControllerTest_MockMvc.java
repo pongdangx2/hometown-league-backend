@@ -514,8 +514,9 @@ public class MatchingControllerTest_MockMvc {
                 );
         responseList.add(res);
         given(matchingService.selectMatchHistory(any(), any())).willReturn(responseList);
+        given(matchingService.selectMatchHistoryCount(any())).willReturn(responseList.size());
 
-        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList, responseList.size()));
 
         ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.get("/matching/history/{teamId}", 1)
                 .header("cookie", "SESSION=" + userSession.getSessionId())
@@ -561,6 +562,7 @@ public class MatchingControllerTest_MockMvc {
                                 fieldWithPath("data[].otherTeam.ciPath").type(JsonFieldType.STRING).description("팀로고명"),
                                 fieldWithPath("data[].otherTeam.score").type(JsonFieldType.NUMBER).description("우리팀 점수(Optional)"),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.count").type(JsonFieldType.NUMBER).description("응답결과 데이터의 개수"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )
                 ));

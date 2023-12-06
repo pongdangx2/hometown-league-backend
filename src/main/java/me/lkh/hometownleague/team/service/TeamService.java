@@ -295,17 +295,21 @@ public class TeamService {
      */
     public List<Team> selectTeamList(String addressSi, String addressGungu, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name, Integer page){
         return teamRepository.selectTeamList(new TeamSearchParam(addressSi, addressGungu, dayOfWeek, time, fromScore,toScore, name, teamPageCount * (page-1), teamPageCount));
-        /*
-        return teamRepository.selectTeamList(addressSi
-                , addressGungu
-                , HometownLeagueUtil.integerToNullableString(fromScore)
-                , HometownLeagueUtil.integerToNullableString(toScore)
-                , HometownLeagueUtil.integerToNullableString(dayOfWeek)
-                , time
-                , name
-                , String.valueOf(teamPageCount * (page-1))
-                , String.valueOf(teamPageCount));
-         */
+    }
+
+    /**
+     * 팀목록 카운트조회
+     * @param addressSi
+     * @param addressGungu
+     * @param fromScore
+     * @param toScore
+     * @param dayOfWeek
+     * @param time
+     * @param name
+     * @return
+     */
+    public int selectTeamListCount(String addressSi, String addressGungu, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name){
+        return teamRepository.selectTeamListCount(new TeamSearchParam(addressSi, addressGungu, dayOfWeek, time, fromScore,toScore, name, null, null));
     }
 
     /**

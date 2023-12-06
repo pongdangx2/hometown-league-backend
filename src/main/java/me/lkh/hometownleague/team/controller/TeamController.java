@@ -6,7 +6,6 @@ import me.lkh.hometownleague.common.exception.common.CommonErrorException;
 import me.lkh.hometownleague.common.exception.user.InvalidSessionException;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
-import me.lkh.hometownleague.image.service.ImageService;
 import me.lkh.hometownleague.session.domain.AuthCheck;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
@@ -16,8 +15,8 @@ import me.lkh.hometownleague.team.domain.Team;
 import me.lkh.hometownleague.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +36,10 @@ public class TeamController {
 
     private final TeamService teamService;
     private final SessionService sessionService;
-    private final ImageService imageService;
 
-    public TeamController(TeamService teamService, SessionService sessionService, ImageService imageService) {
+    public TeamController(TeamService teamService, SessionService sessionService) {
         this.teamService = teamService;
         this.sessionService = sessionService;
-        this.imageService = imageService;
     }
 
     /**
@@ -52,18 +49,13 @@ public class TeamController {
      * @return
      */
     @AuthCheck
-    @PostMapping
-    public CommonResponse makeTeam(@RequestBody MakeTeamRequest makeTeamRequest
-                                   , @RequestParam(value = "imageFile", required = false) MultipartFile multipartFile
-                                    , HttpServletRequest httpServletRequest){
+    @PostMapping (consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public CommonResponse makeTeam(@RequestBody MakeTeamRequest makeTeamRequest, HttpServletRequest httpServletRequest) {
 
-        // 1. 팀생성
         UserSession userSession = sessionService.getUserSession(SessionUtil.getSessionIdFromRequest(httpServletRequest).get());
-        Team team = Team.forCreatingTeam(makeTeamRequest.getName(), userSession.getUserId(), "", makeTeamRequest.getDescription(), makeTeamRequest.getKind());
+        Team team = Team.forCreatingTeam(makeTeamRequest.getName(), userSession.getUserId(), null, makeTeamRequest.getDescription(), makeTeamRequest.getKind());
         Team makedTeam = teamService.makeTeam(team, makeTeamRequest.getTime(), makeTeamRequest.getLocation());
 
-        // 2. 이미지 저장
-        imageService.uploadTeamCi(multipartFile, makedTeam.getId(), userSession.getUserId());
         return new CommonResponse<>(makedTeam);
     }
 
@@ -208,7 +200,8 @@ public class TeamController {
                                          ,@RequestParam Integer page){
 
         logger.debug("selectTeamList:" + addressSi + "," + addressGungu + ", " + fromScore + ", " + toScore + ", " + name + ", " + page);
-        return new CommonResponse<>(teamService.selectTeamList(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name, page));
+        return new CommonResponse<>(teamService.selectTeamList(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name, page)
+                                    , teamService.selectTeamListCount(addressSi, addressGungu, fromScore, toScore, dayOfWeek, time, name));
     }
 
     /**

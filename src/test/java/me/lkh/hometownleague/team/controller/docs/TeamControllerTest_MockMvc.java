@@ -5,7 +5,6 @@ import me.lkh.hometownleague.common.exception.ErrorCode;
 import me.lkh.hometownleague.common.interceptor.SessionInterceptor;
 import me.lkh.hometownleague.common.response.CommonResponse;
 import me.lkh.hometownleague.common.util.SessionUtil;
-import me.lkh.hometownleague.image.service.ImageService;
 import me.lkh.hometownleague.session.domain.UserSession;
 import me.lkh.hometownleague.session.service.SessionService;
 import me.lkh.hometownleague.team.controller.TeamController;
@@ -25,8 +24,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockPart;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
@@ -34,8 +31,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.io.FileInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,9 +68,6 @@ public class TeamControllerTest_MockMvc {
 
     @MockBean
     private SessionInterceptor sessionInterceptor;
-
-    @MockBean
-    private ImageService imageService;
 
     @DisplayName("팀명 중복체크")
     @Test
@@ -117,7 +109,7 @@ public class TeamControllerTest_MockMvc {
 
 
         List<TeamPlayLocation> location = new ArrayList<>();
-        location.add(new TeamPlayLocation(null, "서울과기대",null, 37.6317692339419, 127.0803445512275, "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232", "11350103"));
+        location.add(new TeamPlayLocation(null, "서울과기대",null, 37.6317692339419, 127.0803445512275, "11350103", "서울특별시 노원구 공릉동 172", "서울특별시 노원구 공릉로 232"));
 
         String teamName = "testTeamName";
         String ciPath = "";
@@ -141,10 +133,10 @@ public class TeamControllerTest_MockMvc {
 
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
         given(teamService.makeTeam(any(), any(), any())).willReturn(team);
-        MockMultipartFile file = new MockMultipartFile("imageFile",
-                "test.png",
-                "image/png",
-                new FileInputStream("/Users/lkhz/Workspace/workspace/files/team/test.png"));
+//        MockMultipartFile file = new MockMultipartFile("imageFile",
+//                "test.png",
+//                "image/png",
+//                new FileInputStream("/Users/lkhz/Workspace/workspace/files/team/test.png"));
         /*
         ResultActions resultActions =  this.mockMvc.perform( RestDocumentationRequestBuilders.post("/team")
                 .header("cookie", "SESSION=" + userSession.getSessionId())
@@ -153,8 +145,8 @@ public class TeamControllerTest_MockMvc {
                 .accept(MediaType.APPLICATION_JSON)
         );
          */
-        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.multipart("/team")
-                .file(file).part(new MockPart("imageFile", "test".getBytes(StandardCharsets.UTF_8)))
+        ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.post("/team")
+//                .file(file).part(new MockPart("imageFile", "test".getBytes(StandardCharsets.UTF_8)))
                 .header("cookie", "SESSION=" + userSession.getSessionId())
                 .content(requestContent)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -169,9 +161,9 @@ public class TeamControllerTest_MockMvc {
                 .andDo(document("team-create",
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                        requestParts(
-                                partWithName("imageFile").description("(Optional) 설정할 팀 로고")
-                        ),
+//                        requestParts(
+//                                partWithName("imageFile").description("(Optional) 설정할 팀 로고")
+//                        ),
                         requestFields(
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("생성할 팀의 이름"),
                                 fieldWithPath("kind").type(JsonFieldType.NUMBER).description("생성할 팀의 종목 코드 (축구: 1)"),
@@ -708,9 +700,9 @@ public class TeamControllerTest_MockMvc {
         Team team = new Team(16, "Sunny eleven", null, "테스트 소개글입니다.", 1500, 1);
         responseList.add(team);
 
-        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList));
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseList, responseList.size()));
         given(teamService.selectTeamList(any(), any(), any(), any(), any(), any(), any(), any())).willReturn(responseList);
-
+        given(teamService.selectTeamListCount(any(), any(), any(), any(), any(), any(), any())).willReturn(responseList.size());
 
         ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.get("/team?name=Sunny&page=1")
                 .header("cookie", "SESSION=" + userSession.getSessionId())
@@ -746,6 +738,7 @@ public class TeamControllerTest_MockMvc {
                                 fieldWithPath("data[].rankScore").type(JsonFieldType.NUMBER).description("팀 점수"),
                                 fieldWithPath("data[].kind").type(JsonFieldType.NUMBER).description("팀 종목"),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
+                                fieldWithPath("responseCode.count").type(JsonFieldType.NUMBER).description("응답결과 데이터의 개수"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )
                 ));

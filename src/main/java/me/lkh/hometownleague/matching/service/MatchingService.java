@@ -362,4 +362,7 @@ public class MatchingService {
         return result;
     }
 
+    public int selectMatchHistoryCount(Integer teamId){
+        return matchingRepository.selectMatchingHistoryBaseListByTeamIdCount(teamId);
+    }
 }

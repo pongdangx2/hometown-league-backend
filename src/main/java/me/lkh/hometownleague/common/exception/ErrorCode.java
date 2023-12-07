@@ -39,6 +39,7 @@ public enum ErrorCode {
     ,CANNOT_SAVE_FILE("4000", "파일 저장에 실패했습니다.")
     // 9000 : Common Error
     ,COMMON_ERROR("9000", "처리 중 에러가 발생했습니다.")
+    ,FULL_TEAM_CAPACITY("9001", "가입할 수 있는 최대 팀의 개수를 초과했습니다.")
     ;
 
     private final String code;

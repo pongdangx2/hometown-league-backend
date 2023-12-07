@@ -8,6 +8,7 @@ import me.lkh.hometownleague.rank.service.RankService;
 import me.lkh.hometownleague.team.domain.*;
 import me.lkh.hometownleague.team.repository.TeamRepository;
 import me.lkh.hometownleague.user.domain.User;
+import me.lkh.hometownleague.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,13 +27,19 @@ public class TeamService {
 
     private final RankService rankService;
 
+    private final UserService userService;
+
     // 팀목록 조회 시 한페이지에 들어가는 개수는 일단 히스토리 조회 시와 같게 설정
     @Value("${matching.history-page-count}")
-    private Integer teamPageCount;
+    private Integer TEAM_PAGE_COUNT;
 
-    public TeamService(TeamRepository teamRepository, RankService rankService) {
+    @Value("${team.max-count}")
+    private Integer TEAM_MAX_COUT;
+
+    public TeamService(TeamRepository teamRepository, RankService rankService, UserService userService) {
         this.teamRepository = teamRepository;
         this.rankService = rankService;
+        this.userService = userService;
     }
 
     /**
@@ -46,6 +53,12 @@ public class TeamService {
      */
     @Transactional
     public Team makeTeam(Team team, List<TeamPlayTime> teamPlayTimes, List<TeamPlayLocation> teamPlayLocations){
+
+        // 가입가능한 최대 팀 갯수 체크
+        if(userService.selectTeamOfUser(team.getOwnerId()).size() > TEAM_MAX_COUT){
+            throw new FullTeamCapacityException();
+        }
+
         // 팀명이 이미 존재하는 경우
         if(isDuplicate(team.getName()))
             throw new DuplicateTeamNameException();
@@ -294,7 +307,7 @@ public class TeamService {
      * @return
      */
     public List<Team> selectTeamList(String addressSi, String addressGungu, Integer fromScore, Integer toScore, Integer dayOfWeek, String time, String name, Integer page){
-        return teamRepository.selectTeamList(new TeamSearchParam(addressSi, addressGungu, dayOfWeek, time, fromScore,toScore, name, teamPageCount * (page-1), teamPageCount));
+        return teamRepository.selectTeamList(new TeamSearchParam(addressSi, addressGungu, dayOfWeek, time, fromScore,toScore, name, TEAM_PAGE_COUNT * (page-1), TEAM_PAGE_COUNT));
     }
 
     /**
@@ -319,6 +332,12 @@ public class TeamService {
      * @param description
      */
     public void joinRequest(String teamId, String userId, String description){
+
+        // 0. 가입가능한 최대 팀 갯수 체크
+        if(userService.selectTeamOfUser(userId).size() > TEAM_MAX_COUT){
+            throw new FullTeamCapacityException();
+        }
+
         Team team = Team.forSelectTeam(Integer.valueOf(teamId));
 
         // 1. 존재하는 팀인지 체크

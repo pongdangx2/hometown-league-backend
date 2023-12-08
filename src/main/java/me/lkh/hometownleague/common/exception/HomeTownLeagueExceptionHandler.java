@@ -15,6 +15,7 @@ public class HomeTownLeagueExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @SuppressWarnings("rawtypes")
     @ExceptionHandler(value = {UnauthorizedException.class, InvalidSessionException.class})
     public ResponseEntity UnauthorizedExceptionHandler(HometownLeagueBaseException unauthorizedException){
         CommonResponse commonResponse = CommonResponse.withEmptyData(unauthorizedException.getErrorCode());
@@ -23,6 +24,7 @@ public class HomeTownLeagueExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(commonResponse);
     }
 
+    @SuppressWarnings("rawtypes")
     @ExceptionHandler(value = HometownLeagueBaseException.class)
     public ResponseEntity HometownLeagueBaseExceptionHandler(HometownLeagueBaseException hometownLeagueBaseException){
         CommonResponse commonResponse = CommonResponse.withEmptyData(hometownLeagueBaseException.getErrorCode());
@@ -30,6 +32,8 @@ public class HomeTownLeagueExceptionHandler {
         logger.error("error code: " + hometownLeagueBaseException.getErrorCode().getCode() + ", " + hometownLeagueBaseException.getErrorCode().getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
+
+    @SuppressWarnings("rawtypes")
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity BaseExceptionHandler(Exception exception){
         exception.printStackTrace();

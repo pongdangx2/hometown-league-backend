@@ -69,7 +69,10 @@ public class UserController {
         // 4. 응답쿠키 설정 (SET-COOKIE)
         SessionUtil.setSessionCookie(response, userSession.getSessionId());
 
-        return new CommonResponse<>(checkedUser);
+        // 5. 응답 body에  세션ID 추가
+        User responseUser = new User(checkedUser.getId(), checkedUser.getNickname(), checkedUser.getPassword(), checkedUser.getDescription(), checkedUser.getCiPath(), checkedUser.getUseYn(), checkedUser.getCreateTimestamp(), checkedUser.getModifiedTimestamp(), userSession.getSessionId());
+
+        return new CommonResponse<>(responseUser);
     }
 
     /**

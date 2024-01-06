@@ -29,6 +29,8 @@ public class User {
     @JsonIgnore
     private final LocalDateTime modifiedTimestamp;
 
+    private final String sessionId;
+
     public User(String id, String password){
         this(id, null, password);
     }
@@ -38,9 +40,12 @@ public class User {
     }
 
     public User(String id, String nickname, String password, String description){
-        this(id, nickname, password, description, null, null, null, null);
+        this(id, nickname, password, description, null, null, null, null, null);
     }
-    public User(String id, String nickname, String password, String description, String ciPath,String useYn,   LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp) {
+    public User(String id, String nickname, String password, String description, String ciPath,String useYn,   LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp){
+        this(id, nickname, password, description, ciPath, useYn, createTimestamp, modifiedTimestamp, null);
+    }
+    public User(String id, String nickname, String password, String description, String ciPath,String useYn,   LocalDateTime createTimestamp, LocalDateTime modifiedTimestamp, String sessionId) {
         this.id = id;
         this.nickname = nickname;
         this.password = password;
@@ -49,6 +54,7 @@ public class User {
         this.ciPath = ciPath;
         this.createTimestamp = createTimestamp;
         this.modifiedTimestamp = modifiedTimestamp;
+        this.sessionId = sessionId;
     }
 
     public String getCiPath() {
@@ -81,6 +87,10 @@ public class User {
 
     public LocalDateTime getModifiedTimestamp() {
         return modifiedTimestamp;
+    }
+
+    public String getSessionId() {
+        return sessionId;
     }
 
     @Override

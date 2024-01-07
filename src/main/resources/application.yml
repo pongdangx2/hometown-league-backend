@@ -2,13 +2,13 @@ spring:
   datasource:
     hikari:
       htldb:
-        connection-timeout:
-        validation-timeout:
-        maximum-pool-size:
-        jdbc-url:
-        username:
-        password:
-        transaction-isolation:
+        connection-timeout: 5000
+        validation-timeout: 1000
+        maximum-pool-size: 30
+        jdbc-url: jdbc:mysql://218.232.175.4:49154/htldbp?useSSL=false&serverTimezone=Asia/Seoul
+        username: user
+        password: P@ssw0rd
+        transaction-isolation: TRANSACTION_READ_COMMITTED
   #session:
    # store-type: redis
     # * Spring Boot + redis 참고
@@ -20,14 +20,41 @@ spring:
       #namespace: spring:session # Namespace for keys used to store sessions.
   data:
     redis:
-      host:  # Redis server host.
-      password:  # Login password of the redis server.
-      port:  # Redis server port.
+      host: 218.232.175.4 # Redis server host.
+      password: P@ssw0rd # Login password of the redis server.
+      port: 49161 # Redis server port.
 
   session:
-    namespace:   # 세션 ID에 붙는 Prefix
-    expire-minute:   # 세션 만료 시간(분)
+    namespace: htl-session-  # 세션 ID에 붙는 Prefix
+    expire-minute: 30  # 세션 만료 시간(분)
 
 matching:
+  max-number: 50
+  max-distance: 20
+  use-yn: N
   queue:
-    key:
+    key: htl-matching-queue
+  history-page-count: 10
+
+rank:
+  constant:
+    k: 20
+  min:
+    value: 5
+
+image:
+  team:
+    #path: /Users/lkhz/Workspace/workspace/files/team   # local
+    path: /app/files/team   # 이미지 경로
+  user:
+    #path: /Users/lkhz/Workspace/workspace/files/user   # local
+    path: /app/files/user   # 이미지 경로
+
+team:
+  max-count: 4
+#server:
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/.keystore
+#    key-store-type: PKCS12
+#    key-store-password: P@ssw0rd

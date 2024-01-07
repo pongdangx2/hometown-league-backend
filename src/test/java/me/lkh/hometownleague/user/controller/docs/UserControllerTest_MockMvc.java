@@ -79,12 +79,14 @@ class UserControllerTest_MockMvc {
         User user = new User(id, name, password, description);
         given(sessionInterceptor.preHandle(any(), any(), any())).willReturn(true);
         given(userService.loginCheck(any())).willReturn(user);
-        given(sessionService.getSession(any())).willReturn(new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
+        UserSession userSession = new UserSession("spring-session" + SessionUtil.getSessionId(user.getId())
                 , user.getId()
-                , user.getNickname()));
+                , user.getNickname());
+        given(sessionService.getSession(any())).willReturn(userSession);
 
         String requestContent = objectMapper.writeValueAsString(new LoginRequest(id, password));
-        String responseContent = objectMapper.writeValueAsString(CommonResponse.withEmptyData(ErrorCode.SUCCESS));
+        User responseUser = new User(id, name,  null, description, null, null, null, null, userSession.getSessionId());
+        String responseContent = objectMapper.writeValueAsString(new CommonResponse<>(responseUser));
 
         ResultActions resultActions = this.mockMvc.perform(RestDocumentationRequestBuilders.post("/user/login")
                 .content(requestContent)
@@ -111,6 +113,7 @@ class UserControllerTest_MockMvc {
                                 fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("data.description").type(JsonFieldType.STRING).description("유저 소개글"),
                                 fieldWithPath("data.ciPath").type(JsonFieldType.STRING).description("(Optional)유저 로고 경로").optional(),
+                                fieldWithPath("data.sessionId").type(JsonFieldType.STRING).description("세션ID").optional(),
                                 fieldWithPath("responseCode.code").type(JsonFieldType.STRING).description("응답결과 코드"),
                                 fieldWithPath("responseCode.message").type(JsonFieldType.STRING).description("응답결과 메시지")
                         )

@@ -48,12 +48,21 @@ public class SessionUtil {
      */
     public static Optional<String> getSessionIdFromRequest(HttpServletRequest httpServletRequest){
         final StringBuffer stringBuffer = new StringBuffer();
+        Optional.ofNullable(httpServletRequest.getHeader("SESSION_ID")).ifPresent(sessionId -> {
+                    stringBuffer.append(sessionId.trim());
+                }
+        );
+
+        if(!stringBuffer.isEmpty()){
+            return Optional.of(stringBuffer.toString());
+        }
+
         Optional.ofNullable(httpServletRequest.getHeader("cookie")).ifPresent(
                 rawCookie -> {
                     String[] cookies = rawCookie.trim().split(";");
                     Arrays.stream(cookies).forEach(cookie -> {
                             String[] currentCookie = cookie.split("=");
-                            if(currentCookie[0].trim().equals("SESSION"))
+                            if(currentCookie[0].trim().equalsIgnoreCase("SESSION"))
                                 stringBuffer.append(currentCookie[1].trim());
                         }
                     );

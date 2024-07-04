@@ -28,7 +28,6 @@
 
 | 링크                                                                | 설명                          |
 |-------------------------------------------------------------------|-----------------------------|
-| [우리 동네 리그](http://218.232.175.4:49155)                            | 우리동네리그 서비스에 접속              |
 | [API](http://218.232.175.4:49156/rest/docs.do)                    | API 명세서                     |
 | [Front End](https://github.com/HometownLeague/hometown-league-fe) | Front End Github Repository |
 
